@@ -1,0 +1,58 @@
+.stories.snapgram .story {
+    > .item-link > .item-preview {
+        border-radius: 50%;
+        padding: 3px;
+        background-image: linear-gradient(to left, #fed68d, #fcc971, #fbbb55, #faac38, #f99d0f);
+        > * {
+            border-radius: 50%;
+            border: 3px solid #fff;
+        }
+        img{
+            pointer-events: none;
+        }
+    }
+
+    &.seen {
+        opacity: 0.75;
+
+        > a {
+            > .item-preview {
+                background: #999;
+            }
+
+            color: #999 !important;
+        }
+    }
+
+    &:active {
+        .item-link > .item-preview {
+            transform: scale(.9);
+            &:active{
+                transform: scale(.9);
+            }
+        }
+    }
+}
+
+.story {
+    margin: 15px !important;
+    width: 130px !important;
+    max-width: unset !important;
+
+    .item-link {
+        text-decoration: none;
+        color: #333;
+
+        .item-preview {
+            max-height: unset !important;
+            height: 130px !important;
+            width: 130px !important;
+
+            &:hover {
+                transform: translateY(-4px) !important;
+                box-shadow: 0px 9px 20px rgba(254, 214, 141, 0.6) !important;
+                transition: all 0.3s ease-in-out;
+            }
+        }
+    }
+}

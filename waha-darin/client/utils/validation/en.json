@@ -1,0 +1,12 @@
+{
+    "code": "en",
+    "messages": {
+        "alpha_spaces": "The {_field_} field may only contain alphabetic characters as well as spaces",
+        "max": "The {_field_} field may not be greater than {length} characters",
+        "min": "The {_field_} field must be at least {length} characters",
+        "numeric": "The {_field_} field may only contain numeric characters",
+        "regex": "The {_field_} field format is invalid",
+        "required": "The {_field_} field is required",
+        "isCreditCard": "{_field_} isn't valid."
+    }
+}

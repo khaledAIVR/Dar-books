@@ -1,0 +1,81 @@
+# Backup files
+*.zip
+*.tar
+*.tar.gz
+*.sql
+
+# Public folder
+/public
+waha-darin/public
+**/storage/app/public/
+**/storage/app/public/**
+waha-darin/waha-darin/storage/app/public/
+waha-darin/waha-darin/storage/app/public/**
+
+# .nuxt folders (Nuxt.js build directories)
+.nuxt/
+**/.nuxt/
+**/.nuxt/**
+_nuxt/
+**/_nuxt/
+**/_nuxt/**
+
+# PHP/Laravel specific
+# Dependencies
+/vendor/
+/node_modules/
+**/vendor/
+**/node_modules/
+
+# Environment files
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+**/.env.bak*
+
+# Laravel storage
+/storage/*.key
+/storage/logs/
+/storage/framework/cache/
+/storage/framework/sessions/
+/storage/framework/views/
+**/storage/logs/
+**/storage/framework/cache/
+**/storage/framework/sessions/
+**/storage/framework/views/
+
+# Laravel bootstrap cache
+/bootstrap/cache/
+**/bootstrap/cache/
+
+# PHPUnit
+.phpunit.result.cache
+**/.phpunit.result.cache
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+/public/hot
+/public/storage
+**/public/hot
+**/public/storage
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Laravel Homestead
+Homestead.json
+Homestead.yaml
+

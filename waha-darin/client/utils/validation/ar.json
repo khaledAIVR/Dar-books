@@ -1,0 +1,12 @@
+{
+    "code": "ar",
+    "messages": {
+        "alpha_spaces": "{_field_} قد يحتوي فقط على حروف ومسافات",
+        "max": "الحقل {_field_} يجب ان يحتوي على {length} حروف على الأكثر",
+        "min": "الحقل {_field_} يجب ان يحتوي على {length} حروف على الأقل",
+        "numeric": "{_field_} يمكن ان يحتوي فقط على ارقام",
+        "regex": "الحقل {_field_} غير صحيح",
+        "required": "{_field_} مطلوب",
+        "isCreditCard": "{_field_} ليس صحيح"
+    }
+}

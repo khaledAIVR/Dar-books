@@ -1,0 +1,48 @@
+/* Global Swiper styles */
+
+.swiper {
+    &.colorFull {
+        height: 375px;
+        width: 100%;
+        padding: 0 20px;
+
+        .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 400px;
+        }
+    }
+
+    &.categoryBooks {
+        width: 100%;
+        padding: 0 20px;
+
+        .swiper-wrapper {
+            margin-top: 20px;
+
+            .swiper-slide {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                max-width: 185px;
+            }
+        }
+        a > *{
+            pointer-events: none;
+        }
+    }
+}
+
+.swiper-pagination-bullet {
+    width: 12px;
+    height: 12px;
+
+    &.swiper-pagination-bullet-active {
+        background: $primary;
+    }
+}
+
+html[dir=rtl] .swiper-button-prev:after, html[dir=rtl] .swiper-button-next:after {
+    transform: rotate(180deg) !important;
+}

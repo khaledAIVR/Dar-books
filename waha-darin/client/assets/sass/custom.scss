@@ -1,0 +1,134 @@
+@import "elements/icons";
+@import "elements/_navbar";
+@import "elements/sidebar";
+@import "elements/swiper";
+@import "swiper/css/swiper.css";
+@import "elements/auth";
+
+.btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.btn-primary {
+    color: #fff !important;
+    padding: .5rem 2vw !important;
+}
+
+.btn-primary-light {
+    color: $primary;
+    background: $primary-lighter;
+    padding: .5rem 2vw !important;
+}
+
+.btn-primary-light.btn-lg {
+    padding: 1rem 4rem !important;
+}
+
+span {
+    font-weight: $font-weight-base;
+}
+
+a, li {
+    @include transition(all .3s ease);
+
+    &:hover {
+        text-decoration: none;
+    }
+}
+.btn svg{
+    margin: 0 8px;
+}
+
+.star-container {
+    margin: 0 2px !important;
+}
+
+.text-start {
+    text-align: left;
+}
+
+.btn-outline-primary {
+    background: transparent;
+    border: 1px solid #f99d0f;
+    padding: .5rem 2vw !important;
+    font-weight: $font-weight-base;
+
+    &:hover {
+        color: #fff;
+    }
+}
+
+.section {
+    padding: 0 2rem 2rem 2rem;
+}
+
+.m-start-10 {
+    margin-left: 10px;
+}
+
+.form-control {
+    font-size: 1.1rem;
+    @include placeholder($text-light, 200);
+}
+
+.text-dark-light {
+    color: #91939A;
+}
+
+.rounded-more {
+    border-radius: $border-radius-more !important;
+}
+
+.btn-50 {
+    height: 50px !important;
+}
+
+.invalid-feedback {
+    display: flex;
+    justify-content: start;
+}
+
+.alert {
+    text-align: start !important;
+}
+
+.spinner-border {
+    width: 4rem;
+    height: 4rem;
+}
+
+.v--modal-background-click{
+    display: flex;
+    justify-content: center;
+    .v--modal-box{
+        left: unset !important;
+    }
+}
+.border-1{
+    border-width: 1px;
+}
+h1,h2,h3{
+    line-height: 1.6;
+}
+
+.toast{
+    font-size: 24px;
+    max-width: unset;
+    max-height: 100px;
+}
+.v--modal-overlay{
+    z-index: 1070 !important;
+}
+.dropdown-item{
+    svg{
+        margin: 0 .5rem;
+    }
+}
+
+span.circle {
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+}

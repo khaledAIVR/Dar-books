@@ -1,0 +1,45 @@
+html[dir=rtl] {
+    .dropdown-menu {
+        text-align: right;
+    }
+
+    p, ul, li {
+        text-align: right;
+    }
+
+    ul.list-group {
+        padding-right: 0;
+    }
+
+    .text-start {
+        text-align: right;
+    }
+
+    .m-start-10 {
+        margin-right: 10px;
+    }
+    .b-start-none{
+        border-right: none;
+    }
+    .input-group {
+        .input-group-prepend > .input-group-text {
+            border-radius: 8px !important;
+        }
+
+        .input-group-append > .btn {
+            border-radius: 8px !important;
+        }
+    }
+    .toast{
+        .toast-icon{
+            margin-right: 1em;
+            margin-left: 0;
+        }
+    }
+}
+html[dir=ltr]{
+    .b-start-none{
+        border-left: none;
+    }
+
+}

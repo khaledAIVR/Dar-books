@@ -1,0 +1,12 @@
+{
+    "code": "de",
+    "messages": {
+        "alpha_spaces": "{_field_} darf nur alphanumerische Zeichen und Leerzeichen enthalten",
+        "max": "{_field_} darf nicht länger als {length} Zeichen sein",
+        "min": "{_field_} muss mindestens {length} Zeichen lang sein",
+        "numeric": "{_field_} darf nur numerische Zeichen enthalten",
+        "regex": "Das Format von {_field_} ist ungültig",
+        "required": "{_field_} ist ein Pflichtfeld",
+        "isCreditCard": "{_field_} isn't valid."
+    }
+}

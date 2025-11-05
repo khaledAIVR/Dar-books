@@ -1,0 +1,24 @@
+// Typography
+$font-family-sans-serif: 'DIN', sans-serif;
+$font-size-base: 0.9rem;
+$line-height-base: 1.6;
+$font-weight-base: 300;
+$enable-responsive-font-sizes: true;
+
+// Colors
+$body-bg: #F0F0F7;
+$body-color: #43425D;
+$primary: #F99D0F;
+$primary-light: #FED68D !default;
+$primary-lighter: #FFEFD1 !default;
+$primary-light-hover: #ffe8be !default;
+$text-light: #454545;
+$text-dark: #7E8082 !default;
+
+
+// Buttons and inputs
+$border-radius: 6px;
+$border-radius-more: 15px !default;
+$input-btn-focus-width: 0;
+$input-btn-focus-box-shadow: none;
+$btn-focus-box-shadow: none;

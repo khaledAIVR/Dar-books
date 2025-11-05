@@ -1,0 +1,60 @@
+.border-primary {
+    border: 3px solid $primary;
+}
+
+.auth-form {
+    padding: 0 10%;
+
+    .input-group {
+        .input-group-append .input-group-text {
+            background: #fff;
+        }
+    }
+
+    .btn-facebook {
+        background: #3B5998;
+        color: #fff;
+    }
+
+    .btn-twitter {
+        background: #1DA1F2;
+        color: #fff;
+    }
+
+    .btn-google {
+        background: #4285F4;
+        color: #fff;
+
+        img {
+            width: 20px;
+        }
+    }
+
+    .social-login {
+        button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 1;
+            height: 50px !important;
+
+            svg, img {
+                margin: 0 5px;
+            }
+        }
+    }
+}
+// RTL Styles
+html[dir=rtl] .input-group {
+    .input-group-prepend > .input-group-text {
+        border-radius: 0 $border-radius $border-radius 0;
+    }
+
+    input {
+        border-radius: 0 $border-radius $border-radius 0 !important;
+    }
+
+    .input-group-append > .input-group-text {
+        border-radius: $border-radius 0 0 $border-radius;
+    }
+}
