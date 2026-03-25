@@ -24,8 +24,16 @@ use Illuminate\Support\Carbon;
  */
 class BorrowOrder extends Model
 {
-    protected $casts = ['books' => 'array'];
-    protected $appends = ['completed'];
+    protected $casts = [
+        'books' => 'array',
+        'shipment_confirmed_at' => 'datetime',
+        'delivered_at' => 'datetime',
+        'return_shipment_added_at' => 'datetime',
+        'return_confirmed_at' => 'datetime',
+        'overdue_return_reminder_sent_at' => 'datetime',
+    ];
+
+    protected $appends = ['completed', 'tracking_url'];
 
     /**
      * @return BelongsTo
@@ -48,5 +56,16 @@ class BorrowOrder extends Model
             return true;
         }
         return false;
+    }
+
+    public function getTrackingUrlAttribute(): ?string
+    {
+        if (!$this->shipment_number) {
+            return null;
+        }
+
+        $encodedNumber = urlencode($this->shipment_number);
+
+        return "https://www.dhl.com/en/express/tracking.html?AWB={$encodedNumber}&brand=DHL";
     }
 }

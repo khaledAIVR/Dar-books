@@ -105,4 +105,8 @@ return [
     'books'=> 'books',
     'Order'=> 'Order',
 
+    'Borrow requires active subscription' => 'Ausleihen erfordert ein aktives Abonnement.',
+    'Borrow exceeds plan quota' => 'Sie können jetzt höchstens :max Buch/Bücher ausleihen (Limit dieser Periode und Jahreslimit).',
+    'Cart borrow limit reached' => 'Sie können nicht mehr Bücher hinzufügen, als Ihr Abonnement in dieser Ausleihperiode erlaubt.',
+
 ];

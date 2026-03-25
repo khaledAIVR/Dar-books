@@ -24,7 +24,24 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        // Sends reminder emails 1 day before end_date.
+        $schedule->command('borrow:return-reminders')->daily();
+
+        // Sends overdue return reminders every 3 days (until return shipment number is provided).
+        $schedule->command('borrow:overdue-return-reminders')->daily();
+
+        // Expire subscriptions that passed their end date.
+        // Borrowing is still blocked immediately by middleware date-check;
+        // this command is mainly for status + notification.
+        $schedule->command('subscriptions:expire')->weekly();
+
+        // Keep borrow return statuses in sync.
+        if (app()->environment('local')) {
+            // For development: run frequently so changes are visible quickly.
+            $schedule->command('borrow:update-return-statuses')->everyMinute();
+        } else {
+            $schedule->command('borrow:update-return-statuses')->hourly();
+        }
     }
 
     /**

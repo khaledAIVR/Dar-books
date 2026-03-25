@@ -152,7 +152,7 @@
                                     class="spinner-border text-light mx-2"
                                     role="status"
                                 >
-                                    <span class="sr-only">Loading...</span>
+                                    <span class="sr-only">{{ $t('Loading') }}</span>
                                 </span>
                                 {{ $t('Save Changes') }}
                             </button>

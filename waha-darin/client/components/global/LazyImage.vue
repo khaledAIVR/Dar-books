@@ -4,7 +4,7 @@
         <img
             class="image__item"
             :data-url="source"
-            alt="random image"
+            :alt="$t('Image')"
             :style="imgStyles"
             :class="imgClasses"
             @load="ImageLoad"

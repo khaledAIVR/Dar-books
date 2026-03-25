@@ -24,7 +24,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('guest:api');
     }
 
     /**
@@ -36,7 +36,7 @@ class RegisterController extends Controller
      */
     protected function registered(Request $request, User $user)
     {
-        if ($user instanceof MustVerifyEmail) {
+        if ($user instanceof MustVerifyEmail && ! $user->hasVerifiedEmail()) {
             return response()->json(['status' => trans('verification.sent')]);
         }
 
@@ -66,11 +66,17 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $attributes = [
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-        ]);
+        ];
+
+        if (config('waha.skip_email_verification')) {
+            $attributes['email_verified_at'] = now();
+        }
+
+        return User::create($attributes);
     }
 
     public function guard()

@@ -31,6 +31,7 @@ const routes = [
     { path: '/favourite', name: 'favourite', component: page('favourite.vue') },
     { path: '/orders', name: 'orders', component: page('orders.vue') },
     { path: '/pricing', name: 'pricing', component: page('pricing.vue') },
+    { path: '/faq', name: 'faq', component: page('faq.vue') },
     {
         path: '/checkout/:planId',
         name: 'checkout',

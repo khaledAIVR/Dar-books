@@ -40,7 +40,7 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            'throttle:60,1',
+            'throttle:120,1',
             'bindings',
         ],
     ];
@@ -66,6 +66,7 @@ class Kernel extends HttpKernel
         'has.author.preference' => \App\Http\Middleware\HasAuthorPreference::class,
         'has.category.preference' => \App\Http\Middleware\HasCategoryPreference::class,
         'has.valid.subscription' => \App\Http\Middleware\HasValidSubscription::class,
+        'superadmin.restrict' => \App\Http\Middleware\RestrictSuperAdminFeatures::class,
     ];
 
     /**

@@ -21,6 +21,7 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
         "nicolaslopezj/searchable": "^1.12",
+        "phpoffice/phpspreadsheet": "^1.18",
         "stripe/stripe-php": "^7.28",
         "tcg/voyager": "1.4.*",
         "tymon/jwt-auth": "^1.0.0-rc.5"
@@ -71,10 +72,5 @@
             "@php artisan jwt:secret --force"
         ]
     },
-    "repositories": {
-        "hooks": {
-            "type": "composer",
-            "url": "https://larapack.io"
-        }
-    }
+    "repositories": {}
 }

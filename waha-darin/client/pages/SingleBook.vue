@@ -46,13 +46,13 @@
                                     class="spinner-border text-light mx-2"
                                     role="status"
                                 >
-                                    <span class="sr-only">Loading...</span>
+                                    <span class="sr-only">{{ $t('Loading') }}</span>
                                 </div>
                                 <Icon
                                     color="white"
                                     name="cartAdd"
                                     size="medium"
-                                    title="Add to cart"
+                                    :title="$t('Add to cart')"
                                 />
                                 {{ $t('Add to cart') }}
                             </a>
@@ -67,7 +67,7 @@
                                     role="status"
                                     style="max-width: inherit"
                                 >
-                                    <span class="sr-only">Loading...</span>
+                                    <span class="sr-only">{{ $t('Loading') }}</span>
                                 </div>
                                 <i v-if="!favloading" class="gg-heart" />
                             </a>
@@ -104,7 +104,7 @@
                                                 }
                                             }"
                                         >
-                                            {{ category.name }}
+                                            {{ $i18n.categoryName(category) }}
                                         </nuxt-link>
                                     </li>
                                 </ul>
@@ -264,10 +264,23 @@ export default {
         },
 
         async addBookToCart() {
-            const { data } = await axios.patch(`/cart/${this.book.id}`)
-            this.cartloading = false
-            if (data.status === 200) {
-                this.$modal.show('add-to-cart')
+            try {
+                const { data } = await axios.patch(`/cart/${this.book.id}`)
+                if (data.status === 200) {
+                    this.$modal.show('add-to-cart')
+                }
+            } catch (e) {
+                const res = e.response
+                const msg =
+                    res &&
+                    res.data &&
+                    typeof res.data.message === 'string' &&
+                    res.data.message
+                this.$toast.error(
+                    msg || this.$t('cart_borrow_limit_toast')
+                )
+            } finally {
+                this.cartloading = false
             }
         },
 

@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use App\Support\PublicStorageUrl;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 
 class Author extends Model
 {
@@ -20,6 +20,6 @@ class Author extends Model
 
     public function getAvatarPhotoAttribute()
     {
-        return $this->avatar ? Storage::disk('public')->url('') . $this->avatar : '/author-placeholder.png';
+        return $this->avatar ? PublicStorageUrl::url($this->avatar) : '/author-placeholder.png';
     }
 }

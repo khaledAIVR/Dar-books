@@ -3,11 +3,13 @@
     "scripts": {
         "dev": "./node_modules/.bin/nuxt -c nuxt.config.js",
         "build": "./node_modules/.bin/nuxt build -c nuxt.config.js",
+        "generate": "./node_modules/.bin/nuxt generate -c nuxt.config.js",
         "start": "./node_modules/.bin/nuxt start -c nuxt.config.js",
         "lint": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
         "analyze": "nuxt build --analyze"
     },
     "dependencies": {
+        "@nuxt/vue-app": "^2.12.2",
         "@nuxtjs/router": "^1.5.0",
         "@stripe/stripe-js": "^1.9.0",
         "@trevoreyre/autocomplete-vue": "^2.1.1",
@@ -15,6 +17,7 @@
         "bootstrap": "^4.4.1",
         "bootstrap-vue": "^2.15.0",
         "dotenv": "^8.2.0",
+        "esm": "^3.2.25",
         "fast-average-color": "^6.0.2",
         "jquery": "^3.4.1",
         "js-cookie": "^2.2.1",
@@ -35,10 +38,13 @@
         "vue-i18n": "^8.15.3",
         "vue-infinite-loading": "^2.4.5",
         "vue-js-modal": "^1.3.33",
+        "vue": "2.6.11",
         "vue-router": "^3.2.0",
+        "vue-server-renderer": "2.6.11",
         "vue-simple-calendar": "^4.4.0",
         "vue-stripe-menu": "^1.2.11",
         "vue-toast-notification": "^0.4.0",
+        "vue-template-compiler": "2.6.11",
         "vuex": "^3.4.0",
         "zuck.js": "^1.6.0"
     },
@@ -47,7 +53,6 @@
         "@babel/plugin-proposal-pipeline-operator": "^7.10.1",
         "@nuxtjs/eslint-config": "^1.1.2",
         "@nuxtjs/eslint-module": "^1.0.0",
-        "@nuxtjs/ngrok": "^1.2.8",
         "@nuxtjs/router-extras": "^1.1.0",
         "@nuxtjs/style-resources": "^1.0.0",
         "babel-eslint": "^10.0.3",

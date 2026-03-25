@@ -4,7 +4,7 @@
             <nuxt-link :to="{ name: 'home' }" class="navbar-brand">
                 <img
                     class="logo-img"
-                    alt="Wahat Darin"
+                    :alt="$t('Waha Darin logo')"
                     src="~static/darin-logo-ltr.png"
                 />
             </nuxt-link>

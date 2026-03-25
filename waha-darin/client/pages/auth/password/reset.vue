@@ -1,7 +1,7 @@
 <template>
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <alert-success :form="form" :message="status" />
+            <alert-success :form="form" :message="statusMessage" />
 
             <div class="card rounded">
                 <h1 class="card-header bg-white text-center pt-3 pb-4">
@@ -44,7 +44,7 @@
                                         >
                                             <Icon
                                                 name="email"
-                                                title="Menu"
+                                                :title="$t('Menu')"
                                                 size="normal"
                                         /></span>
                                     </div>
@@ -88,7 +88,7 @@
                                         >
                                             <Icon
                                                 name="password"
-                                                title="Menu"
+                                                :title="$t('Menu')"
                                                 size="normal"
                                         /></span>
                                     </div>
@@ -130,7 +130,7 @@
                                         >
                                             <Icon
                                                 name="password"
-                                                title="Menu"
+                                                :title="$t('Menu')"
                                                 size="normal"
                                         /></span>
                                     </div>
@@ -156,7 +156,7 @@
                                         class="spinner-border text-light mx-2"
                                         role="status"
                                     >
-                                        <span class="sr-only">Loading...</span>
+                                        <span class="sr-only">{{ $t('Loading') }}</span>
                                     </div>
                                     {{ $t('Reset Password') }}
                                 </button>
@@ -176,7 +176,7 @@ export default {
     layout: 'auth',
 
     data: () => ({
-        status: '',
+        statusKey: '',
         form: new Form({
             token: '',
             email: '',
@@ -184,6 +184,12 @@ export default {
             password_confirmation: ''
         })
     }),
+
+    computed: {
+        statusMessage() {
+            return this.statusKey ? this.$t(this.statusKey) : ''
+        }
+    },
 
     created() {
         this.form.email = this.$route.query.email
@@ -194,7 +200,7 @@ export default {
         async reset() {
             const { data } = await this.form.post('/password/reset')
 
-            this.status = data.status
+            this.statusKey = 'reset'
 
             this.form.reset()
         }

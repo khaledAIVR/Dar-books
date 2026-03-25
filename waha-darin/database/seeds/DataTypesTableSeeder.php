@@ -52,6 +52,20 @@ class DataTypesTableSeeder extends Seeder
                 'description'           => '',
             ])->save();
         }
+
+        $dataType = $this->dataType('slug', 'bank_account_details');
+        if (!$dataType->exists) {
+            $dataType->fill([
+                'name'                  => 'bank_account_details',
+                'display_name_singular' => 'Bank Account',
+                'display_name_plural'   => 'Bank Account Details',
+                'icon'                  => 'voyager-credit-card',
+                'model_name'            => 'App\\Models\\BankAccountDetail',
+                'controller'            => '',
+                'generate_permissions'  => 1,
+                'description'           => 'Bank account details shown on subscription checkout',
+            ])->save();
+        }
     }
 
     /**

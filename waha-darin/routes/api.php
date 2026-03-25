@@ -26,7 +26,11 @@ Route::group(['middleware' => 'auth:api'], function () {
 //    Route::post("/update-book", "BookController@updateBook");
 
     Route::get('/user', function (Request $request) {
-        return $request->user();
+        $user = $request->user();
+        $user->load(['subscription' => function ($q) {
+            $q->select('id', 'user_id', 'plan_id', 'status', 'start', 'end');
+        }]);
+        return $user;
     });
 
 
@@ -56,6 +60,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::group(['prefix' => 'orders'], function () {
         Route::get('/', 'OrderController@index');
         Route::post('/', 'OrderController@create');
+        Route::post('/{order}/return-shipment', 'OrderController@addReturnShipment');
     });
 });
 
@@ -116,6 +121,8 @@ Route::group(['prefix' => 'plans'], function () {
     Route::get('/', 'PlanController@index');
     Route::get('/{plan}', 'PlanController@show');
 });
+
+Route::get('bank-details', 'BankAccountDetailController@show');
 
 /*
 |--------------------------------------------------------------------------

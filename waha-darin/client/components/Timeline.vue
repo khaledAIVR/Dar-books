@@ -38,7 +38,8 @@ export default {
                 Processing: false,
                 Shipped: false,
                 Delivered: false,
-                Completed: false
+                WaitingReturnShipment: false,
+                ReturnedBack: false,
             }
         }
     },
@@ -59,12 +60,20 @@ export default {
                 this.states.Shipped = true
                 this.states.Delivered = true
                 break
-            case 'Completed':
+            case 'WaitingReturnShipment':
                 this.states.Received = true
                 this.states.Processing = true
                 this.states.Shipped = true
                 this.states.Delivered = true
-                this.states.Completed = true
+                this.states.WaitingReturnShipment = true
+                break
+            case 'ReturnedBack':
+                this.states.Received = true
+                this.states.Processing = true
+                this.states.Shipped = true
+                this.states.Delivered = true
+                this.states.WaitingReturnShipment = true
+                this.states.ReturnedBack = true
                 break
             default:
                 this.states.Received = true

@@ -14,6 +14,7 @@ class DataRowsTableSeeder extends Seeder
         $userDataType = DataType::where('slug', 'users')->firstOrFail();
         $menuDataType = DataType::where('slug', 'menus')->firstOrFail();
         $roleDataType = DataType::where('slug', 'roles')->firstOrFail();
+        $bankAccountDataType = DataType::where('slug', 'bank_account_details')->first();
 
         $dataRow = $this->dataRow($userDataType, 'id');
         if (!$dataRow->exists) {
@@ -349,6 +350,37 @@ class DataRowsTableSeeder extends Seeder
                 'delete'       => 1,
                 'order'        => 9,
             ])->save();
+        }
+
+        if ($bankAccountDataType) {
+            $dataRow = $this->dataRow($bankAccountDataType, 'id');
+            if (!$dataRow->exists) {
+                $dataRow->fill(['type' => 'number', 'display_name' => 'ID', 'required' => 1, 'browse' => 0, 'read' => 0, 'edit' => 0, 'add' => 0, 'delete' => 0, 'order' => 1])->save();
+            }
+            $dataRow = $this->dataRow($bankAccountDataType, 'name');
+            if (!$dataRow->exists) {
+                $dataRow->fill(['type' => 'text', 'display_name' => 'Name (account holder or bank)', 'required' => 0, 'browse' => 1, 'read' => 1, 'edit' => 1, 'add' => 1, 'delete' => 1, 'order' => 2])->save();
+            }
+            $dataRow = $this->dataRow($bankAccountDataType, 'account_number');
+            if (!$dataRow->exists) {
+                $dataRow->fill(['type' => 'text', 'display_name' => 'Account Number', 'required' => 0, 'browse' => 1, 'read' => 1, 'edit' => 1, 'add' => 1, 'delete' => 1, 'order' => 3])->save();
+            }
+            $dataRow = $this->dataRow($bankAccountDataType, 'iban');
+            if (!$dataRow->exists) {
+                $dataRow->fill(['type' => 'text', 'display_name' => 'IBAN', 'required' => 0, 'browse' => 0, 'read' => 1, 'edit' => 1, 'add' => 1, 'delete' => 1, 'order' => 4])->save();
+            }
+            $dataRow = $this->dataRow($bankAccountDataType, 'swift_code');
+            if (!$dataRow->exists) {
+                $dataRow->fill(['type' => 'text', 'display_name' => 'Swift Code', 'required' => 0, 'browse' => 0, 'read' => 1, 'edit' => 1, 'add' => 1, 'delete' => 1, 'order' => 5])->save();
+            }
+            $dataRow = $this->dataRow($bankAccountDataType, 'created_at');
+            if (!$dataRow->exists) {
+                $dataRow->fill(['type' => 'timestamp', 'display_name' => 'Created At', 'required' => 0, 'browse' => 0, 'read' => 1, 'edit' => 0, 'add' => 0, 'delete' => 0, 'order' => 6])->save();
+            }
+            $dataRow = $this->dataRow($bankAccountDataType, 'updated_at');
+            if (!$dataRow->exists) {
+                $dataRow->fill(['type' => 'timestamp', 'display_name' => 'Updated At', 'required' => 0, 'browse' => 0, 'read' => 1, 'edit' => 0, 'add' => 0, 'delete' => 0, 'order' => 7])->save();
+            }
         }
     }
 

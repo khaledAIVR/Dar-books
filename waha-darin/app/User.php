@@ -20,6 +20,17 @@ class User extends \TCG\Voyager\Models\User implements JWTSubject, MustVerifyEma
 {
     use Notifiable;
 
+    public function isSuperAdmin(): bool
+    {
+        $superAdminEmail = (string) config('superadmin.email', env('SUPER_ADMIN_EMAIL', ''));
+        if ($superAdminEmail !== '') {
+            return strtolower((string) $this->email) === strtolower($superAdminEmail);
+        }
+
+        $superAdminId = (int) config('superadmin.id', (int) env('SUPER_ADMIN_ID', 1));
+        return (int) $this->id === $superAdminId;
+    }
+
     /**
      * The attributes that are mass assignable.
      *

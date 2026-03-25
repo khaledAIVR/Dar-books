@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-use Illuminate\Support\Facades\Storage;
+use App\Support\PublicStorageUrl;
 use TCG\Voyager\Traits\Translatable;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,7 +22,10 @@ class Event extends Model
     }
 
 
-    public function getCoverImageAttribute(){
-        return $this->image ? Storage::disk('public')->url('/') . $this->image : 'book_placeholder/png';
+    public function getCoverImageAttribute()
+    {
+        return $this->image
+            ? PublicStorageUrl::url($this->image)
+            : PublicStorageUrl::url('default-book.png');
     }
 }

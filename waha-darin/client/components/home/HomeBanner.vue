@@ -11,7 +11,7 @@
                 <div
                     class="btn-group d-flex pr-3 pl-3"
                     role="group"
-                    aria-label="Auth buttons"
+                    :aria-label="$t('Auth buttons')"
                 >
                     <nuxt-link
                         class="nav-link btn btn-primary btn-lg"

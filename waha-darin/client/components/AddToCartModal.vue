@@ -13,7 +13,7 @@
                     <div class="rounded-circle bg-success check-circle">
                         <Icon
                             name="check"
-                            title="Done"
+                            :title="$t('Done')"
                             size="large"
                             color="white"
                         />
@@ -44,7 +44,7 @@
                 class="d-flex justify-content-center align-items-center p-5"
             >
                 <div class="spinner-border text-primary" role="status">
-                    <span class="sr-only">Loading...</span>
+                    <span class="sr-only">{{ $t('Loading') }}</span>
                 </div>
             </div>
         </div>

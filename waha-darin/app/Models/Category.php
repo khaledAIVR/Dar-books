@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
+use App\Support\PublicStorageUrl;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Storage;
 
 class Category extends Model
 {
@@ -16,6 +15,6 @@ class Category extends Model
 
     public function getImageUrlAttribute($value)
     {
-        return $this->image ? Storage::disk('public')->url('') . $this->image : '/holder.jpg';
+        return $this->image ? PublicStorageUrl::url($this->image) : '/holder.jpg';
     }
 }

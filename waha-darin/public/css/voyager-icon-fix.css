@@ -1,0 +1,26 @@
+/* Hide sidebar menu icons (they appear as annoying glyph letters when fonts misbehave) */
+.voyager .side-menu #adminmenu .navbar-nav li a .icon {
+  display: none !important;
+  width: 0 !important;
+}
+
+.voyager .side-menu #adminmenu .navbar-nav li a .title {
+  padding-left: 0 !important;
+}
+
+/* Hide Voyager icons inside pages (titles/buttons/etc.) */
+.voyager i[class^="voyager-"],
+.voyager i[class*=" voyager-"],
+.voyager a i[class^="voyager-"],
+.voyager a i[class*=" voyager-"],
+.voyager button i[class^="voyager-"],
+.voyager button i[class*=" voyager-"] {
+  display: none !important;
+}
+
+/* When icons are hidden, remove extra left spacing */
+.voyager .page-title i + span,
+.voyager .btn i + span {
+  margin-left: 0 !important;
+}
+

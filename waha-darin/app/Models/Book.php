@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use App\Support\PublicStorageUrl;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 
 class Book extends Model
 {
@@ -53,8 +53,11 @@ class Book extends Model
         return $query;
     }
 
-    public function getCoverPhotoAttribute(){
-        return $this->image ? Storage::disk('public')->url('/') . $this->image : 'https://waha.dar-in.org/storage/default-book.png';
+    public function getCoverPhotoAttribute()
+    {
+        return $this->image
+            ? PublicStorageUrl::url($this->image)
+            : PublicStorageUrl::url('default-book.png');
     }
 
 }

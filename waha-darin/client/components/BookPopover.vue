@@ -38,7 +38,7 @@
                     role="status"
                     style="max-width: inherit"
                 >
-                    <span class="sr-only">Loading...</span>
+                    <span class="sr-only">{{ $t('Loading') }}</span>
                 </div>
                 <i v-if="!favloading" class="gg-heart" />
             </a>

@@ -10,7 +10,7 @@
                 style="min-height: 300px"
             >
                 <div class="spinner-border text-primary" role="status">
-                    <span class="sr-only">Loading...</span>
+                    <span class="sr-only">{{ $t('Loading') }}</span>
                 </div>
             </div>
         </div>
@@ -73,7 +73,7 @@ export default {
                 Zuck.buildTimelineItem(
                     category.slug,
                     category.image_url,
-                    category.name,
+                    this.$i18n.categoryName(category),
                     '',
                     this.timestamp(),
                     booksArray

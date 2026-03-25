@@ -128,6 +128,10 @@ class BookController extends Controller
 
         private function findOrCreateCategory($name)
         {
+            $name = preg_replace('/\s+/u', ' ', trim((string) $name));
+            if (!$name) {
+                return null;
+            }
             // Find category & return it's id
             $category = Category::where('name', $name)->first();
             if ($category) return $category->id;
@@ -144,7 +148,10 @@ class BookController extends Controller
         {
             $categories = [];
             foreach ($bookCategories as $category) {
-                array_push($categories, $this->findOrCreateCategory($category));
+                $id = $this->findOrCreateCategory($category);
+                if ($id) {
+                    array_push($categories, $id);
+                }
             }
             return $categories;
         }

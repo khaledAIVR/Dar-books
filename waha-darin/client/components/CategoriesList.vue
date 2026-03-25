@@ -23,21 +23,21 @@
                     <div class="hoverArea">
                         <img
                             data-lazy-load
-                            :src="category['image_url']"
+                            :src="getCategoryImageUrl(category)"
                             class="cat-img img-fluid rounded-circle"
                             alt=""
                         />
                         <div class="middle">
                             <icon
                                 name="bookOpen"
-                                title="Use"
+                                :title="$t('Use')"
                                 size="vlarge"
                                 color="white"
                             />
                         </div>
                     </div>
                     <h2 class="mt-2 text-dark">
-                        {{ category.name }}
+                        {{ $i18n.categoryName(category) }}
                     </h2>
                 </nuxt-link>
             </div>
@@ -49,6 +49,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { getCategoryImageUrl } from '~/data/categoryImages'
 
 export default {
     name: 'CategoriesList',
@@ -65,6 +66,7 @@ export default {
     },
 
     methods: {
+        getCategoryImageUrl,
         async fetch() {
             await this.$store.dispatch('category/fetchCategories', {})
         },

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\BorrowQuotaService;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Subscription extends Model
 {
     protected $appends = ['valid'];
-    protected $dates = ['created_at', 'updated_at', 'start', 'end'];
+    protected $dates = ['created_at', 'updated_at', 'start', 'end', 'transaction_date'];
     protected $casts = ['quote' => 'array'];
 
     public function plan()
@@ -23,13 +24,17 @@ class Subscription extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-
+    /**
+     * Remaining books the authenticated user may borrow now: min(per-period cap, annual cap), no rollover.
+     * Plans 4–5 (no period fields / books_quota 0) resolve to 0 here — borrow API stays blocked until product adds agreed limits.
+     */
     public function getValidAttribute()
     {
-        $month = Carbon::now()->month;
-        $count = BorrowOrder::where('user_id', auth()->id())->whereMonth("created_at", $month)->count();
-        $monthQuota = $this->plan->books_quota;
-        return $monthQuota >= $count? $monthQuota - $count : 0;
+        if (! auth()->check()) {
+            return 0;
+        }
+
+        return app(BorrowQuotaService::class)->remainingBorrowSlotsForSubscription($this, (int) auth()->id());
     }
 
 

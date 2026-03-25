@@ -106,4 +106,8 @@ return [
     'books'=> 'كتب',
     'Order'=> 'طلب رقم',
 
+    'Borrow requires active subscription' => 'الاستعارة تتطلب اشتراكًا فعّالًا.',
+    'Borrow exceeds plan quota' => 'يمكنك استعارة :max كتاب/كتب كحد أقصى الآن (حد هذه الفترة والحد السنوي).',
+    'Cart borrow limit reached' => 'لا يمكنك إضافة كتب أكثر مما يسمح به اشتراكك في فترة الاستعارة الحالية.',
+
 ];

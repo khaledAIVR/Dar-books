@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\Borrow\OrderReceived;
 use App\Http\Requests\BorrowOrderRequest;
 use App\Models\BorrowOrder;
 use App\Models\Subscription;
 use Illuminate\Support\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -17,7 +20,9 @@ class OrderController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('has.valid.subscription')->except('index');
+        // Only require a valid subscription when placing a borrow order.
+        // Other order actions (list, return shipment, etc.) should not depend on `books` payload.
+        $this->middleware('has.valid.subscription')->only('create');
         $this->middleware(function ($request, $next) {
             $user = auth()->user();
             $this->userSubscription = Subscription::where('user_id', $user->id)->first();
@@ -27,10 +32,82 @@ class OrderController extends Controller
 
     public function index()
     {
-        // group by completed
         $user = auth()->user();
-        $orders = $user->orders()->select('id', 'start_date', 'end_date', 'end_date', 'status')->with('books:image')->get()->groupBy('completed');
-        return response()->json($orders, 200);
+        $orders = $user->orders()
+            ->select(
+                'id',
+                'start_date',
+                'end_date',
+                'status',
+                'shipment_number',
+                'shipment_status',
+                'shipment_confirmed_at',
+                'delivered_at',
+                'return_shipment_number',
+                'return_shipment_added_at',
+                'return_confirmed_at',
+                'created_at'
+            )
+            ->where(function ($query) {
+                $query->where('shipment_status', '!=', 'cancelled')
+                      ->orWhereNull('shipment_status');
+            })
+            ->where('status', '!=', 'Cancelled')
+            ->with(['books' => function ($query) {
+                $query->select('books.id', 'books.title', 'books.image', 'books.author_id')
+                      ->with('author:id,name');
+            }])
+            ->orderByDesc('created_at')
+            ->get()
+            ->map(function ($order) {
+                // When using select(), appended attributes aren't automatically included in JSON
+                // Manually calculate and add tracking_url to the response
+                if ($order->shipment_number) {
+                    $encodedNumber = urlencode($order->shipment_number);
+                    $order->tracking_url = "https://www.dhl.com/en/express/tracking.html?AWB={$encodedNumber}&brand=DHL";
+                } else {
+                    $order->tracking_url = null;
+                }
+
+                // Keep status consistent for the customer flow:
+                // - If delivered and past due with no return shipment => WaitingReturnShipment
+                // (We derive this at response time so it stays correct even if a scheduled job hasn't run yet.)
+                if (!in_array($order->status, ['Cancelled', 'Completed'], true)) {
+                    if (
+                        $order->status === 'Delivered' &&
+                        $order->end_date &&
+                        now()->greaterThan(Carbon::parse($order->end_date)->endOfDay())
+                    ) {
+                        $order->status = 'WaitingReturnShipment';
+                    }
+                }
+
+                // Make sure these fields are visible in JSON response
+                $order->makeVisible([
+                    'tracking_url',
+                    'shipment_number',
+                    'shipment_status',
+                    'shipment_confirmed_at',
+                    'delivered_at',
+                    'return_shipment_number',
+                    'return_shipment_added_at',
+                    'return_confirmed_at',
+                ]);
+                return $order;
+            })
+            ->values();
+
+        // Current vs Completed:
+        // - Completed: only orders confirmed returned by admin (ReturnedBack)
+        // - Current: everything else
+        [$completed, $current] = $orders->partition(function ($order) {
+            return $order->status === 'ReturnedBack';
+        });
+
+        return response()->json([
+            $current->values(),
+            $completed->values(),
+        ], 200);
     }
 
     public function showBorrow()
@@ -60,8 +137,11 @@ class OrderController extends Controller
 
         $order->save();
         $order->books()->sync($request->books);
-        $subscription->quote = $subscription->quote - count($request->books);
-        $subscription->save();
+        $order->loadMissing(['user', 'books']);
+        Mail::to($order->user)->send(new OrderReceived($order));
+        // Quota enforcement is handled by the `has.valid.subscription` middleware via
+        // Subscription::valid (based on plan quota and monthly borrow count).
+        // `quote` is stored as JSON/array and should not be decremented as a scalar.
         $this->updateUserInfo($request);
         $this->deleteUserCart();
 
@@ -70,6 +150,42 @@ class OrderController extends Controller
             'message' => __('internal.Order Placed!'),
             'subMessage' => __('internal.You can track your orders from my orders page.')
         ];
+    }
+
+    public function addReturnShipment(Request $request, BorrowOrder $order)
+    {
+        $data = $request->validate([
+            'return_shipment_number' => ['required', 'string', 'max:190'],
+        ]);
+
+        if ($order->user_id !== auth()->id()) {
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
+
+        if (!in_array($order->status, ['Delivered', 'WaitingReturnShipment'], true)) {
+            return response()->json(['message' => 'Return shipment can only be added for delivered orders.'], 409);
+        }
+
+        if ($order->return_shipment_number) {
+            return response()->json(['message' => 'Return shipment number already set.'], 409);
+        }
+
+        $order->return_shipment_number = $data['return_shipment_number'];
+        $order->return_shipment_added_at = now();
+        // Do NOT mark returned here. Admin must confirm the book return.
+        if (
+            $order->status === 'Delivered' &&
+            $order->end_date &&
+            now()->greaterThan(Carbon::parse($order->end_date)->endOfDay())
+        ) {
+            $order->status = 'WaitingReturnShipment';
+        }
+        $order->save();
+
+        return response()->json([
+            'message' => 'Return shipment number saved.',
+            'order' => $order->fresh(),
+        ], 200);
     }
 
     private function updateUserInfo($request)

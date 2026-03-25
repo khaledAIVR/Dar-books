@@ -14,6 +14,13 @@ export default async ({ app, store }) => {
     }
 
     app.i18n = i18n
+
+    // Helper: translated category name (falls back to category.name if no translation)
+    app.i18n.categoryName = function (category) {
+        if (!category || !category.name) return ''
+        const key = `categories.${category.name}`
+        return this.te(key) ? this.t(key) : category.name
+    }
 }
 
 /**
@@ -21,9 +28,10 @@ export default async ({ app, store }) => {
  */
 export async function loadMessages(locale) {
     if (Object.keys(i18n.getLocaleMessage(locale)).length === 0) {
-        const messages = await import(
+        const module = await import(
             /* webpackChunkName: "lang-[request]" */ `~/lang/${locale}`
         )
+        const messages = module.default != null ? module.default : module
         i18n.setLocaleMessage(locale, messages)
     }
 

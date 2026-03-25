@@ -39,7 +39,7 @@
                 >
                     <Icon
                         name="trash"
-                        title="Remove Item"
+                        :title="$t('Remove Item')"
                         size="medium"
                         color="red"
                     />
@@ -77,7 +77,7 @@
             class="d-flex justify-content-center align-items-center p-5"
         >
             <div class="spinner-border text-primary" role="status">
-                <span class="sr-only">Loading...</span>
+                <span class="sr-only">{{ $t('Loading') }}</span>
             </div>
         </div>
     </div>

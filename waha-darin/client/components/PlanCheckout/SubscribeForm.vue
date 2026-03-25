@@ -1,7 +1,7 @@
 <template>
     <div class="col-md-12 col-lg-8 mx-auto mb-5" :dir="direction">
         <h1 class="mb-5 text-start">
-            {{ $t('Subscribe to plan') }} "{{ plan.name }}" ({{ toBePaid }} EUR)
+            {{ $t('Subscribe to plan') }} "{{ planName(plan) }}" ({{ toBePaid }} EUR)
         </h1>
 
         <div class="p-5 mb-5 bg-white rounded">
@@ -11,9 +11,14 @@
                     1.
                     {{ $t('Make a bank transfer to the following account:') }}
                     <ul>
-                        <li>{{ $t('Account Number:') }} 33333</li>
-                        <li>{{ $t('IBAN:') }} 33333</li>
-                        <li>{{ $t('Swift Code:') }} 33333</li>
+                        <li v-if="bankDetails && bankDetails.name">
+                            {{ $t('Account name:') }} {{ bankDetails.name }}
+                        </li>
+                        <li v-if="bankDetails && bankDetails.iban">{{ $t('IBAN:') }} {{ bankDetails.iban }}</li>
+                        <li v-if="bankDetails && bankDetails.swift_code">{{ $t('Swift Code:') }} {{ bankDetails.swift_code }}</li>
+                        <template v-if="!bankDetails || (!bankDetails.name && !bankDetails.iban && !bankDetails.swift_code)">
+                            <li class="text-muted">{{ $t('Bank details will be displayed here.') }}</li>
+                        </template>
                     </ul>
                 </li>
                 <li>
@@ -63,9 +68,20 @@
             </div>
         </div>
 
+        <p class="terms-line mb-3">
+            {{ $t('I agree to the terms and conditions') }}
+            <button
+                type="button"
+                class="btn btn-link p-0 align-baseline"
+                @click="openTermsModal"
+            >
+                {{ $t('Terms and conditions') }}
+            </button>
+        </p>
+
         <button
             type="submit"
-            :disabled="done || loading"
+            :disabled="done || loading || !termsAgreed"
             class="btn btn-primary d-flex w-100 justify-content-center align-items-center btn-50"
             @click="submit"
         >
@@ -74,17 +90,69 @@
                 class="spinner-border text-light mx-2"
                 role="status"
             >
-                <span class="sr-only">Loading...</span>
+                <span class="sr-only">{{ $t('Loading') }}</span>
             </div>
             {{ $t('Confirm') }}
         </button>
+
+        <b-modal
+            v-model="showTermsModal"
+            size="lg"
+            body-class="p-0"
+            hide-header-close
+            scrollable
+            @show="onTermsModalShow"
+            @hidden="onTermsModalHidden"
+        >
+            <template #modal-header>
+                <div
+                    class="d-flex align-items-center w-100 modal-header-custom"
+                    :class="{ 'flex-row-reverse': lang === 'ar' }"
+                >
+                    <span class="modal-header-spacer" aria-hidden="true">&times;</span>
+                    <h5 class="modal-title mb-0 flex-grow-1 text-center">
+                        {{ $t('Terms and conditions') }}
+                    </h5>
+                    <b-button-close
+                        :aria-label="$t('Close')"
+                        @click="showTermsModal = false"
+                    />
+                </div>
+            </template>
+            <div
+                ref="termsScroll"
+                class="terms-modal-body"
+                @scroll="onTermsScroll"
+            >
+                <div class="terms-content p-4" v-html="termsContentFormatted" />
+            </div>
+            <template #modal-footer>
+                <div class="w-100 d-flex justify-content-between align-items-center">
+                    <span
+                        v-if="!hasScrolledToEnd"
+                        class="text-muted small"
+                    >
+                        {{ $t('Scroll to the end to continue') }}
+                    </span>
+                    <span v-else />
+                    <b-button
+                        v-if="hasScrolledToEnd"
+                        variant="primary"
+                        @click="agreeAndCloseTerms"
+                    >
+                        {{ $t('Read it all') }}
+                    </b-button>
+                </div>
+            </template>
+        </b-modal>
     </div>
 </template>
 
 <script>
 import { ValidationObserver, ValidationProvider } from 'vee-validate'
-import { BFormDatepicker, BFormInput } from 'bootstrap-vue'
+import { BFormDatepicker, BFormInput, BModal, BButton, BButtonClose } from 'bootstrap-vue'
 import axios from 'axios'
+import { getTermsForLocale } from '../../data/terms'
 
 export default {
     name: 'SubscribeForm',
@@ -92,12 +160,19 @@ export default {
         ValidationProvider,
         ValidationObserver,
         BFormDatepicker,
-        BFormInput
+        BFormInput,
+        BModal,
+        BButton,
+        BButtonClose
     },
     props: {
         plan: {
             required: true,
             type: Object
+        },
+        bankDetails: {
+            type: Object,
+            default: null
         }
     },
     data() {
@@ -108,7 +183,10 @@ export default {
                 date: '',
                 amount: ''
             },
-            response: null
+            response: null,
+            showTermsModal: false,
+            hasScrolledToEnd: false,
+            termsAgreed: false
         }
     },
     computed: {
@@ -120,10 +198,52 @@ export default {
         },
         toBePaid() {
             return this.plan.price
+        },
+        termsContentFormatted() {
+            const text = getTermsForLocale(this.lang)
+            if (!text) return ''
+            return text
+                .replace(/\n/g, '<br>')
+                .replace(/  /g, ' &nbsp;')
         }
     },
     methods: {
+        planName(plan) {
+            const key = `plan_name_${plan.id}`
+            const t = this.$t(key)
+            return t !== key ? t : plan.name
+        },
+        openTermsModal() {
+            this.hasScrolledToEnd = false
+            this.showTermsModal = true
+        },
+        onTermsModalShow() {
+            this.hasScrolledToEnd = false
+            this.$nextTick(() => this.checkTermsScroll())
+        },
+        onTermsModalHidden() {
+            this.hasScrolledToEnd = false
+        },
+        onTermsScroll() {
+            this.checkTermsScroll()
+        },
+        checkTermsScroll() {
+            const el = this.$refs.termsScroll
+            if (!el) return
+            const threshold = 80
+            const atEnd =
+                el.scrollHeight - el.scrollTop - el.clientHeight <= threshold
+            if (atEnd) this.hasScrolledToEnd = true
+        },
+        agreeAndCloseTerms() {
+            this.termsAgreed = true
+            this.showTermsModal = false
+        },
         async submit() {
+            if (!this.termsAgreed) {
+                this.openTermsModal()
+                return
+            }
             const data = {
                 plan_id: this.plan.id,
                 transaction_amount: this.formData.amount,
@@ -133,6 +253,7 @@ export default {
                 alert(
                     this.$t('Please Complete the transaction date and amount')
                 )
+                return
             }
             try {
                 this.loading = true
@@ -157,5 +278,35 @@ export default {
 <style scoped>
 [dir='rtl'] {
     text-align: right;
+}
+.terms-line {
+    font-size: 0.95rem;
+}
+.terms-line .btn-link {
+    font-weight: 600;
+}
+</style>
+
+<style>
+.terms-modal-body {
+    max-height: 55vh;
+    overflow-y: auto;
+}
+.terms-content {
+    white-space: pre-line;
+    line-height: 1.6;
+}
+[dir='rtl'] .terms-content {
+    text-align: right;
+}
+/* RTL: move modal close (x) button to the left for Arabic */
+.modal-header-rtl {
+    flex-direction: row-reverse;
+}
+.modal-header-custom .modal-header-spacer {
+    width: 2rem;
+    visibility: hidden;
+    font-size: 1.5rem;
+    line-height: 1;
 }
 </style>

@@ -13,39 +13,39 @@ return [
     |
     */
 
-    'failed' => 'These credentials do not match our records.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'failed' => 'Diese Anmeldedaten stimmen nicht mit unseren Unterlagen überein.',
+    'throttle' => 'Zu viele Anmeldeversuche. Bitte versuchen Sie es in :seconds Sekunden erneut.',
 
-    'Create New Account' => 'Create New Account',
-    'Full name' => 'Full name',
-    'E-mail address' => 'E-mail address',
-    'Password' => 'Password',
-    'Password confirmation' => 'Password confirmation',
+    'Create New Account' => 'Neues Konto erstellen',
+    'Full name' => 'Vollständiger Name',
+    'E-mail address' => 'E-Mail-Adresse',
+    'Password' => 'Passwort',
+    'Password confirmation' => 'Passwort bestätigen',
 
-    'Or register using' => 'Or register using',
+    'Or register using' => 'Oder registrieren mit',
     'Facebook' => 'Facebook',
     'Twitter' => 'Twitter',
     'Google' => 'Google',
 
-    'Already have an account?' => 'Already have an account?',
-    'Login' => 'Login',
+    'Already have an account?' => 'Haben Sie bereits ein Konto?',
+    'Login' => 'Anmelden',
 
     // Select authors and categories page
-    "Hello :user, Let's know more about your interests !" => "Hello :user, Let's know more about your interests !",
-    'Select your favorite authors' => 'Select your favorite authors',
-    'Select your favorite categories' => 'Select your favorite categories',
-    'Submit and continue' => 'Submit and continue',
+    "Hello :user, Let's know more about your interests !" => "Hallo :user, erzählen Sie uns von Ihren Interessen!",
+    'Select your favorite authors' => 'Wählen Sie Ihre Lieblingsautoren',
+    'Select your favorite categories' => 'Wählen Sie Ihre Lieblingskategorien',
+    'Submit and continue' => 'Absenden und fortfahren',
 
-    'Forgot Your Password?' => 'Forgot Your Password?',
-    'Remember Me' => 'Remember Me',
-    'Reset Password' => 'Reset Password',
+    'Forgot Your Password?' => 'Passwort vergessen?',
+    'Remember Me' => 'Angemeldet bleiben',
+    'Reset Password' => 'Passwort zurücksetzen',
 
     // E-mail verification
-    'Verify Your Email Address' => 'Verify Your Email Address',
-    'If you did not receive the email' => 'If you did not receive the email',
-    'A fresh verification link has been sent to your email address.' => 'A fresh verification link has been sent to your email address.A fresh verification link has been sent to your email address.',
-    'Before proceeding, please check your email for a verification link.' => 'Before proceeding, please check your email for a verification link.Before proceeding, please check your email for a verification link.',
-    'click here to request another' => 'click here to request another',
-    'You must :linkOpen verify :linkClose your email first.' => 'You must :linkOpen  verify  :linkClose your email first.'
+    'Verify Your Email Address' => 'E-Mail-Adresse bestätigen',
+    'If you did not receive the email' => 'E-Mail nicht erhalten?',
+    'A fresh verification link has been sent to your email address.' => 'Ein neuer Bestätigungslink wurde an Ihre E-Mail-Adresse gesendet.',
+    'Before proceeding, please check your email for a verification link.' => 'Bitte überprüfen Sie vor dem Fortfahren Ihre E-Mails auf den Bestätigungslink.',
+    'click here to request another' => 'hier klicken, um einen neuen anzufordern',
+    'You must :linkOpen verify :linkClose your email first.' => 'Sie müssen zuerst :linkOpen Ihre E-Mail bestätigen :linkClose.'
 
 ];

@@ -7,7 +7,7 @@
                 </h1>
 
                 <div class="card-body">
-                    <alert-success :form="form" :message="status" />
+                    <alert-success :form="form" :message="statusMessage" />
 
                     <form
                         class="d-inline"
@@ -45,7 +45,7 @@
                                         >
                                             <Icon
                                                 name="email"
-                                                title="Menu"
+                                                :title="$t('Menu')"
                                                 size="normal"
                                         /></span>
                                     </div>
@@ -69,7 +69,7 @@
                                 class="spinner-border text-light mx-2"
                                 role="status"
                             >
-                                <span class="sr-only">Loading...</span>
+                                <span class="sr-only">{{ $t('Loading') }}</span>
                             </div>
                             {{ $t('Reset Password') }}
                         </button>
@@ -87,17 +87,23 @@ export default {
     layout: 'auth',
 
     data: () => ({
-        status: '',
+        statusKey: '',
         form: new Form({
             email: ''
         })
     }),
 
+    computed: {
+        statusMessage() {
+            return this.statusKey ? this.$t(this.statusKey) : ''
+        }
+    },
+
     methods: {
         async send() {
             const { data } = await this.form.post('/password/email')
 
-            this.status = data.status
+            this.statusKey = 'sent'
 
             this.form.reset()
         }

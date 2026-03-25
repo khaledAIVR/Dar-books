@@ -144,7 +144,14 @@ return [
         ],
 
         'widgets' => [
-
+            \App\Widgets\BooksDimmer::class,
+            \App\Widgets\BookCoversDimmer::class,
+            \App\Widgets\AuthorsDimmer::class,
+            \App\Widgets\AuthorPhotosDimmer::class,
+            \App\Widgets\CategoriesDimmer::class,
+            \App\Widgets\PublishersDimmer::class,
+            \App\Widgets\BorrowOrdersDimmer::class,
+            \App\Widgets\SubscriptionsDimmer::class,
         ],
 
     ],
@@ -187,7 +194,8 @@ return [
 
     // Here you can specify additional assets you would like to be included in the master.blade
     'additional_css' => [
-        //'css/custom.css',
+        // Cache-busted to force browsers to pick up icon fixes
+        'css/voyager-icon-fix.css?v=1',
     ],
 
     'additional_js' => [

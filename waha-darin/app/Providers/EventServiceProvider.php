@@ -27,8 +27,10 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        parent::boot();
+        if (config('waha.skip_email_verification')) {
+            $this->listen[Registered::class] = [];
+        }
 
-        //
+        parent::boot();
     }
 }

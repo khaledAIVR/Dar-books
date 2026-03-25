@@ -47,7 +47,7 @@
                                 class="d-flex justify-content-center flex-column align-items-center"
                             >
                                 <h1 class="my-5 text-center">
-                                    {{ $t('Your cart is empty.') }}
+                                    {{ $t('Your cart is empty') }}
                                 </h1>
                                 <nuxt-link
                                     :to="{ name: 'home' }"
@@ -70,7 +70,7 @@
                                     class="spinner-border text-primary"
                                     role="status"
                                 >
-                                    <span class="sr-only">Loading...</span>
+                                    <span class="sr-only">{{ $t('Loading') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -105,8 +105,19 @@ export default {
         try {
             window.$nuxt.$loading.start()
         } catch (e) {}
-        const { data } = await axios.get(`/cart`)
-        return { books: data.books, booksMaxNumber: data.available }
+        try {
+            const { data } = await axios.get(`/cart`)
+            const booksMaxNumber = Math.max(
+                0,
+                parseInt(data.available, 10) || 0
+            )
+            return {
+                books: data.books || [],
+                booksMaxNumber
+            }
+        } catch (e) {
+            return { books: [], booksMaxNumber: 0 }
+        }
     },
     data: () => ({
         dates: [],
@@ -144,11 +155,34 @@ export default {
         lang: 'lang/locale',
         user: 'auth/user'
     }),
+    watch: {
+        lang() {
+            this.refreshDatesForLocale()
+        }
+    },
     mounted() {
         this.initDates(3)
         this.initUserData()
     },
     methods: {
+        refreshDatesForLocale() {
+            const savedStart = this.formData.selectedDateStart?.dateString
+            const savedEnd = this.formData.selectedDateEnd?.dateString
+            this.dates = []
+            this.initDates(3)
+            if (savedStart && savedEnd) {
+                const match = this.dates.find(
+                    (d) =>
+                        d.start.dateString === savedStart &&
+                        d.end.dateString === savedEnd
+                )
+                if (match) {
+                    match.selected = true
+                    this.formData.selectedDateStart = match.start
+                    this.formData.selectedDateEnd = match.end
+                }
+            }
+        },
         goForwardStep() {
             if (this.currentStep !== 3) {
                 this.currentStep++

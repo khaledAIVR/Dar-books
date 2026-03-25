@@ -3,9 +3,11 @@
         <div class="card-form__inner">
             <div class="bookSelect">
                 <h5>{{ $t('Choose books from your cart') }}</h5>
-                <p>
-                    {{ $t('Allowed Number of books:') }}
-                    <span>{{ maxBooks - formData.selectedBooks.length }}</span>
+                <p v-if="maxBooks > 0" class="mb-0">
+                    {{ $t('borrow_quota_remaining_pick', { n: remainingSelectable }) }}
+                </p>
+                <p v-else class="text-danger mb-0">
+                    {{ $t('borrow_quota_none') }}
                 </p>
                 <p v-if="error" class="alert-danger rounded py-2 px-4">
                     {{ error }}
@@ -13,7 +15,7 @@
                 <div v-if="books.length > 0" class="form-group">
                     <div
                         v-for="book in books"
-                        :key="book.book_id"
+                        :key="book.id"
                         class="d-flex align-items-center book-item"
                         :class="{ selected: book.selected === true }"
                         @click="toggleBookSelection(book, $event)"
@@ -91,6 +93,14 @@ export default {
     data() {
         return {
             error: null
+        }
+    },
+    computed: {
+        remainingSelectable() {
+            return Math.max(
+                0,
+                this.maxBooks - this.formData.selectedBooks.length
+            )
         }
     },
     methods: {

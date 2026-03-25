@@ -36,6 +36,6 @@ class StartBorrow extends Mailable implements ShouldQueue
     public function build()
     {
         return $this->subject("Start Borrow")
-            ->view('emails.start-borrow');
+            ->markdown('emails.start-borrow');
     }
 }

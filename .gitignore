@@ -1,81 +1,92 @@
-# Backup files
-*.zip
-*.tar
-*.tar.gz
-*.sql
+# --- OS ---
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
 
-# Public folder
-/public
-waha-darin/public
-**/storage/app/public/
-**/storage/app/public/**
-waha-darin/waha-darin/storage/app/public/
-waha-darin/waha-darin/storage/app/public/**
+# --- Local DB dumps, archives, import scratch (repo root) ---
+darin2_backup_*.sql
+darin2_backup_*.zip
+waha-darin_*.tar.gz
+books counting/
+book-import-sample.xlsx
 
-# .nuxt folders (Nuxt.js build directories)
-.nuxt/
-**/.nuxt/
-**/.nuxt/**
-_nuxt/
-**/_nuxt/
-**/_nuxt/**
-
-# PHP/Laravel specific
-# Dependencies
-/vendor/
-/node_modules/
-**/vendor/
-**/node_modules/
-
-# Environment files
-.env
-.env.*
-!.env.example
-**/.env
-**/.env.*
-**/.env.bak*
-
-# Laravel storage
-/storage/*.key
-/storage/logs/
-/storage/framework/cache/
-/storage/framework/sessions/
-/storage/framework/views/
-**/storage/logs/
-**/storage/framework/cache/
-**/storage/framework/sessions/
-**/storage/framework/views/
-
-# Laravel bootstrap cache
-/bootstrap/cache/
-**/bootstrap/cache/
-
-# PHPUnit
-.phpunit.result.cache
-**/.phpunit.result.cache
-
-# IDE files
+# --- Editors / IDEs ---
 .idea/
+*.iml
+*.sublime-project
+*.sublime-workspace
 .vscode/
 *.swp
 *.swo
 *~
-.DS_Store
-Thumbs.db
 
-# Build artifacts
-/public/hot
-/public/storage
-**/public/hot
-**/public/storage
+# --- Secrets & local env (templates like .env.example stay tracked) ---
+.env
+.env.*
+!.env.example
+!**/.env.example
 
-# Logs
+# --- Python (local tooling under waha-darin) ---
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.Python
+waha-darin/.pydeps/
+
+# --- Logs & debug ---
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.pnpm-debug.log*
 
-# Laravel Homestead
-Homestead.json
-Homestead.yaml
+# --- PHP / test tooling caches ---
+.phpunit.result.cache
+.php_cs.cache
+.php-cs-fixer.cache
 
+# --- waha-darin: installed deps (reinstall: composer + npm/yarn in client) ---
+waha-darin/node_modules/
+waha-darin/client/node_modules/
+waha-darin/vendor/
+
+# --- waha-darin: Laravel runtime / generated ---
+waha-darin/public/hot
+waha-darin/public/storage
+waha-darin/storage/*.key
+waha-darin/storage/logs/*
+!waha-darin/storage/logs/.gitignore
+waha-darin/storage/framework/cache/*
+!waha-darin/storage/framework/cache/.gitignore
+waha-darin/storage/framework/sessions/*
+!waha-darin/storage/framework/sessions/.gitignore
+waha-darin/storage/framework/views/*
+!waha-darin/storage/framework/views/.gitignore
+waha-darin/storage/app/public/*
+!waha-darin/storage/app/public/.gitignore
+waha-darin/storage/app/covers_by_title
+waha-darin/storage/app/covers_by_isbn
+waha-darin/storage/app/backups
+waha-darin/bootstrap/cache/*
+!waha-darin/bootstrap/cache/.gitignore
+
+# --- waha-darin: local bulk / tooling (not needed for clean clone) ---
+waha-darin/new_dataset/
+waha-darin/x.xlsx
+
+# --- waha-darin: Vagrant / Homestead ---
+waha-darin/Homestead.json
+waha-darin/Homestead.yaml
+
+# --- waha-darin: local SQLite DBs ---
+waha-darin/database/*.sqlite
+waha-darin/database/*.sqlite-journal
+
+# --- waha-darin: Nuxt build output ---
+waha-darin/client/.nuxt/
+waha-darin/public/_nuxt/
+waha-darin/client/public/_nuxt/

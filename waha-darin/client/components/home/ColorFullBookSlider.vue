@@ -75,7 +75,7 @@
             style="min-height: 100vh"
         >
             <div class="spinner-border text-primary" role="status">
-                <span class="sr-only">Loading...</span>
+                <span class="sr-only">{{ $t('Loading') }}</span>
             </div>
         </div>
         <hr class="my-1" />

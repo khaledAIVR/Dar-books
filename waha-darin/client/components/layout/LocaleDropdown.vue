@@ -20,7 +20,7 @@
                 :src="value.flag"
                 alt=""
                 class="ml-1 mr-1"
-                title="English language"
+                :title="$t(value.name)"
                 width="24px"
             />
             {{ value.name }}
@@ -44,10 +44,9 @@ export default {
     }),
 
     methods: {
-        setLocale(locale) {
+        async setLocale(locale) {
             if (this.$i18n.locale !== locale) {
-                loadMessages(locale)
-
+                await loadMessages(locale)
                 this.$store.dispatch('lang/setLocale', { locale })
             }
         }

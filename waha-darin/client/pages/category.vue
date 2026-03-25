@@ -15,7 +15,7 @@
                             class="circle"
                             :style="`background: ${newCategory.color}`"
                         />
-                        {{ newCategory.name }}
+                        {{ $i18n.categoryName(newCategory) }}
                     </h1>
                 </div>
                 <div class="row justify-content-between">

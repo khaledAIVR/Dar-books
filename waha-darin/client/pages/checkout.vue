@@ -3,6 +3,7 @@
         v-if="plan"
         :form-data="formData"
         :plan="plan"
+        :bank-details="bankDetails"
         :loading="loading"
         :done="done"
         :response="serverResponse"
@@ -25,8 +26,14 @@ export default {
         try {
             window.$nuxt.$loading.start()
         } catch (e) {}
-        const { data } = await axios.get(`/plans/${params.planId}`)
-        return { plan: data.plan }
+        const [plansRes, bankRes] = await Promise.all([
+            axios.get(`/plans/${params.planId}`),
+            axios.get('/bank-details').catch(() => ({ data: null }))
+        ])
+        return {
+            plan: plansRes.data.plan,
+            bankDetails: bankRes.data && typeof bankRes.data === 'object' ? bankRes.data : null
+        }
     },
     data: () => ({
         formData: {

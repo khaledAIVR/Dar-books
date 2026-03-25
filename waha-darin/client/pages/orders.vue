@@ -7,7 +7,7 @@
                     class="d-flex justify-content-center align-items-center p-5"
                 >
                     <div class="spinner-border text-primary" role="status">
-                        <span class="sr-only">Loading...</span>
+                        <span class="sr-only">{{ $t('Loading') }}</span>
                     </div>
                 </div>
                 <div v-if="!loading && orders.length <= 0">
@@ -40,7 +40,7 @@
                 </div>
 
                 <div
-                    v-if="!loading && orders && orders[0]"
+                    v-if="!loading && orders && orders.length"
                     class="card orders-wrapper rounded-more border-0"
                 >
                     <div class="card-header bg-transparent text-center p-0">
@@ -48,12 +48,13 @@
                             <li class="nav-item">
                                 <a
                                     id="current-tab"
-                                    class="nav-link active"
-                                    data-toggle="tab"
+                                    class="nav-link"
+                                    :class="{ active: activeTab === 'current' }"
                                     href="#current"
                                     role="tab"
-                                    aria-controls="Current Orders"
-                                    aria-selected="false"
+                                    aria-controls="current"
+                                    :aria-selected="activeTab === 'current' ? 'true' : 'false'"
+                                    @click.prevent="setActiveTab('current')"
                                 >
                                     <h4 class="font-weight-light">
                                         {{ $t('Current Orders') }}
@@ -62,13 +63,14 @@
                             </li>
                             <li class="nav-item">
                                 <a
-                                    id="part-tab"
+                                    id="completed-tab"
                                     class="nav-link"
-                                    data-toggle="tab"
+                                    :class="{ active: activeTab === 'completed' }"
                                     href="#completed"
                                     role="tab"
-                                    aria-controls="Past Orders"
-                                    aria-selected="true"
+                                    aria-controls="completed"
+                                    :aria-selected="activeTab === 'completed' ? 'true' : 'false'"
+                                    @click.prevent="setActiveTab('completed')"
                                 >
                                     <h4 class="font-weight-light">
                                         {{ $t('Completed Orders') }}
@@ -80,34 +82,38 @@
                     <div id="myTabContent" class="card-body tab-content">
                         <div
                             id="current"
-                            class="tab-pane fade show active"
+                            class="tab-pane fade"
+                            :class="{ show: activeTab === 'current', active: activeTab === 'current' }"
                             role="tabpanel"
                             aria-labelledby="current-tab"
                         >
-                            <single-order
-                                v-for="(order, index) in orders[0]"
-                                v-if="orders[0].length > 0"
-                                :key="index"
-                                :order="order"
-                            />
-                            <div v-else>
-                                No Orders
+                            <div v-if="currentOrders.length">
+                                <single-order
+                                    v-for="order in currentOrders"
+                                    :key="order.id"
+                                    :order="order"
+                                />
+                            </div>
+                            <div v-else class="text-center text-muted py-4">
+                                {{ $t('No Orders') }}
                             </div>
                         </div>
                         <div
                             id="completed"
                             class="tab-pane fade"
+                            :class="{ show: activeTab === 'completed', active: activeTab === 'completed' }"
                             role="tabpanel"
                             aria-labelledby="completed-tab"
                         >
-                            <single-order
-                                v-for="(order, index) in orders[1]"
-                                v-if="orders[0].length > 0"
-                                :key="index"
-                                :order="order"
-                            />
-                            <div v-else>
-                                No Orders
+                            <div v-if="completedOrders.length">
+                                <single-order
+                                    v-for="order in completedOrders"
+                                    :key="order.id"
+                                    :order="order"
+                                />
+                            </div>
+                            <div v-else class="text-center text-muted py-4">
+                                {{ $t('No Orders') }}
                             </div>
                         </div>
                     </div>
@@ -129,9 +135,21 @@ export default {
     async fetch() {
         try {
             const { data } = await axios.get(`/orders`)
-            if (data && data[0]) {
-                this.orders = data
+
+            // Normalize API response into [currentOrders, completedOrders].
+            // Backend should return an array of two arrays, but we also tolerate legacy object shapes.
+            let current = []
+            let completed = []
+            if (Array.isArray(data)) {
+                current = data[0] || []
+                completed = data[1] || []
+            } else if (data && typeof data === 'object') {
+                // Legacy groupBy('completed') JSON can come back as { "0": [...], "1": [...] }
+                current = data[0] || data['0'] || data.false || data['false'] || []
+                completed = data[1] || data['1'] || data.true || data['true'] || []
             }
+            this.orders = [current, completed]
+
             this.loading = false
         } catch (e) {
             this.$router.push({ name: 'pricing' })
@@ -140,11 +158,53 @@ export default {
     data() {
         return {
             orders: [],
-            loading: true
+            loading: true,
+            activeTab: 'current'
+        }
+    },
+    computed: {
+        currentOrders() {
+            return (this.orders && this.orders[0]) ? this.orders[0] : []
+        },
+        completedOrders() {
+            return (this.orders && this.orders[1]) ? this.orders[1] : []
+        }
+    },
+    watch: {
+        '$route.hash'() {
+            this.activateTabFromHash()
+        }
+    },
+    methods: {
+        setActiveTab(tab) {
+            this.activeTab = tab
+            // keep URL in sync (so refresh preserves the selected tab)
+            const hash = tab === 'completed' ? '#completed' : '#current'
+            if (this.$route && this.$route.hash !== hash) {
+                this.$router.replace({ hash }).catch(() => {})
+            }
+        },
+        activateTabFromHash() {
+            if (!process.client) return
+            const hash = (this.$route && this.$route.hash) ? this.$route.hash : ''
+            if (hash === '#completed') {
+                this.activeTab = 'completed'
+            } else if (hash === '#current') {
+                this.activeTab = 'current'
+            }
         }
     },
     mounted() {
-        this.$fetch()
+        this.$fetch().finally(() => {
+            // Ensure correct tab opens when URL contains #completed
+            this.$nextTick(() => {
+                this.activateTabFromHash()
+                // default hash if missing
+                if (!this.$route.hash) {
+                    this.$router.replace({ hash: '#current' }).catch(() => {})
+                }
+            })
+        })
     }
 }
 </script>

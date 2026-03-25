@@ -14,7 +14,7 @@ return [
     */
 
     'failed' => 'خطأ في كلمة المرور او البريد الإلكتروني',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'throttle' => 'محاولات تسجيل دخول كثيرة. يرجى المحاولة مرة أخرى بعد :seconds ثانية.',
 
     'Create New Account' => 'تسجيل حساب جديد',
     'Full name' => 'الاسم بالكامل',

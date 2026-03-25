@@ -1,0 +1,35 @@
+.git
+.gitignore
+.dockerignore
+Dockerfile
+*.md
+.env
+.env.*
+!.env.example
+
+# JS (built in frontend stage)
+client/node_modules
+**/node_modules
+
+# PHP deps installed in image
+/vendor
+
+# Local / bulky
+.venv
+.idea
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+
+# Laravel runtime / bulky local data (keep .gitignore placeholders via non-excluded paths)
+storage/logs/*
+!storage/logs/.gitignore
+storage/framework/cache/*
+!storage/framework/cache/.gitignore
+storage/framework/sessions/*
+!storage/framework/sessions/.gitignore
+storage/framework/views/*
+!storage/framework/views/.gitignore
+storage/app/backups
+storage/app/covers_by_title
+storage/app/public/book-covers-by-title

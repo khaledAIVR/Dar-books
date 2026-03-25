@@ -105,4 +105,8 @@ return [
     'Completed Orders'=> 'Completed Orders',
     'books'=> 'books',
     'Order'=> 'Order',
+
+    'Borrow requires active subscription' => 'Borrowing requires an active subscription.',
+    'Borrow exceeds plan quota' => 'You can borrow at most :max book(s) right now (this period and annual limit).',
+    'Cart borrow limit reached' => 'You cannot add more books than your subscription allows for this borrow period.',
 ];

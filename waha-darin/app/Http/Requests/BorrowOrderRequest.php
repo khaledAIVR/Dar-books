@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Subscription;
+use App\Services\BorrowQuotaService;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -47,5 +49,33 @@ class BorrowOrderRequest extends FormRequest
             'zipCode' => 'required',
 
         ];
+    }
+
+    /**
+     * Enforce the same remaining quota as {@see \App\Http\Middleware\HasValidSubscription} (books, not orders).
+     */
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $user = auth()->user();
+            if (! $user || $user->isSuperAdmin()) {
+                return;
+            }
+            $books = $this->input('books');
+            if (! is_array($books)) {
+                return;
+            }
+            $count = count($books);
+            $subscription = Subscription::where('user_id', $user->id)->first();
+            if (! $subscription) {
+                $validator->errors()->add('books', __('internal.Borrow requires active subscription'));
+
+                return;
+            }
+            $remaining = app(BorrowQuotaService::class)->remainingBorrowSlotsForSubscription($subscription, (int) $user->id);
+            if ($count > $remaining) {
+                $validator->errors()->add('books', __('internal.Borrow exceeds plan quota', ['max' => $remaining]));
+            }
+        });
     }
 }

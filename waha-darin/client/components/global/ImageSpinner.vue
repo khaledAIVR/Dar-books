@@ -1,7 +1,7 @@
 <template>
     <div class="loader">
         <div class="spinner-border text-primary" role="status">
-            <span class="sr-only">Loading...</span>
+            <span class="sr-only">{{ $t('Loading') }}</span>
         </div>
     </div>
 </template>

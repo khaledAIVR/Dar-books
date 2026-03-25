@@ -79,6 +79,70 @@ class MenuItemsTableSeeder extends Seeder
             ])->save();
         }
 
+        $menuItem = MenuItem::firstOrNew([
+            'menu_id' => $menu->id,
+            'title'   => 'Weekly Orders',
+            'url'     => '',
+            'route'   => 'voyager.weekly-orders.page',
+        ]);
+        if (!$menuItem->exists) {
+            $menuItem->fill([
+                'target'     => '_self',
+                'icon_class' => 'voyager-calendar',
+                'color'      => null,
+                'parent_id'  => null,
+                'order'      => 9,
+            ])->save();
+        }
+
+        $menuItem = MenuItem::firstOrNew([
+            'menu_id' => $menu->id,
+            'title'   => 'Manage Subscriptions',
+            'url'     => '',
+            'route'   => 'voyager.manage-subscriptions.page',
+        ]);
+        if (!$menuItem->exists) {
+            $menuItem->fill([
+                'target'     => '_self',
+                'icon_class' => 'voyager-credit-card',
+                'color'      => null,
+                'parent_id'  => null,
+                'order'      => 10,
+            ])->save();
+        }
+
+        $menuItem = MenuItem::firstOrNew([
+            'menu_id' => $menu->id,
+            'title'   => 'Import Books',
+            'url'     => '',
+            'route'   => 'voyager.book-import.page',
+        ]);
+        if (!$menuItem->exists) {
+            $menuItem->fill([
+                'target'     => '_self',
+                'icon_class' => 'voyager-upload',
+                'color'      => null,
+                'parent_id'  => null,
+                'order'      => 8,
+            ])->save();
+        }
+
+        $menuItem = MenuItem::firstOrNew([
+            'menu_id' => $menu->id,
+            'title'   => 'Bank Account',
+            'url'     => '',
+            'route'   => 'voyager.bank_account_details.index',
+        ]);
+        if (!$menuItem->exists) {
+            $menuItem->fill([
+                'target'     => '_self',
+                'icon_class' => 'voyager-credit-card',
+                'color'      => null,
+                'parent_id'  => null,
+                'order'      => 9,
+            ])->save();
+        }
+
         $toolsMenuItem = MenuItem::firstOrNew([
             'menu_id' => $menu->id,
             'title'   => __('voyager::seeders.menu_items.tools'),
@@ -90,7 +154,7 @@ class MenuItemsTableSeeder extends Seeder
                 'icon_class' => 'voyager-tools',
                 'color'      => null,
                 'parent_id'  => null,
-                'order'      => 9,
+                'order'      => 10,
             ])->save();
         }
 
@@ -170,7 +234,7 @@ class MenuItemsTableSeeder extends Seeder
                 'icon_class' => 'voyager-settings',
                 'color'      => null,
                 'parent_id'  => null,
-                'order'      => 14,
+                'order'      => 15,
             ])->save();
         }
     }

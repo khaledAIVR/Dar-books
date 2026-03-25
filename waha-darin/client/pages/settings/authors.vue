@@ -29,7 +29,7 @@
                             <div class="middle">
                                 <Icon
                                     name="check"
-                                    title="Use"
+                                    :title="$t('Use')"
                                     size="large"
                                     color="white"
                                 />
@@ -52,7 +52,7 @@
                             class="spinner-border text-light mx-2"
                             role="status"
                         >
-                            <span class="sr-only">Loading...</span>
+                            <span class="sr-only">{{ $t('Loading') }}</span>
                         </div>
                         {{ $t('Save Changes') }}
                     </button>

@@ -42,7 +42,7 @@
                                         >
                                             <Icon
                                                 name="email"
-                                                title="Menu"
+                                                :title="$t('Menu')"
                                                 size="normal"
                                         /></span>
                                     </div>
@@ -86,7 +86,7 @@
                                         >
                                             <Icon
                                                 name="password"
-                                                title="Menu"
+                                                :title="$t('Menu')"
                                                 size="normal"
                                         /></span>
                                     </div>
@@ -112,7 +112,7 @@
                                         class="spinner-border text-light mx-2"
                                         role="status"
                                     >
-                                        <span class="sr-only">Loading...</span>
+                                        <span class="sr-only">{{ $t('Loading') }}</span>
                                     </div>
                                     {{ $t('Login') }}
                                 </button>
@@ -143,14 +143,14 @@
                             </div>
                         </div>
                     </form>
-<!--                    <div class="form-group row mb-0 auth-form">
+                    <!--                    <div class="form-group row mb-0 auth-form">
                         <div class="col-12">
                             <p class="text-center">
                                 {{ $t('Or register using') }}
                             </p>
                         </div>
                     </div>-->
-<!--                    <div class="form-group row mb-0 auth-form">
+                    <!--                    <div class="form-group row mb-0 auth-form">
                         <div class="col-12">
                             <div class="d-flex w-100 social-login">
                                 <button
@@ -159,7 +159,7 @@
                                 >
                                     <Icon
                                         name="facebook"
-                                        title="Login with facebook"
+                                        :title="$t('Login with Facebook')"
                                         color="white"
                                         size="small"
                                     />
@@ -171,7 +171,7 @@
                                 >
                                     <Icon
                                         name="twitter"
-                                        title="Login with twitter text-white"
+                                        :title="$t('Login with Twitter')"
                                         color="white"
                                         size="small"
                                     />
@@ -184,8 +184,8 @@
                                     <img
                                         src="google.png"
                                         class="img-fluid"
-                                        alt="Login with google"
-                                        title="Login with google"
+                                        :alt="$t('Login with Google')"
+                                        :title="$t('Login with Google')"
                                     />
                                     {{ $t('Google') }}
                                 </button>

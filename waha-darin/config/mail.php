@@ -39,8 +39,11 @@ return [
             'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
             'port' => env('MAIL_PORT', 587),
             'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+            // For Twilio SendGrid SMTP:
+            // - MAIL_USERNAME=apikey
+            // - password can be set via SENDGRID_API_KEY (preferred) or MAIL_PASSWORD
             'username' => env('MAIL_USERNAME'),
-            'password' => env('MAIL_PASSWORD'),
+            'password' => env('SENDGRID_API_KEY', env('MAIL_PASSWORD')),
             'timeout' => null,
         ],
 
@@ -83,8 +86,9 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        // Trim: trailing spaces in .env break RFC5322 From and confuse some providers (e.g. Gmail).
+        'address' => trim((string) env('MAIL_FROM_ADDRESS', 'hello@example.com')),
+        'name' => trim((string) env('MAIL_FROM_NAME', 'Example')),
     ],
 
     /*

@@ -3,6 +3,18 @@
         <h1 class="mb-5 text-start">
             {{ $t('My Cart') }}
         </h1>
+        <div
+            v-if="!loading && books.length > available"
+            class="alert alert-warning text-start"
+            role="alert"
+        >
+            {{
+                $t('borrow_quota_cart_overflow', {
+                    c: books.length,
+                    n: available
+                })
+            }}
+        </div>
         <div v-if="!loading && books.length > 0">
             <div
                 v-for="book in books"
@@ -39,7 +51,7 @@
                 >
                     <Icon
                         name="trash"
-                        title="Remove Item"
+                        :title="$t('Remove Item')"
                         size="medium"
                         color="red"
                     />
@@ -47,11 +59,20 @@
             </div>
             <div class="d-flex justify-content-center mt-3">
                 <nuxt-link
+                    v-if="canCheckout"
                     :to="{ name: 'borrow' }"
                     class="btn btn-primary btn-lg p-0 m-0 align-baseline"
                 >
                     {{ $t('Checkout Now') }}
                 </nuxt-link>
+                <button
+                    v-else
+                    type="button"
+                    class="btn btn-secondary btn-lg p-0 m-0 align-baseline"
+                    disabled
+                >
+                    {{ $t('Checkout Now') }}
+                </button>
             </div>
         </div>
         <div v-if="!loading && books.length <= 0">
@@ -85,7 +106,7 @@
             class="d-flex justify-content-center align-items-center p-5"
         >
             <div class="spinner-border text-primary" role="status">
-                <span class="sr-only">Loading...</span>
+                <span class="sr-only">{{ $t('Loading') }}</span>
             </div>
         </div>
     </div>
@@ -103,28 +124,49 @@ export default {
 
         try {
             const { data } = await axios.get(`/cart`)
-            return { books: data.books, loading: false }
+            const available = Math.max(0, parseInt(data.available, 10) || 0)
+            return {
+                books: data.books || [],
+                available,
+                loading: false
+            }
         } catch (e) {
-            // debugger
+            return { books: [], available: 0, loading: false }
         }
     },
     data() {
         return {
-            loading: true
+            loading: true,
+            available: 0
+        }
+    },
+    computed: {
+        canCheckout() {
+            return (
+                this.available > 0 &&
+                this.books.length > 0 &&
+                this.books.length <= this.available
+            )
         }
     },
     methods: {
-        deleteFromCart(bookId) {
-            const that = this
-            axios.delete(`/cart/${bookId}`).then((res) => {
+        async deleteFromCart(bookId) {
+            try {
+                const res = await axios.delete(`/cart/${bookId}`)
                 if (res.data.status === 200) {
-                    for (const [index, book] of that.books.entries()) {
+                    for (const [index, book] of this.books.entries()) {
                         if (book.id === bookId) {
-                            that.books.splice(index, 1)
+                            this.books.splice(index, 1)
+                            break
                         }
                     }
+                    const { data } = await axios.get('/cart')
+                    this.available = Math.max(
+                        0,
+                        parseInt(data.available, 10) || 0
+                    )
                 }
-            })
+            } catch (e) {}
         }
     }
 }

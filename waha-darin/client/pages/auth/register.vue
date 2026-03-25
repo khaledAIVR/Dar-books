@@ -41,7 +41,7 @@
                                         >
                                             <Icon
                                                 name="user"
-                                                title="Menu"
+                                                :title="$t('Menu')"
                                                 size="normal"
                                             />
                                         </span>
@@ -87,7 +87,7 @@
                                         >
                                             <Icon
                                                 name="email"
-                                                title="Menu"
+                                                :title="$t('Menu')"
                                                 size="normal"
                                         /></span>
                                     </div>
@@ -131,7 +131,7 @@
                                         >
                                             <Icon
                                                 name="password"
-                                                title="Menu"
+                                                :title="$t('Menu')"
                                                 size="normal"
                                         /></span>
                                     </div>
@@ -173,7 +173,7 @@
                                         >
                                             <Icon
                                                 name="password"
-                                                title="Menu"
+                                                :title="$t('Menu')"
                                                 size="normal"
                                         /></span>
                                     </div>
@@ -199,7 +199,7 @@
                                         class="spinner-border text-light mx-2"
                                         role="status"
                                     >
-                                        <span class="sr-only">Loading...</span>
+                                        <span class="sr-only">{{ $t('Loading') }}</span>
                                     </div>
                                     {{ $t('Create New Account') }}
                                 </button>

@@ -19,6 +19,10 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return response()->json(['message' => 'Already authenticated.'], 400);
+            }
+
             return redirect(RouteServiceProvider::HOME);
         }
 

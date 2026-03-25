@@ -35,7 +35,7 @@
             class="d-flex justify-content-center align-items-center p-5"
         >
             <div class="spinner-border text-primary" role="status">
-                <span class="sr-only">Loading...</span>
+                <span class="sr-only">{{ $t('Loading') }}</span>
             </div>
         </div>
         <div role="separator" class="dropdown-divider" />

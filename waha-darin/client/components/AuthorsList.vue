@@ -24,7 +24,7 @@
                         <div class="middle">
                             <icon
                                 name="bookOpen"
-                                title="Use"
+                                :title="$t('Use')"
                                 size="vlarge"
                                 color="white"
                             />

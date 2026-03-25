@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <div class="col-lg-12 m-auto">
-            <alert-success :form="form" :message="status" />
+            <alert-success :form="form" :message="statusMessage" />
 
             <div class="card rounded-more border-primary p-5">
                 <h1 class="card-header bg-white text-center pt-3 border-0">
@@ -53,7 +53,7 @@
                                         >
                                             <Icon
                                                 name="email"
-                                                title="Menu"
+                                                :title="$t('Menu')"
                                                 size="normal"
                                         /></span>
                                     </div>
@@ -77,7 +77,7 @@
                                 class="spinner-border text-primary mx-2"
                                 role="status"
                             >
-                                <span class="sr-only">Loading...</span>
+                                <span class="sr-only">{{ $t('Loading') }}</span>
                             </div>
                             {{ $t('click here to request another') }}
                         </button>
@@ -100,11 +100,19 @@ export default {
     },
 
     data: () => ({
-        status: '',
+        statusKey: '',
         form: new Form({
             email: ''
         })
     }),
+
+    computed: {
+        statusMessage() {
+            return this.statusKey
+                ? this.$t('verification_link_sent')
+                : ''
+        }
+    },
 
     created() {
         if (this.$route.query.email) {
@@ -116,7 +124,7 @@ export default {
         async send() {
             const { data } = await this.form.post('/email/resend')
 
-            this.status = data.status
+            this.statusKey = 'verification_link_sent'
 
             this.form.reset()
         }

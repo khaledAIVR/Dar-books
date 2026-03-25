@@ -20,22 +20,21 @@
                     >
                         <div class="hoverArea">
                             <LazyImage
-                                v-if="category['image_url']"
                                 alt=""
                                 class="img-fluid rounded-circle -fluid article-item__image auhtor-sm-image"
-                                :source="category['image_url']"
+                                :source="getCategoryImageUrl(category)"
                                 :img-styles="'border-radius:50%'"
                             />
                             <div class="middle">
                                 <Icon
                                     name="check"
-                                    title="Use"
+                                    :title="$t('Use')"
                                     size="large"
                                     color="white"
                                 />
                             </div>
                         </div>
-                        <h2 class="mt-2 text-dark">{{ category.name }}</h2>
+                        <h2 class="mt-2 text-dark">{{ $i18n.categoryName(category) }}</h2>
                     </a>
                 </div>
                 <div class="my-5" />
@@ -52,7 +51,7 @@
                             class="spinner-border text-light mx-2"
                             role="status"
                         >
-                            <span class="sr-only">Loading...</span>
+                            <span class="sr-only">{{ $t('Loading') }}</span>
                         </div>
                         {{ $t('Save Changes') }}
                     </button>
@@ -65,6 +64,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import axios from 'axios'
+import { getCategoryImageUrl } from '~/data/categoryImages'
 
 export default {
     middleware: 'auth',
@@ -86,6 +86,7 @@ export default {
         categories: 'category/categories'
     }),
     methods: {
+        getCategoryImageUrl,
         async update() {
             const formData = { categories: this.selectedCategories }
             const { data } = await axios.patch('/settings/categories', formData)

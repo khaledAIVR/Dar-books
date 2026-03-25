@@ -18,12 +18,20 @@ export const getters = {
 
 // mutations
 export const mutations = {
-    SET_CATEGORIES(state, categories) {
-        if (state.categories.categories.length <= 0) {
-            state.categories.total = categories.total
+    SET_CATEGORIES(state, { data, page = 1 }) {
+        if (page === 1) {
+            state.categories.categories = []
+            state.categories.total = data.total
         }
-        for (const category of categories.data) {
-            state.categories.categories.push(category)
+        const names = new Set(state.categories.categories.map((c) => c.name))
+        for (const category of data.data) {
+            if (!names.has(category.name)) {
+                names.add(category.name)
+                state.categories.categories.push(category)
+            }
+        }
+        if (page > 1 && data.data.length === 0) {
+            state.categories.total = state.categories.categories.length
         }
     },
     SET_CATEGORY(state, category) {
@@ -53,7 +61,7 @@ export const actions = {
             const { data } = await axios.get(
                 `/categories?page=${page}&per_page=${per_page}`
             )
-            commit('SET_CATEGORIES', data)
+            commit('SET_CATEGORIES', { data, page })
         } catch (e) {
             commit('FETCH_CATEGORIES_FAILURE')
         }

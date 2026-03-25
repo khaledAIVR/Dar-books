@@ -8,7 +8,7 @@
                     class="circle"
                     :style="`background: ${category.color}`"
                 />
-                {{ category.name }}
+                {{ $i18n.categoryName(category) }}
             </h1>
             <div class="d-flex swiper-buttons">
                 <div
@@ -81,7 +81,7 @@
             class="d-flex justify-content-center align-items-center p-5"
         >
             <div class="spinner-border text-primary" role="status">
-                <span class="sr-only">Loading...</span>
+                <span class="sr-only">{{ $t('Loading') }}</span>
             </div>
         </div>
         <hr class="my-1 m-5" />

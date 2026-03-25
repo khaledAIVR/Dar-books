@@ -2,11 +2,7 @@
 
 namespace App\Observers;
 
-use App\Mail\Borrow\BeforeEndBorrow;
-use App\Mail\Borrow\EndBorrow;
-use App\Mail\Borrow\StartBorrow;
 use App\Models\BorrowOrder;
-use Illuminate\Support\Facades\Mail;
 
 class BorrowOrderObserver
 {
@@ -29,16 +25,11 @@ class BorrowOrderObserver
      */
     public function updated(BorrowOrder $borrowOrder)
     {
-        //
-        if ($borrowOrder->isDirty('status') && strtolower($borrowOrder->status) == 'delivered'){
-            $start      = new StartBorrow($borrowOrder);
-            $end       = new EndBorrow($borrowOrder);
-            $beforeEnd = new BeforeEndBorrow($borrowOrder);
-            Mail::to($borrowOrder->user)->send($start);
-            Mail::to($borrowOrder->user)->later($borrowOrder->end_date, $end);
-            Mail::to($borrowOrder->user)->later($borrowOrder->end_date->subWeeks(2), $beforeEnd);
-        }
-
+        // Email notifications are handled explicitly by:
+        // - Order creation (Received)
+        // - Admin shipment confirmation (Shipped)
+        // - Admin delivery confirmation (Delivered)
+        // - Scheduled command (Return reminder)
     }
 
     /**

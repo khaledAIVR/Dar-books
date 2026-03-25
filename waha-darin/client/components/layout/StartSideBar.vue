@@ -85,9 +85,9 @@
                     </nuxt-link>
                 </li>
                 <li class="list-group-item">
-                    <a href="#">
+                    <nuxt-link :to="{ name: 'faq' }">
                         {{ $t('FAQ') }}
-                    </a>
+                    </nuxt-link>
                 </li>
                 <li class="list-group-item">
                     <a href="#">

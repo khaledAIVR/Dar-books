@@ -1,0 +1,14 @@
+{
+  "rewrites": [
+    {
+      "source": "/((?!_nuxt/).*)",
+      "destination": "/_nuxt/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/_nuxt/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    }
+  ]
+}

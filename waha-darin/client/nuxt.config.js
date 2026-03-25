@@ -1,14 +1,24 @@
-require('dotenv').config()
 const { join } = require('path')
-const { copySync, removeSync } = require('fs-extra')
+// Load Laravel env vars for Nuxt build-time config (APP_URL, API_URL, etc.)
+require('dotenv').config({ path: join(__dirname, '..', '.env') })
+const { copySync, removeSync, pathExistsSync } = require('fs-extra')
 
 module.exports = {
     mode: 'spa', // Comment this for SSR
 
     srcDir: __dirname,
 
+    server: {
+        port: 8000,
+        host: 'localhost'
+    },
+
     env: {
-        apiUrl: process.env.API_URL || process.env.APP_URL + '/api',
+        // Prefer explicit API_URL (set in Laravel root .env for split dev, e.g. http://127.0.0.1:8001/api).
+        // Default `/api` avoids localhost vs 127.0.0.1 mismatch when Laravel serves the built SPA on one port.
+        apiUrl: process.env.API_URL && String(process.env.API_URL).trim() !== ''
+            ? process.env.API_URL
+            : '/api',
         appName: process.env.APP_NAME || 'Waha Darin',
         appLocale: process.env.APP_LOCALE || 'ar',
         githubAuth: !!process.env.GITHUB_CLIENT_ID
@@ -57,7 +67,7 @@ module.exports = {
 
     modules: ['@nuxtjs/router', 'bootstrap-vue/nuxt'],
     bootstrapVue: {
-        components: ['BPopover']
+        components: ['BPopover', 'BModal', 'BButton']
     },
 
     build: {
@@ -72,21 +82,40 @@ module.exports = {
                     generator.nuxt.options.dev === false &&
                     generator.nuxt.options.mode === 'spa'
                 ) {
-                    const publicDir = join(
+                    const clientPublicDir = join(
                         generator.nuxt.options.rootDir,
                         'public',
                         '_nuxt'
                     )
-                    removeSync(publicDir)
-                    copySync(
-                        join(generator.nuxt.options.generate.dir, '_nuxt'),
-                        publicDir
+                    const laravelPublicDir = join(
+                        generator.nuxt.options.rootDir,
+                        '..',
+                        'public',
+                        '_nuxt'
                     )
-                    copySync(
-                        join(generator.nuxt.options.generate.dir, '200.html'),
-                        join(publicDir, 'index.html')
+                    const targets = [clientPublicDir, laravelPublicDir]
+                    targets.forEach((target) => {
+                        removeSync(target)
+                        copySync(
+                            join(generator.nuxt.options.generate.dir, '_nuxt'),
+                            target
+                        )
+                    })
+                    const distDir = generator.nuxt.options.generate.dir
+                    const fallbackFile = pathExistsSync(
+                        join(distDir, 'index.html')
                     )
-                    removeSync(generator.nuxt.options.generate.dir)
+                        ? 'index.html'
+                        : '200.html'
+                    targets.forEach((target) => {
+                        copySync(
+                            join(distDir, fallbackFile),
+                            join(target, 'index.html')
+                        )
+                    })
+                    if (!process.env.KEEP_GENERATE_DIR) {
+                        removeSync(generator.nuxt.options.generate.dir)
+                    }
                 }
             }
         }

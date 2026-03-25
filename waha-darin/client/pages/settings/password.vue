@@ -26,7 +26,7 @@
                                 name="password"
                                 class="form-control"
                                 autocomplete="new-password"
-                                :placeholder="$t('Full name')"
+                                :placeholder="$t('New password')"
                             />
                             <has-error :form="form" field="password" />
                         </div>
@@ -72,7 +72,7 @@
                                     class="spinner-border text-light mx-2"
                                     role="status"
                                 >
-                                    <span class="sr-only">Loading...</span>
+                                    <span class="sr-only">{{ $t('Loading') }}</span>
                                 </span>
                                 {{ $t('Save Changes') }}
                             </button>

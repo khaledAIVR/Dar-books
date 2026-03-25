@@ -1,0 +1,44 @@
+Build the Nuxt frontend and serve it from Laravel
+===============================================
+
+Prerequisites
+------------
+1. You must use Node.js 16 when working inside `client/`. The repository ships with a `.nvmrc` set to `16.20.2`, so `nvm use` (or an equivalent manager) will switch automatically.
+2. Install the frontend dependencies once per Node install:
+   ```
+   cd /Users/khaled-moselmany/Desktop/Dar-books/waha-darin/client
+   nvm use         # or your tool’s equivalent, ensures Node 16.20.2
+   npm install     # only needed after switching Node or pulling new deps
+   ```
+
+Build workflow
+--------------
+1. From the Nuxt client directory, generate the static SPA:
+   ```
+   cd /Users/khaled-moselmany/Desktop/Dar-books/waha-darin/client
+   nvm use
+   npm run generate
+   ```
+   The `nuxt.config.js` build hook copies the freshly generated `_nuxt` bundle and `index.html` into both:
+   * `client/public/_nuxt`
+   * Laravel’s `public/_nuxt`
+
+2. Serve the backend (and the generated frontend) via Laravel:
+   ```
+   cd /Users/khaled-moselmany/Desktop/Dar-books/waha-darin
+   php artisan serve --host=127.0.0.1 --port=8000
+   ```
+   Visit http://127.0.0.1:8000 to verify both API and SPA are available on the same origin.
+
+Repeat after frontend changes
+-----------------------------
+Whenever you modify the client code:
+1. Switch to Node 16 (`nvm use`) inside `client/`.
+2. Run `npm run generate`.
+3. Restart `php artisan serve` if it isn’t already running (stop with `Ctrl+C` or `pkill -f "php artisan serve"`).
+
+That’s all that’s required to rebuild the frontend and publish it through the Laravel backend.
+
+
+
+

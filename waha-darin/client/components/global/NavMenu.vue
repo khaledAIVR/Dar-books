@@ -42,13 +42,16 @@
      *   <li class="vsm-section">
      */
 
-    import {mapGetters} from "vuex";
+    import { mapGetters } from "vuex";
 
     export default {
         name: 'NavMenu',
-        data() {
-            return {
-                menu: [
+        computed: {
+            ...mapGetters({
+                user: 'auth/user'
+            }),
+            menu() {
+                const base = [
                     {
                         title: this.$t('Library'),
                         icon: 'books',
@@ -92,7 +95,7 @@
                             },
                             {
                                 title: this.$t('FAQ'),
-                                routeName: 'favourite',
+                                routeName: 'faq',
                                 // icon:'heart',
                                 // description: this.$t("Control your preferences & info")
                             },
@@ -105,14 +108,8 @@
                         ]
                     },
                 ]
-            }
-        },
-        computed: mapGetters({
-            user: 'auth/user'
-        }),
-        created() {
-            if (this.user) {
-                this.menu.push({
+                if (this.user) {
+                    base.push({
                         title: this.$t('My Account'),
                         icon: 'user-thin',
                         dropdown: 'account',
@@ -142,8 +139,9 @@
                                 description: this.$t("Control your preferences & info")
                             },
                         ]
-                    },
-                )
+                    })
+                }
+                return base
             }
         }
     }
