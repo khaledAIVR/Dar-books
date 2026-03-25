@@ -10,6 +10,7 @@ use App\Observers\SubscriptionObserver;
 use Illuminate\Notifications\Events\NotificationSent;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -31,6 +32,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Render (and similar) terminate TLS at the edge; force HTTPS for asset(), route(), etc.
+        if ($this->app->environment('production') || env('FORCE_HTTPS_URLS', false)) {
+            URL::forceScheme('https');
+        }
+
         Event::listen(NotificationSent::class, function (NotificationSent $event) {
             if (! $event->notification instanceof VerifyEmail) {
                 return;

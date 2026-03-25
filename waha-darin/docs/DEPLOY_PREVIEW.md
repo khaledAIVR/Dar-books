@@ -1,6 +1,6 @@
-# Preview deploy (friends testing): one URL + MySQL
+# Preview deploy (friends testing): one URL + database
 
-This app is **not** deployable as “everything on Vercel”: Vercel does not run PHP (Laravel) or MySQL. Use a **single container** (this `Dockerfile`) on **Railway**, **Render**, or similar, plus a small **MySQL** database.
+This app is **not** deployable as “everything on Vercel”: Vercel does not run PHP (Laravel) or your database. Use a **single container** (this `Dockerfile`) on **Railway**, **Render**, or similar, plus **PostgreSQL** (e.g. **Neon**, recommended for new deploys) or **MySQL** (legacy / Railway-style).
 
 **You only care about Railway right now?** Skip [Build locally](#build-locally) and use the **[Railway deployment runbook](#railway-deploy-runbook)** first. It assumes your **tar of covers/authors is already on the volume** and tells you exactly what to connect so the deployed site behaves like a working local stack (FE + BE + DB + images).
 
@@ -313,9 +313,91 @@ Afterwards, confirm **`APP_URL`** on the web service is your real Railway HTTPS 
 
 Without a **volume**, redeploying wipes anything you copied into `storage/`. For a long-lived preview, add a Railway volume mounted at **`/var/www/html/storage/app/public`** (or broader `/var/www/html/storage`).
 
-## Render
+## Render + Neon (PostgreSQL) + static covers in `public/media`
 
-Same idea: **Web Service** with **Docker**, attach **MySQL** (if available) or external MySQL. Free tier Postgres is **not** drop-in for this repo without switching Laravel to `pgsql`.
+This stack matches **Render free web** (ephemeral disk) and **Neon** (free Postgres, no card): book and author images that are **fixed** live under **`public/media/covers`** and **`public/media/authors`** in Git, so the Docker image serves them without **`storage:link`** or a volume. The API still exposes **`cover_photo`** / **`avatar_photo`**; [`PublicStorageUrl`](../app/Support/PublicStorageUrl.php) uses **`asset()`** for any DB path that starts with **`media/`**, and keeps **`/storage/...`** behavior for legacy rows and Voyager uploads.
+
+### Render service
+
+| Setting | Value |
+|--------|--------|
+| **Root directory** | `waha-darin` if the Git repo root is the parent folder |
+| **Environment** | **Docker** (same [`Dockerfile`](../Dockerfile): Nuxt `generate` → `public/_nuxt`, PHP Apache, Laravel) |
+| **Build / start** | Image `ENTRYPOINT` runs [`docker/entrypoint-preview.sh`](../docker/entrypoint-preview.sh) (Passport keys, `storage:link` for anything still on the public disk) |
+
+### Environment variables (Render)
+
+Use your service’s public HTTPS origin everywhere the app builds links (SPA, API, verification emails, password reset). Replace the placeholder with the URL Render shows for your service (no trailing slash).
+
+| Variable | Example / notes |
+|----------|-----------------|
+| **`APP_URL`** | `https://your-service-name.onrender.com` |
+| **`CLIENT_URL`** | Same as **`APP_URL`** (single-origin Nuxt + Laravel in one container) |
+| **`ASSET_URL`** | Usually same as **`APP_URL`** if you see mixed-content warnings for CSS/JS |
+| **`APP_ENV`** | `production` |
+| **`APP_DEBUG`** | `false` |
+| **`APP_KEY`** | `php artisan key:generate --show` locally, paste into Render |
+| **`JWT_SECRET`** | Long random string (API auth) |
+| **`DATABASE_URL`** | Neon PostgreSQL URL, e.g. `postgresql://…?sslmode=require` |
+| **`DB_CONNECTION`** | `pgsql` |
+| **`DB_SSLMODE`** | `require` if not already in `DATABASE_URL` |
+| **`RUN_MIGRATIONS_ON_BOOT`** | `true` (default): [`entrypoint-preview.sh`](../docker/entrypoint-preview.sh) runs **`php artisan migrate --force`** when **`APP_ENV=production`** |
+| **`SKIP_EMAIL_VERIFICATION`** | Omit or **`false`** for real behaviour: verification emails, password reset, and registration must work. Do **not** set `true` on public production. |
+| **`MAIL_MAILER`** | `smtp` |
+| **`MAIL_DRIVER`** | `smtp` (Laravel 7 reads this too) |
+| **`MAIL_HOST`** | `smtp.sendgrid.net` (or your provider) |
+| **`MAIL_PORT`** | `587` |
+| **`MAIL_USERNAME`** | `apikey` (SendGrid) |
+| **`MAIL_PASSWORD`** | SendGrid API key — set only in Render **Environment** (secret); **rotate** the key if it was ever pasted into chat or committed |
+| **`MAIL_ENCRYPTION`** | `tls` |
+| **`MAIL_FROM_ADDRESS`** | Your verified sender (e.g. `info@your-domain.com`) |
+| **`MAIL_FROM_NAME`** | e.g. `Dar Books` or `${APP_NAME}` |
+
+Optional blueprint: [`render.yaml`](../../render.yaml) at the monorepo root sets non-secret defaults; you still add **`APP_URL`**, **`CLIENT_URL`**, **`APP_KEY`**, **`JWT_SECRET`**, **`DATABASE_URL`**, **`MAIL_PASSWORD`**, etc. in the dashboard.
+
+**HTTPS:** [`AppServiceProvider`](../app/Providers/AppServiceProvider.php) calls **`URL::forceScheme('https')`** in production so generated URLs match Render’s TLS termination.
+
+**Admin (Voyager):** same web service — open **`https://your-service.onrender.com/admin`** after migrations. Create an admin user locally or via **`php artisan voyager:admin`** in a Render shell if you have no admin yet. Voyager uploads still live under ephemeral `storage/` unless you add object storage or a disk.
+
+After first deploy (migrations run on boot), run **once** in a **Render shell** (OAuth clients are not duplicated safely by the entrypoint):
+
+```bash
+php artisan passport:install --force
+```
+
+### Catalog data: MySQL → Neon (no raw dump)
+
+Avoid importing a **MySQL** dump into **Postgres**. After **`migrate`** on an empty Neon database:
+
+1. From a machine that can reach **both** databases, point **`.env`** default connection at Neon (`DB_CONNECTION=pgsql`, `DATABASE_URL`, …) and set **`MYSQL_SOURCE_*`** (see [`.env.example`](../.env.example) and `mysql_source` in [`config/database.php`](../config/database.php)).
+2. Run:
+
+```bash
+php artisan data:import-catalog-from-mysql --force
+```
+
+That copies **publishers**, **authors**, **categories**, **books**, and **pivot_book_categories** only. It **truncates** those tables plus **`rates`** on Postgres when using **`--force`**. **Users, Voyager tables, borrow orders, carts, subscriptions**, etc. are **not** copied — add seeders, another export path, or extend the command if you need them.
+
+### Moving existing covers from `storage/app/public` into `public/media`
+
+On a machine that has the legacy files under **`storage/app/public`**:
+
+```bash
+php artisan media:publish-from-storage
+# php artisan media:publish-from-storage --dry-run   # preview
+```
+
+This writes **`public/media/covers/{book_id}.ext`** (and **`public/media/authors/{author_id}.ext`**) and updates **`books.image`** / **`authors.avatar`**. New dataset imports from **`books:import-new-dataset`** already place covers under **`public/media/covers/`** (see [`ImportNewDatasetCommand`](../app/Console/Commands/ImportNewDatasetCommand.php)); run **`media:publish-from-storage`** afterward if you want filenames normalized to **`{id}.ext`**.
+
+### Ephemeral disk on Render free
+
+- **Passport key files** under `storage/` are recreated when missing (see [Passport / OAuth keys](#passport--oauth-keys-persistence)); **new deploys** can rotate keys unless you persist `storage/`, so expect **re-login** / re-issued tokens for previews.
+- **Voyager uploads** to **`storage/app/public`** are still **lost** on redeploy without external object storage or a paid disk — prefer **`public/media`** for long-lived marketing/catalog images.
+- **`/storage/...`** remains for legacy paths and admin uploads; it is **not** required for rows that already store **`media/...`**.
+
+## Render (MySQL only, legacy)
+
+You can still run the same Docker image against **managed MySQL** on Render if you set **`DB_CONNECTION=mysql`** and a MySQL **`DATABASE_URL`**. The runtime image includes **`pdo_pgsql`** only; for MySQL you would need to **add `pdo_mysql`** back to the [`Dockerfile`](../Dockerfile) for that variant.
 
 ## Passport / OAuth keys (persistence)
 

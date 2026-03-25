@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Services\BookBulkImportService;
 use Illuminate\Console\Command;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ImportNewDatasetCommand extends Command
@@ -15,7 +14,7 @@ class ImportNewDatasetCommand extends Command
         {--covers-dir= : Directory containing cover images (default: new_dataset/covers)}
         {--dry-run : Parse and report row/cover stats without writing DB or copying files}';
 
-    protected $description = 'Import books from the new_dataset Excel file, copy covers into public storage, run BookBulkImportService.';
+    protected $description = 'Import books from the new_dataset Excel file, copy covers into public/media/covers, run BookBulkImportService.';
 
     public function handle(BookBulkImportService $importer): int
     {
@@ -57,11 +56,13 @@ class ImportNewDatasetCommand extends Command
         $rows = [];
         $missingCovers = 0;
         $copiedCovers = 0;
-        $destPrefix = 'books/new_dataset';
-        $disk = Storage::disk('public');
+        $destPrefix = 'media/covers';
 
         if (!$this->option('dry-run')) {
-            $disk->makeDirectory($destPrefix);
+            $dir = public_path($destPrefix);
+            if (!is_dir($dir)) {
+                mkdir($dir, 0755, true);
+            }
         }
 
         foreach ($parsed['rows'] as $raw) {
@@ -79,7 +80,7 @@ class ImportNewDatasetCommand extends Command
                 } elseif ($this->option('dry-run')) {
                     ++$copiedCovers;
                 } else {
-                    $rel = $this->storeCoverFile($disk, $destPrefix, $src, $coverName, (string) ($row['title'] ?? ''), (string) ($row['isbn'] ?? ''));
+                    $rel = $this->storeCoverFile($destPrefix, $src, $coverName, (string) ($row['title'] ?? ''), (string) ($row['isbn'] ?? ''));
                     $row['image'] = $rel;
                     ++$copiedCovers;
                 }
@@ -176,7 +177,7 @@ class ImportNewDatasetCommand extends Command
         return '';
     }
 
-    private function storeCoverFile($disk, string $destPrefix, string $srcPath, string $originalName, string $title, string $isbn): string
+    private function storeCoverFile(string $destPrefix, string $srcPath, string $originalName, string $title, string $isbn): string
     {
         $ext = strtolower(pathinfo($originalName, PATHINFO_EXTENSION) ?: 'jpg');
         $ext = preg_replace('/[^a-z0-9]/', '', $ext) ?: 'jpg';
@@ -189,9 +190,11 @@ class ImportNewDatasetCommand extends Command
 
         $name = $base.'.'.$ext;
         $rel = $destPrefix.'/'.$name;
+        $abs = public_path($rel);
         $i = 2;
-        while ($disk->exists($rel)) {
+        while (is_file($abs)) {
             $rel = $destPrefix.'/'.$base.'_'.$i.'.'.$ext;
+            $abs = public_path($rel);
             ++$i;
         }
 
@@ -199,7 +202,7 @@ class ImportNewDatasetCommand extends Command
         if ($stream === false) {
             return '';
         }
-        $disk->put($rel, stream_get_contents($stream));
+        file_put_contents($abs, stream_get_contents($stream));
         fclose($stream);
 
         return $rel;

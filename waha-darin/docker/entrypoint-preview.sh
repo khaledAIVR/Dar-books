@@ -32,8 +32,15 @@ if [ ! -f storage/oauth-private.key ]; then
     php artisan passport:keys --force 2>/dev/null || true
 fi
 
-# Book covers live under storage/app/public; URLs use /storage/... via this symlink.
+# Legacy / Voyager uploads live under storage/app/public; URLs use /storage/... via this symlink.
+# Versioned catalog images can live under public/media/... (no symlink; see PublicStorageUrl).
 php artisan storage:link 2>/dev/null || true
+
+# Production deploys (e.g. Render): run DB migrations before serving traffic.
+# Set RUN_MIGRATIONS_ON_BOOT=false to skip (local Docker without DB, etc.).
+if [ "${APP_ENV:-local}" = "production" ] && [ "${RUN_MIGRATIONS_ON_BOOT:-true}" != "false" ]; then
+    php artisan migrate --force
+fi
 
 # passport:keys may create files as root; Apache/PHP run as www-data.
 chown -R www-data:www-data storage

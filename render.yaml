@@ -1,0 +1,43 @@
+# Render Blueprint (optional): connect this Git repo and apply, or create the Web Service manually.
+# If your Render service "Root Directory" is empty, use rootDir below. If you deploy only `waha-darin` as the repo root, remove rootDir and set dockerfilePath to ./Dockerfile.
+#
+# Set secrets in the Render dashboard (never commit real keys): APP_KEY, JWT_SECRET, DATABASE_URL, MAIL_PASSWORD, etc.
+# See waha-darin/docs/DEPLOY_PREVIEW.md → "Render + Neon" for the full variable list.
+
+services:
+  - type: web
+    name: waha-darin
+    runtime: docker
+    rootDir: waha-darin
+    dockerfilePath: ./Dockerfile
+    plan: free
+    envVars:
+      - key: APP_NAME
+        value: Dar Books
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: RUN_MIGRATIONS_ON_BOOT
+        value: "true"
+      - key: SKIP_EMAIL_VERIFICATION
+        value: "false"
+      - key: MAIL_MAILER
+        value: smtp
+      - key: MAIL_DRIVER
+        value: smtp
+      - key: MAIL_HOST
+        value: smtp.sendgrid.net
+      - key: MAIL_PORT
+        value: "587"
+      - key: MAIL_USERNAME
+        value: apikey
+      - key: MAIL_ENCRYPTION
+        value: tls
+      - key: MAIL_FROM_ADDRESS
+        value: info@darbooks.de
+      # Optional: override in dashboard to match APP_NAME
+      - key: MAIL_FROM_NAME
+        value: Dar Books
+      - key: DB_CONNECTION
+        value: pgsql

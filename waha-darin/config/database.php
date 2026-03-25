@@ -75,7 +75,28 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'schema' => 'public',
-            'sslmode' => 'prefer',
+            'sslmode' => env('DB_SSLMODE', 'prefer'),
+        ],
+
+        /*
+        | Optional read source for `php artisan data:import-catalog-from-mysql` while the app
+        | default connection is PostgreSQL (e.g. Neon). Leave unset when not importing.
+        */
+        'mysql_source' => [
+            'driver' => 'mysql',
+            'url' => env('MYSQL_SOURCE_DATABASE_URL'),
+            'host' => env('MYSQL_SOURCE_HOST', '127.0.0.1'),
+            'port' => env('MYSQL_SOURCE_PORT', '3306'),
+            'database' => env('MYSQL_SOURCE_DATABASE', ''),
+            'username' => env('MYSQL_SOURCE_USERNAME', 'root'),
+            'password' => env('MYSQL_SOURCE_PASSWORD', ''),
+            'unix_socket' => env('MYSQL_SOURCE_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
         ],
 
         'sqlsrv' => [
