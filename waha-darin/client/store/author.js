@@ -40,7 +40,10 @@ export const mutations = {
                 author.books.push(book)
             }
         }
-    }
+    },
+    FETCH_AUTHORS_FAILURE() {},
+    FETCH_CATEGORIES_FAILURE() {},
+    SET_AUTHOR_BOOKS_FAILURE() {}
 }
 
 // actions
@@ -56,6 +59,9 @@ export const actions = {
             commit('SET_AUTHORS', data)
         } catch (e) {
             commit('FETCH_AUTHORS_FAILURE')
+            if (typeof console !== 'undefined' && console.error) {
+                console.error('[author/fetchAuthors]', e.response?.status, e.message)
+            }
         }
     },
     async fetchAuthorBooks({ state, commit }, authorId) {
@@ -75,6 +81,9 @@ export const actions = {
             commit('SET_AUTHOR_BOOKS', data)
         } catch (e) {
             commit('SET_AUTHOR_BOOKS_FAILURE')
+            if (typeof console !== 'undefined' && console.error) {
+                console.error('[author/fetchAuthorBooks]', e.response?.status, e.message)
+            }
         }
     },
     async fetchAllAuthorBooksPaginated(
@@ -97,6 +106,9 @@ export const actions = {
             commit('SET_AUTHOR_BOOKS', data)
         } catch (e) {
             commit('FETCH_CATEGORIES_FAILURE')
+            if (typeof console !== 'undefined' && console.error) {
+                console.error('[author/fetchAllAuthorBooksPaginated]', e.response?.status, e.message)
+            }
         }
     }
 }

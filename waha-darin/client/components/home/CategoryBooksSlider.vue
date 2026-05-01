@@ -33,7 +33,10 @@
             :auto-update="true"
             @slider-move="onSwiperSlideMoveStart"
         >
-            <swiper-slide v-for="book in newCategory.books" :key="book.book_id">
+            <swiper-slide
+                v-for="book in newCategory.books"
+                :key="'c' + category.id + '-b' + (book.id || book.book_id)"
+            >
                 <nuxt-link
                     :id="'tooltip-target-' + book.id + category.id"
                     :to="{ name: 'book', params: { slug: book.slug } }"
@@ -68,7 +71,7 @@
                     </h5>
                     <p class="author font-weight-lighter mb-3 text-dark">
                         {{ $t('Author:') }}
-                        {{ book.author.name }}
+                        {{ book.author ? book.author.name : '' }}
                     </p>
                 </nuxt-link>
             </swiper-slide>
