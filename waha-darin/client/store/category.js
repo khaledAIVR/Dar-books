@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Vue from 'vue'
+import { shuffledCopy } from '~/utils'
 
 // state
 export const state = () => ({
@@ -81,6 +82,7 @@ export const actions = {
         try {
             const { data } = await axios.get(`/books?category_id=${categoryId}`)
             data.category_id = categoryId
+            data.data = shuffledCopy(data.data)
             commit('SET_CATEGORY_BOOKS', data)
         } catch (e) {
             commit('FETCH_CATEGORIES_FAILURE')

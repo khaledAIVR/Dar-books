@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { shuffledCopy } from '~/utils'
 
 // state
 export const state = () => ({
@@ -25,7 +26,7 @@ export const actions = {
         }
         try {
             const { data } = await axios.get('/books')
-            commit('SET_BOOKS', data.data)
+            commit('SET_BOOKS', shuffledCopy(data.data))
         } catch (e) {
             commit('FETCH_BOOKS_FAILURE')
         }
