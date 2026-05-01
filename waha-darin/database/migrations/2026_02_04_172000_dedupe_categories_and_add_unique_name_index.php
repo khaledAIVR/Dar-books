@@ -49,7 +49,7 @@ class DedupeCategoriesAndAddUniqueNameIndex extends Migration
         $dups = DB::table('pivot_book_categories')
             ->selectRaw('MIN(id) as keep_id, book_id, category_id, COUNT(*) as c')
             ->groupBy('book_id', 'category_id')
-            ->having('c', '>', 1)
+            ->havingRaw('COUNT(*) > 1')
             ->get();
 
         foreach ($dups as $row) {
