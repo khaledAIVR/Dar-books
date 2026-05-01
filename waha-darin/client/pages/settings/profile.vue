@@ -207,13 +207,24 @@ export default {
     }),
 
     created() {
-        // Fill the form with user data.
-        this.form.keys().forEach((key) => {
-            this.form[key] = this.user[key]
-        })
+        if (this.user) {
+            this.fillForm()
+        }
+    },
+
+    watch: {
+        user(val) {
+            if (val) this.fillForm()
+        }
     },
 
     methods: {
+        fillForm() {
+            this.form.keys().forEach((key) => {
+                this.form[key] = this.user[key]
+            })
+        },
+
         async update() {
             const { data } = await this.form.patch('/settings/profile')
             if (data.status === 200) {
