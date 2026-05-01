@@ -14,10 +14,14 @@ export default ({ app, store, redirect }) => {
     axios.interceptors.request.use((request) => {
         request.baseURL = process.env.apiUrl
 
-        const token = store.getters['auth/token']
+        const token = (store.getters['auth/token'] || '').trim()
 
         if (token) {
-            request.headers.common.Authorization = `Bearer ${token}`
+            const bearer = token.match(/^Bearer\s+/i)
+                ? token
+                : `Bearer ${token}`
+            request.headers.Authorization = bearer
+            request.headers.common.Authorization = bearer
         }
 
         const locale = store.getters['lang/locale']

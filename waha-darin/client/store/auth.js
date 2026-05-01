@@ -26,6 +26,7 @@ export const mutations = {
 
     FETCH_USER_FAILURE(state) {
         state.token = null
+        state.user = null
     },
 
     LOGOUT(state) {
@@ -40,21 +41,61 @@ export const mutations = {
 
 // actions
 export const actions = {
-    saveToken({ commit, dispatch }, { token, remember }) {
-        commit('SET_TOKEN', token)
+    saveToken({ commit }, { token, remember }) {
+        const clean = String(token || '').trim()
+        commit('SET_TOKEN', clean)
 
-        Cookies.set('token', token, { expires: remember ? 365 : null })
+        const opts = { sameSite: 'lax' }
+        if (remember) {
+            opts.expires = 365
+        }
+        if (typeof window !== 'undefined' && window.location.protocol === 'https:') {
+            opts.secure = true
+        }
+        Cookies.set('token', clean, opts)
     },
 
     async fetchUser({ commit }) {
-        try {
-            const { data } = await axios.get('/user')
+        let lastError = null
+        for (let attempt = 0; attempt < 3; attempt++) {
+            try {
+                const { data } = await axios.get('/user')
+                commit('FETCH_USER_SUCCESS', data)
 
-            commit('FETCH_USER_SUCCESS', data)
-        } catch (e) {
-            Cookies.remove('token')
+                return
+            } catch (e) {
+                lastError = e
+                const status = e.response && e.response.status
 
-            commit('FETCH_USER_FAILURE')
+                if (status === 401) {
+                    Cookies.remove('token')
+                    commit('FETCH_USER_FAILURE')
+
+                    return
+                }
+
+                const retry =
+                    attempt < 2 &&
+                    (!status ||
+                        status >= 500 ||
+                        status === 429 ||
+                        status === 408)
+
+                if (retry) {
+                    await new Promise((resolve) =>
+                        setTimeout(resolve, 500 * (attempt + 1))
+                    )
+
+                    continue
+                }
+
+                break
+            }
+        }
+
+        if (process.env.NODE_ENV === 'development') {
+            // eslint-disable-next-line no-console
+            console.warn('[auth/fetchUser] failed after retries', lastError)
         }
     },
 

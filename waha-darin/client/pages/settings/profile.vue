@@ -222,13 +222,23 @@ export default {
     },
 
     created() {
-        const source = this.prefetchedUser && this.prefetchedUser.email
-            ? this.prefetchedUser
-            : this.user
+        const source =
+            this.prefetchedUser && this.prefetchedUser.email
+                ? this.prefetchedUser
+                : this.user
         if (source) {
             this.form.keys().forEach((key) => {
                 this.form[key] = source[key] || ''
             })
+        }
+    },
+
+    async mounted() {
+        if (this.$store.getters['auth/token'] && !this.user) {
+            await this.$store.dispatch('auth/fetchUser')
+        }
+        if (this.user) {
+            this.fillForm()
         }
     },
 
