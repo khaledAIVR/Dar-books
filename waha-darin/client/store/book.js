@@ -13,20 +13,20 @@ export const getters = {
 // mutations
 export const mutations = {
     SET_BOOKS(state, books) {
-        for (const book of books) {
-            state.books.push(book)
-        }
+        state.books = books
     }
 }
 
 // actions
 export const actions = {
-    async fetchBooks({ commit }) {
+    async fetchBooks({ commit, state }) {
+        if (state.books.length > 0) {
+            return
+        }
         try {
             const { data } = await axios.get('/books')
             commit('SET_BOOKS', data.data)
         } catch (e) {
-            // debugger
             commit('FETCH_BOOKS_FAILURE')
         }
     }

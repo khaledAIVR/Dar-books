@@ -13,9 +13,11 @@ class BookController extends Controller
 {
     public function index(Request $request)
     {
+        // Avoid inRandomOrder(): on Postgres/MySQL it forces expensive scans and slows every
+        // homepage/category slider request (each hits this endpoint).
         $books = Book::select('id', 'title', 'slug', 'description', 'image', 'author_id', 'publisher_id', 'internal_code')
             ->with('author:id,name,slug,avatar', 'publisher:name,id,slug,avatar')
-            ->inRandomOrder()
+            ->orderByDesc('id')
             ->Filter($request)
             ->paginate(20);
         return response()->json($books, 200);
