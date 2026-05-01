@@ -321,7 +321,7 @@ This stack matches **Render free web** (ephemeral disk) and **Neon** (free Postg
 
 | Setting | Value |
 |--------|--------|
-| **Root directory** | `waha-darin` if the Git repo root is the parent folder |
+| **Root directory** | For GitHub repo **Dar-books** (`khaledAIVR/Dar-books`): set **`waha-darin`** (the Laravel app is inside that folder, not at the repo root) |
 | **Environment** | **Docker** (same [`Dockerfile`](../Dockerfile): Nuxt `generate` → `public/_nuxt`, PHP Apache, Laravel) |
 | **Build / start** | Image `ENTRYPOINT` runs [`docker/entrypoint-preview.sh`](../docker/entrypoint-preview.sh) (Passport keys, `storage:link` for anything still on the public disk) |
 
@@ -353,7 +353,7 @@ Use your service’s public HTTPS origin everywhere the app builds links (SPA, A
 | **`MAIL_FROM_ADDRESS`** | Your verified sender (e.g. `info@your-domain.com`) |
 | **`MAIL_FROM_NAME`** | e.g. `Dar Books` or `${APP_NAME}` |
 
-Optional blueprint: [`render.yaml`](../../render.yaml) at the monorepo root sets non-secret defaults; you still add **`APP_URL`**, **`CLIENT_URL`**, **`APP_KEY`**, **`JWT_SECRET`**, **`DATABASE_URL`**, **`MAIL_PASSWORD`**, etc. in the dashboard.
+Optional blueprint: [`render.yaml`](../../render.yaml) at the **Dar-books** repo root uses **`rootDir: waha-darin`** to match this layout; you still add **`APP_URL`**, **`CLIENT_URL`**, **`APP_KEY`**, **`JWT_SECRET`**, **`DATABASE_URL`**, **`MAIL_PASSWORD`**, etc. in the dashboard.
 
 **HTTPS:** [`AppServiceProvider`](../app/Providers/AppServiceProvider.php) calls **`URL::forceScheme('https')`** in production so generated URLs match Render’s TLS termination.
 

@@ -78,11 +78,14 @@ Route::group(['middleware' => 'guest:api', 'namespace' => 'Auth'], function () {
     Route::post('password/email', 'ForgotPasswordController@sendResetLinkEmail');
     Route::post('password/reset', 'ResetPasswordController@reset');
 
-    Route::post('email/verify/{id}/{hash}', 'VerificationController@verify')->name('verification.verify');
-    Route::post('email/resend', 'VerificationController@resend');
-
     Route::post('oauth/{driver}', 'OAuthController@redirectToProvider');
     Route::get('oauth/{driver}/callback', 'OAuthController@handleProviderCallback')->name('oauth.callback');
+});
+
+// Email verification is accessible to both guests and authenticated users
+Route::group(['namespace' => 'Auth'], function () {
+    Route::post('email/verify/{id}/{hash}', 'VerificationController@verify')->name('verification.verify');
+    Route::post('email/resend', 'VerificationController@resend');
 });
 
 /*

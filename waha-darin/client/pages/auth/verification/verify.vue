@@ -3,8 +3,9 @@
         <div class="col-lg-12 m-auto">
             <div class="card rounded-more border-primary p-5">
                 <h1 class="card-header bg-white text-center pt-3 border-0">
-                    {{ $t('Verification Error') }}
+                    {{ success ? $t('Email Verified') : $t('Verification Error') }}
                 </h1>
+                <p v-if="status" class="text-center mt-3">{{ status }}</p>
             </div>
         </div>
     </div>
@@ -15,12 +16,11 @@ import axios from 'axios'
 
 const qs = (params) =>
     Object.keys(params)
-        .map((key) => `${key}=${params[key]}`)
+        .map((key) => `${key}=${encodeURIComponent(params[key])}`)
         .join('&')
 
 export default {
     layout: 'auth',
-    middleware: 'guest',
 
     metaInfo() {
         return { title: this.$t('verify_email') }
@@ -33,11 +33,12 @@ export default {
             )
             return { success: true, status: data.status }
         } catch (e) {
-            return { success: false, status: e.response.data.status }
+            return { success: false, status: e?.response?.data?.status || e?.response?.data?.message }
         }
     },
+
     mounted() {
-        this.$router.push({ name: 'home' })
+        setTimeout(() => this.$router.push({ name: 'home' }), 2000)
     }
 }
 </script>

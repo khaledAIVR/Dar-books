@@ -36,6 +36,10 @@ class VerificationController extends Controller
     {
         $user = User::find((int) $request->route('id'));
 
+        if (! $user) {
+            return response()->json(['status' => trans('verification.user')], 404);
+        }
+
         if ($user->hasVerifiedEmail()) {
             return response()->json([
                 'status' => trans('verification.already_verified'),
