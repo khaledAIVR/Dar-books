@@ -194,6 +194,7 @@ export default {
     scrollToTop: false,
 
     data: () => ({
+        prefetchedUser: {},
         form: new Form({
             name: '',
             email: '',
@@ -207,16 +208,27 @@ export default {
         user: 'auth/user'
     }),
 
-    async created() {
-        if (this.user) {
-            this.fillForm()
-        } else {
-            // Fallback: fetch directly if store hasn't hydrated yet
+    async asyncData({ store }) {
+        // Ensure user is in the store before the component renders
+        if (!store.getters['auth/user']) {
             try {
-                const { data } = await axios.get('/user')
-                this.$store.commit('auth/FETCH_USER_SUCCESS', data)
-                this.fillForm()
+                await store.dispatch('auth/fetchUser')
             } catch (e) {}
+        }
+        const user = store.getters['auth/user']
+        return {
+            prefetchedUser: user || {}
+        }
+    },
+
+    created() {
+        const source = this.prefetchedUser && this.prefetchedUser.email
+            ? this.prefetchedUser
+            : this.user
+        if (source) {
+            this.form.keys().forEach((key) => {
+                this.form[key] = source[key] || ''
+            })
         }
     },
 
