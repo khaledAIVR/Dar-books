@@ -185,6 +185,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import Form from 'vform'
 import { mapGetters } from 'vuex'
 
@@ -206,9 +207,16 @@ export default {
         user: 'auth/user'
     }),
 
-    created() {
+    async created() {
         if (this.user) {
             this.fillForm()
+        } else {
+            // Fallback: fetch directly if store hasn't hydrated yet
+            try {
+                const { data } = await axios.get('/user')
+                this.$store.commit('auth/FETCH_USER_SUCCESS', data)
+                this.fillForm()
+            } catch (e) {}
         }
     },
 

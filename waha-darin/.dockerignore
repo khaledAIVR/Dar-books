@@ -10,6 +10,8 @@ Dockerfile
 # JS (built in frontend stage)
 client/node_modules
 **/node_modules
+# Force Docker to always use freshly generated Nuxt build, not the committed pre-built files
+public/_nuxt
 
 # PHP deps installed in image
 /vendor
