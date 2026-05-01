@@ -8,7 +8,7 @@
         >
             <li
                 v-for="book in formData.selectedBooks"
-                :key="book.id || book.book_id"
+                :key="book.book_id"
                 class="d-flex align-items-start border-info"
             >
                 <div class="d-flex">

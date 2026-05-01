@@ -7,7 +7,7 @@
         <ul v-if="!loading" class="list-group">
             <li
                 v-for="book in books"
-                :key="book.id || book.book_id"
+                :key="book.book_id"
                 class="list-group-item list-group-item-action d-flex align-items-start"
             >
                 <div class="d-flex">

@@ -16,8 +16,7 @@ export const mutations = {
         for (const book of books) {
             state.books.push(book)
         }
-    },
-    FETCH_BOOKS_FAILURE() {}
+    }
 }
 
 // actions
@@ -27,10 +26,8 @@ export const actions = {
             const { data } = await axios.get('/books')
             commit('SET_BOOKS', data.data)
         } catch (e) {
+            // debugger
             commit('FETCH_BOOKS_FAILURE')
-            if (typeof console !== 'undefined' && console.error) {
-                console.error('[book/fetchBooks]', e.response?.status, e.message)
-            }
         }
     }
 }

@@ -34,7 +34,6 @@ export const mutations = {
             state.categories.total = state.categories.categories.length
         }
     },
-    FETCH_CATEGORIES_FAILURE() {},
     SET_CATEGORY(state, category) {
         state.categories.categories.push(category[0])
     },
@@ -65,9 +64,6 @@ export const actions = {
             commit('SET_CATEGORIES', { data, page })
         } catch (e) {
             commit('FETCH_CATEGORIES_FAILURE')
-            if (typeof console !== 'undefined' && console.error) {
-                console.error('[category/fetchCategories]', e.response?.status, e.message)
-            }
         }
     },
     async fetchCategoryBooks({ state, commit }, categoryId) {
@@ -88,9 +84,6 @@ export const actions = {
             commit('SET_CATEGORY_BOOKS', data)
         } catch (e) {
             commit('FETCH_CATEGORIES_FAILURE')
-            if (typeof console !== 'undefined' && console.error) {
-                console.error('[category/fetchCategoryBooks]', e.response?.status, e.message)
-            }
         }
     },
     async fetchAllCategoryBooksPaginated(
@@ -113,9 +106,6 @@ export const actions = {
             commit('SET_CATEGORY_BOOKS', data)
         } catch (e) {
             commit('FETCH_CATEGORIES_FAILURE')
-            if (typeof console !== 'undefined' && console.error) {
-                console.error('[category/fetchAllCategoryBooksPaginated]', e.response?.status, e.message)
-            }
         }
     }
 }

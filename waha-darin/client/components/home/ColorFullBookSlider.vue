@@ -31,7 +31,7 @@
                                     </h5>
                                     <p class="author font-weight-lighter mb-1">
                                         {{ $t('Author:') }}
-                                        {{ book.author ? book.author.name : '' }}
+                                        {{ book.author.name }}
                                     </p>
                                     <p class="desc p-2">
                                         {{ book.description | truncate(55) }}
