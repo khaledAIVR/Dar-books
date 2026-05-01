@@ -20,6 +20,26 @@ class Author extends Model
 
     public function getAvatarPhotoAttribute()
     {
+        $committed = $this->committedCatalogAvatarUrl();
+        if ($committed !== null) {
+            return $committed;
+        }
+
         return $this->avatar ? PublicStorageUrl::url($this->avatar) : '/author-placeholder.png';
+    }
+
+    /**
+     * Avatar shipped in public/media/authors/{id}.ext (see media:publish-from-storage).
+     */
+    private function committedCatalogAvatarUrl(): ?string
+    {
+        foreach (['jpg', 'jpeg', 'gif', 'png', 'webp'] as $ext) {
+            $rel = 'media/authors/'.$this->id.'.'.$ext;
+            if (is_file(public_path($rel))) {
+                return asset($rel);
+            }
+        }
+
+        return null;
     }
 }

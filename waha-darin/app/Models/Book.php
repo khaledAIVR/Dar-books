@@ -55,9 +55,31 @@ class Book extends Model
 
     public function getCoverPhotoAttribute()
     {
+        // Prefer Git-baked files under public/media (Docker on Render often has no storage/app/public blobs;
+        // /storage/... then falls through to the SPA and returns HTML — broken <img> tags.)
+        $committed = $this->committedCatalogCoverUrl();
+        if ($committed !== null) {
+            return $committed;
+        }
+
         return $this->image
             ? PublicStorageUrl::url($this->image)
             : PublicStorageUrl::url('default-book.png');
+    }
+
+    /**
+     * Cover shipped in public/media/covers/{id}.ext (see media:publish-from-storage).
+     */
+    private function committedCatalogCoverUrl(): ?string
+    {
+        foreach (['jpg', 'jpeg', 'gif', 'png', 'webp'] as $ext) {
+            $rel = 'media/covers/'.$this->id.'.'.$ext;
+            if (is_file(public_path($rel))) {
+                return asset($rel);
+            }
+        }
+
+        return null;
     }
 
 }
