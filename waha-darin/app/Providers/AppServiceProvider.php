@@ -2,11 +2,13 @@
 
 namespace App\Providers;
 
+use App\Mail\Transport\BrevoTransport;
 use App\Models\BorrowOrder;
 use App\Models\Subscription;
 use App\Notifications\VerifyEmail;
 use App\Observers\BorrowOrderObserver;
 use App\Observers\SubscriptionObserver;
+use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Notifications\Events\NotificationSent;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
@@ -22,7 +24,22 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->booted(function () {
+            $this->registerBrevoMailTransport();
+        });
+    }
+
+    private function registerBrevoMailTransport(): void
+    {
+        $this->app->make('mail.manager')->extend('brevo', function () {
+            $key = trim((string) config('services.brevo.key'));
+            $client = new GuzzleClient([
+                'timeout' => (float) config('services.brevo.timeout', 60),
+                'connect_timeout' => (float) config('services.brevo.connect_timeout', 20),
+            ]);
+
+            return new BrevoTransport($client, $key);
+        });
     }
 
     /**

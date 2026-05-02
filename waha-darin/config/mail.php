@@ -29,7 +29,7 @@ return [
     | mailers below. You are free to add additional mailers as required.
     |
     | Supported: "smtp", "sendmail", "mailgun", "ses",
-    |            "postmark", "log", "array"
+    |            "postmark", "brevo", "log", "array"
     |
     */
 
@@ -42,6 +42,14 @@ return [
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
             'timeout' => null,
+        ],
+
+        /*
+         * Brevo (Sendinblue) transactional email over HTTPS — no SMTP.
+         * Requires BREVO_API_KEY; set MAIL_MAILER=brevo for production.
+         */
+        'brevo' => [
+            'transport' => 'brevo',
         ],
 
         'ses' => [
