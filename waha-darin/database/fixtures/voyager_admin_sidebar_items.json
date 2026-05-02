@@ -1,0 +1,82 @@
+[
+    {
+        "title": "Books",
+        "route": "voyager.books.index",
+        "order": 3,
+        "target": "_self",
+        "icon_class": "voyager-book",
+        "color": null
+    },
+    {
+        "title": "Categories",
+        "route": "voyager.categories.index",
+        "order": 4,
+        "target": "_self",
+        "icon_class": "voyager-categories",
+        "color": null
+    },
+    {
+        "title": "Authors",
+        "route": "voyager.authors.index",
+        "order": 5,
+        "target": "_self",
+        "icon_class": "voyager-pen",
+        "color": null
+    },
+    {
+        "title": "Publishers",
+        "route": "voyager.publishers.index",
+        "order": 6,
+        "target": "_self",
+        "icon_class": "voyager-sound",
+        "color": null
+    },
+    {
+        "title": "Posts",
+        "route": "voyager.posts.index",
+        "order": 6,
+        "target": "_self",
+        "icon_class": "voyager-news",
+        "color": null
+    },
+    {
+        "title": "Hooks",
+        "route": "voyager.hooks",
+        "order": 7,
+        "target": "_self",
+        "icon_class": "voyager-hook",
+        "color": null
+    },
+    {
+        "title": "Plans",
+        "route": "voyager.plans.index",
+        "order": 7,
+        "target": "_self",
+        "icon_class": "voyager-world",
+        "color": "#000000"
+    },
+    {
+        "title": "Pages",
+        "route": "voyager.pages.index",
+        "order": 7,
+        "target": "_self",
+        "icon_class": "voyager-file-text",
+        "color": null
+    },
+    {
+        "title": "Borrow Orders",
+        "route": "voyager.borrow-orders.index",
+        "order": 8,
+        "target": "_self",
+        "icon_class": "voyager-list",
+        "color": null
+    },
+    {
+        "title": "Subscriptions",
+        "route": "voyager.subscriptions.index",
+        "order": 9,
+        "target": "_self",
+        "icon_class": "voyager-bookmark",
+        "color": "#000000"
+    }
+]

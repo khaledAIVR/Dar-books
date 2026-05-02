@@ -38,8 +38,12 @@ php artisan storage:link 2>/dev/null || true
 
 # Production deploys (e.g. Render): run DB migrations before serving traffic.
 # Set RUN_MIGRATIONS_ON_BOOT=false to skip (local Docker without DB, etc.).
-if [ "${APP_ENV:-local}" = "production" ] && [ "${RUN_MIGRATIONS_ON_BOOT:-true}" != "false" ]; then
-    php artisan migrate --force
+if [ "${APP_ENV:-local}" = "production" ]; then
+    if [ "${RUN_MIGRATIONS_ON_BOOT:-true}" != "false" ]; then
+        php artisan migrate --force
+    fi
+    # Voyager menus/BREAD/metadata live in DB; without this seed, admin is empty despite migrations.
+    php artisan voyager:bootstrap-if-empty 2>/dev/null || true
 fi
 
 # passport:keys may create files as root; Apache/PHP run as www-data.

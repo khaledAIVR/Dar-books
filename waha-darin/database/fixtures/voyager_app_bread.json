@@ -1,0 +1,2341 @@
+{
+    "authors": {
+        "data_type": {
+            "name": "authors",
+            "slug": "authors",
+            "display_name_singular": "Author",
+            "display_name_plural": "Authors",
+            "icon": "voyager-pen",
+            "model_name": "App\\Models\\Author",
+            "policy_name": null,
+            "controller": null,
+            "description": null,
+            "generate_permissions": 1,
+            "server_side": 1,
+            "details": {
+                "order_column": null,
+                "order_display_column": null,
+                "order_direction": "asc",
+                "default_search_key": "name",
+                "scope": null
+            }
+        },
+        "data_rows": [
+            {
+                "field": "id",
+                "type": "text",
+                "display_name": "Id",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 1
+            },
+            {
+                "field": "avatar",
+                "type": "image",
+                "display_name": "Avatar",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "validation": {
+                        "edit": {
+                            "rule": "nullable"
+                        },
+                        "add": {
+                            "rule": "required"
+                        }
+                    }
+                },
+                "order": 2
+            },
+            {
+                "field": "name",
+                "type": "text",
+                "display_name": "Name",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "validation": {
+                        "rule": "required"
+                    }
+                },
+                "order": 3
+            },
+            {
+                "field": "slug",
+                "type": "text",
+                "display_name": "Slug",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "slugify": {
+                        "origin": "name",
+                        "forceUpdate": true,
+                        "validation": {
+                            "rule": "required|unique:authors,slug"
+                        }
+                    }
+                },
+                "order": 4
+            },
+            {
+                "field": "description",
+                "type": "text_area",
+                "display_name": "Description",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 5
+            },
+            {
+                "field": "created_at",
+                "type": "timestamp",
+                "display_name": "Created At",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 0,
+                "delete": 1,
+                "details": [],
+                "order": 6
+            },
+            {
+                "field": "updated_at",
+                "type": "timestamp",
+                "display_name": "Updated At",
+                "required": 0,
+                "browse": 0,
+                "read": 0,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 7
+            }
+        ]
+    },
+    "books": {
+        "data_type": {
+            "name": "books",
+            "slug": "books",
+            "display_name_singular": "Book",
+            "display_name_plural": "Books",
+            "icon": "voyager-book",
+            "model_name": "App\\Models\\Book",
+            "policy_name": null,
+            "controller": null,
+            "description": null,
+            "generate_permissions": 1,
+            "server_side": 1,
+            "details": {
+                "order_column": null,
+                "order_display_column": null,
+                "order_direction": "asc",
+                "default_search_key": null,
+                "scope": null
+            }
+        },
+        "data_rows": [
+            {
+                "field": "id",
+                "type": "text",
+                "display_name": "Id",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 1
+            },
+            {
+                "field": "image",
+                "type": "image",
+                "display_name": "Cover",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "display": {
+                        "width": "12"
+                    },
+                    "validation": {
+                        "edit": {
+                            "rule": "nullable"
+                        },
+                        "add": {
+                            "rule": "required"
+                        }
+                    }
+                },
+                "order": 2
+            },
+            {
+                "field": "author_id",
+                "type": "text",
+                "display_name": "Author Id",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 3
+            },
+            {
+                "field": "publisher_id",
+                "type": "text",
+                "display_name": "Publisher Id",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 4
+            },
+            {
+                "field": "title",
+                "type": "text",
+                "display_name": "Title",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "display": {
+                        "width": "4"
+                    },
+                    "validation": {
+                        "rule": "required"
+                    }
+                },
+                "order": 5
+            },
+            {
+                "field": "slug",
+                "type": "text",
+                "display_name": "Slug",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "display": {
+                        "width": "4"
+                    },
+                    "slugify": {
+                        "origin": "title",
+                        "forceUpdate": true,
+                        "validation": {
+                            "rule": "required|unique:authors,slug"
+                        }
+                    }
+                },
+                "order": 6
+            },
+            {
+                "field": "internal_code",
+                "type": "text",
+                "display_name": "Internal Code",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "display": {
+                        "width": "4"
+                    },
+                    "validation": {
+                        "rule": "required"
+                    }
+                },
+                "order": 7
+            },
+            {
+                "field": "price",
+                "type": "number",
+                "display_name": "Price",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "default": 0,
+                    "display": {
+                        "width": "4"
+                    }
+                },
+                "order": 8
+            },
+            {
+                "field": "ISBN",
+                "type": "text",
+                "display_name": "ISBN",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "default": 0,
+                    "display": {
+                        "width": "4"
+                    },
+                    "validation": {
+                        "rule": "required"
+                    }
+                },
+                "order": 9
+            },
+            {
+                "field": "year",
+                "type": "number",
+                "display_name": "Year",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "display": {
+                        "width": "4"
+                    },
+                    "default": 0,
+                    "max": 2050,
+                    "validation": {
+                        "rule": "nullable|max:4"
+                    }
+                },
+                "order": 10
+            },
+            {
+                "field": "book_belongstomany_category_relationship",
+                "type": "relationship",
+                "display_name": "categories",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "display": {
+                        "width": "4"
+                    },
+                    "model": "App\\Models\\Category",
+                    "table": "categories",
+                    "type": "belongsToMany",
+                    "column": "id",
+                    "key": "id",
+                    "label": "name",
+                    "pivot_table": "pivot_book_categories",
+                    "pivot": "1",
+                    "taggable": "on"
+                },
+                "order": 11
+            },
+            {
+                "field": "book_belongsto_author_relationship",
+                "type": "relationship",
+                "display_name": "Author",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "display": {
+                        "width": "4"
+                    },
+                    "model": "App\\Models\\Author",
+                    "table": "authors",
+                    "type": "belongsTo",
+                    "column": "author_id",
+                    "key": "id",
+                    "label": "name",
+                    "pivot_table": "authors",
+                    "pivot": "0",
+                    "taggable": "0"
+                },
+                "order": 12
+            },
+            {
+                "field": "book_belongsto_publisher_relationship",
+                "type": "relationship",
+                "display_name": "Publisher",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "display": {
+                        "width": "4"
+                    },
+                    "model": "App\\Models\\Publisher",
+                    "table": "publishers",
+                    "type": "belongsTo",
+                    "column": "publisher_id",
+                    "key": "id",
+                    "label": "name",
+                    "pivot_table": "authors",
+                    "pivot": "0",
+                    "taggable": "0"
+                },
+                "order": 13
+            },
+            {
+                "field": "Available",
+                "type": "checkbox",
+                "display_name": "Available For rent",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "display": {
+                        "width": "4"
+                    }
+                },
+                "order": 14
+            },
+            {
+                "field": "description",
+                "type": "text_area",
+                "display_name": "Description",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "display": {
+                        "width": "12"
+                    },
+                    "validation": {
+                        "rule": "required"
+                    }
+                },
+                "order": 15
+            },
+            {
+                "field": "pages_screenshots",
+                "type": "rich_text_box",
+                "display_name": "Pages Screenshots",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "display": {
+                        "width": "12"
+                    },
+                    "description": "Upload images for the pages."
+                },
+                "order": 16
+            },
+            {
+                "field": "created_at",
+                "type": "timestamp",
+                "display_name": "Created At",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 17
+            },
+            {
+                "field": "updated_at",
+                "type": "timestamp",
+                "display_name": "Updated At",
+                "required": 0,
+                "browse": 0,
+                "read": 0,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 18
+            }
+        ]
+    },
+    "borrow-orders": {
+        "data_type": {
+            "name": "borrow_orders",
+            "slug": "borrow-orders",
+            "display_name_singular": "Borrow Order",
+            "display_name_plural": "Borrow Orders",
+            "icon": "voyager-list",
+            "model_name": "App\\Models\\BorrowOrder",
+            "policy_name": null,
+            "controller": null,
+            "description": null,
+            "generate_permissions": 1,
+            "server_side": 0,
+            "details": {
+                "order_column": null,
+                "order_display_column": null,
+                "order_direction": "asc",
+                "default_search_key": null,
+                "scope": null
+            }
+        },
+        "data_rows": [
+            {
+                "field": "id",
+                "type": "text",
+                "display_name": "Order Id",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 1
+            },
+            {
+                "field": "user_id",
+                "type": "text",
+                "display_name": "User Id",
+                "required": 1,
+                "browse": 0,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 2
+            },
+            {
+                "field": "user_name",
+                "type": "text",
+                "display_name": "User Name",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 3
+            },
+            {
+                "field": "borrow_order_hasmany_book_relationship",
+                "type": "relationship",
+                "display_name": "books",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "model": "App\\Models\\Book",
+                    "table": "books",
+                    "type": "belongsToMany",
+                    "column": "id",
+                    "key": "id",
+                    "label": "title",
+                    "pivot_table": "pivot_order_books",
+                    "pivot": "1",
+                    "taggable": "0"
+                },
+                "order": 4
+            },
+            {
+                "field": "start_date",
+                "type": "date",
+                "display_name": "Start Date",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 5
+            },
+            {
+                "field": "end_date",
+                "type": "date",
+                "display_name": "End Date",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 6
+            },
+            {
+                "field": "user_phone",
+                "type": "text",
+                "display_name": "User Phone",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 7
+            },
+            {
+                "field": "user_address_line_one",
+                "type": "text",
+                "display_name": "User Address Line One",
+                "required": 1,
+                "browse": 0,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 8
+            },
+            {
+                "field": "user_address_line_two",
+                "type": "text",
+                "display_name": "User Address Line Two",
+                "required": 0,
+                "browse": 0,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 9
+            },
+            {
+                "field": "use_country",
+                "type": "text",
+                "display_name": "Use Country",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 10
+            },
+            {
+                "field": "use_region",
+                "type": "text",
+                "display_name": "Use Region",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 11
+            },
+            {
+                "field": "use_zipCode",
+                "type": "text",
+                "display_name": "Use ZipCode",
+                "required": 1,
+                "browse": 0,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 12
+            },
+            {
+                "field": "status",
+                "type": "select_dropdown",
+                "display_name": "Status",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "options": {
+                        "Received": "Received",
+                        "Processing": "Processing",
+                        "Shipped": "Shipped",
+                        "Delivered": "Delivered",
+                        "Completed": "Completed",
+                        "WaitingReturnShipment": "WaitingReturnShipment",
+                        "ReturnedBack": "ReturnedBack"
+                    }
+                },
+                "order": 13
+            },
+            {
+                "field": "sub_total",
+                "type": "text",
+                "display_name": "Sub Total",
+                "required": 1,
+                "browse": 0,
+                "read": 0,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 14
+            },
+            {
+                "field": "tax",
+                "type": "text",
+                "display_name": "Tax",
+                "required": 1,
+                "browse": 0,
+                "read": 0,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 15
+            },
+            {
+                "field": "total",
+                "type": "text",
+                "display_name": "Total",
+                "required": 1,
+                "browse": 0,
+                "read": 0,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 16
+            },
+            {
+                "field": "checkout",
+                "type": "text",
+                "display_name": "Checkout",
+                "required": 1,
+                "browse": 0,
+                "read": 0,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 17
+            },
+            {
+                "field": "created_at",
+                "type": "timestamp",
+                "display_name": "Created At",
+                "required": 0,
+                "browse": 0,
+                "read": 1,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 18
+            },
+            {
+                "field": "updated_at",
+                "type": "timestamp",
+                "display_name": "Updated At",
+                "required": 0,
+                "browse": 0,
+                "read": 1,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 19
+            }
+        ]
+    },
+    "categories": {
+        "data_type": {
+            "name": "categories",
+            "slug": "categories",
+            "display_name_singular": "\u062a\u0635\u0646\u064a\u0641",
+            "display_name_plural": "\u062a\u0635\u0646\u064a\u0641\u0627\u062a",
+            "icon": "voyager-categories",
+            "model_name": "App\\Models\\Category",
+            "policy_name": null,
+            "controller": null,
+            "description": null,
+            "generate_permissions": 1,
+            "server_side": 1,
+            "details": {
+                "order_column": null,
+                "order_display_column": null,
+                "order_direction": "asc",
+                "default_search_key": null,
+                "scope": null
+            }
+        },
+        "data_rows": [
+            {
+                "field": "id",
+                "type": "text",
+                "display_name": "Id",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 1
+            },
+            {
+                "field": "image",
+                "type": "image",
+                "display_name": "Image",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "validation": {
+                        "edit": {
+                            "rule": "nullable"
+                        },
+                        "add": {
+                            "rule": "required"
+                        }
+                    }
+                },
+                "order": 2
+            },
+            {
+                "field": "parent_id",
+                "type": "select_dropdown",
+                "display_name": "Parent",
+                "required": 0,
+                "browse": 0,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "default": "",
+                    "null": "",
+                    "options": {
+                        "": "-- None --"
+                    },
+                    "relationship": {
+                        "key": "id",
+                        "label": "name"
+                    }
+                },
+                "order": 2
+            },
+            {
+                "field": "name",
+                "type": "text",
+                "display_name": "Name",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "validation": {
+                        "rule": "required"
+                    }
+                },
+                "order": 3
+            },
+            {
+                "field": "order",
+                "type": "text",
+                "display_name": "Order",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "default": 1
+                },
+                "order": 3
+            },
+            {
+                "field": "slug",
+                "type": "text",
+                "display_name": "Slug",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "slugify": {
+                        "origin": "name",
+                        "forceUpdate": true,
+                        "validation": {
+                            "rule": "required|unique:authors,slug"
+                        }
+                    }
+                },
+                "order": 4
+            },
+            {
+                "field": "color",
+                "type": "color",
+                "display_name": "Color",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 5
+            },
+            {
+                "field": "created_at",
+                "type": "timestamp",
+                "display_name": "Created At",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 6
+            },
+            {
+                "field": "updated_at",
+                "type": "timestamp",
+                "display_name": "Updated At",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 7
+            }
+        ]
+    },
+    "event-categories": {
+        "data_type": {
+            "name": "event_categories",
+            "slug": "event-categories",
+            "display_name_singular": "Event Category",
+            "display_name_plural": "Event Categories",
+            "icon": "far fa-newspaper",
+            "model_name": "App\\Models\\EventCategory",
+            "policy_name": null,
+            "controller": null,
+            "description": null,
+            "generate_permissions": 1,
+            "server_side": 1,
+            "details": {
+                "order_column": null,
+                "order_display_column": null,
+                "order_direction": "asc",
+                "default_search_key": null
+            }
+        },
+        "data_rows": [
+            {
+                "field": "id",
+                "type": "text",
+                "display_name": "Id",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 1
+            },
+            {
+                "field": "image",
+                "type": "image",
+                "display_name": "Image",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "validation": {
+                        "edit": {
+                            "rule": "nullable"
+                        },
+                        "add": {
+                            "rule": "required"
+                        }
+                    }
+                },
+                "order": 2
+            },
+            {
+                "field": "name",
+                "type": "text",
+                "display_name": "Name",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "validation": {
+                        "rule": "required"
+                    }
+                },
+                "order": 3
+            },
+            {
+                "field": "slug",
+                "type": "text",
+                "display_name": "Slug",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "slugify": {
+                        "origin": "name",
+                        "forceUpdate": true,
+                        "validation": {
+                            "rule": "required|unique:authors,slug"
+                        }
+                    }
+                },
+                "order": 4
+            },
+            {
+                "field": "created_at",
+                "type": "timestamp",
+                "display_name": "Created At",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 5
+            },
+            {
+                "field": "updated_at",
+                "type": "timestamp",
+                "display_name": "Updated At",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 6
+            }
+        ]
+    },
+    "events": {
+        "data_type": {
+            "name": "events",
+            "slug": "events",
+            "display_name_singular": "Event",
+            "display_name_plural": "Events",
+            "icon": null,
+            "model_name": "App\\Models\\Event",
+            "policy_name": null,
+            "controller": null,
+            "description": null,
+            "generate_permissions": 1,
+            "server_side": 1,
+            "details": {
+                "order_column": null,
+                "order_display_column": null,
+                "order_direction": "asc",
+                "default_search_key": null,
+                "scope": null
+            }
+        },
+        "data_rows": [
+            {
+                "field": "id",
+                "type": "text",
+                "display_name": "Id",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 1
+            },
+            {
+                "field": "image",
+                "type": "image",
+                "display_name": "Image",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "display": {
+                        "width": "12"
+                    },
+                    "validation": {
+                        "edit": {
+                            "rule": "nullable"
+                        },
+                        "add": {
+                            "rule": "required"
+                        }
+                    }
+                },
+                "order": 2
+            },
+            {
+                "field": "title",
+                "type": "text",
+                "display_name": "Title",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "display": {
+                        "width": "4"
+                    },
+                    "validation": {
+                        "rule": "required"
+                    }
+                },
+                "order": 3
+            },
+            {
+                "field": "slug",
+                "type": "text",
+                "display_name": "Slug",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "display": {
+                        "width": "4"
+                    },
+                    "slugify": {
+                        "origin": "title",
+                        "forceUpdate": true,
+                        "validation": {
+                            "rule": "required|unique:authors,slug"
+                        }
+                    }
+                },
+                "order": 4
+            },
+            {
+                "field": "price",
+                "type": "number",
+                "display_name": "Price",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "display": {
+                        "width": "4"
+                    },
+                    "min": 0,
+                    "max": 1000,
+                    "validation": {
+                        "rule": "required"
+                    }
+                },
+                "order": 5
+            },
+            {
+                "field": "start_datetime",
+                "type": "timestamp",
+                "display_name": "Start Datetime",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "display": {
+                        "width": "4"
+                    },
+                    "validation": {
+                        "rule": "required"
+                    }
+                },
+                "order": 6
+            },
+            {
+                "field": "end_datetime",
+                "type": "timestamp",
+                "display_name": "End Datetime",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "display": {
+                        "width": "4"
+                    },
+                    "validation": {
+                        "rule": "required"
+                    }
+                },
+                "order": 7
+            },
+            {
+                "field": "location",
+                "type": "text",
+                "display_name": "Location",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "display": {
+                        "width": "4"
+                    },
+                    "validation": {
+                        "rule": "required"
+                    }
+                },
+                "order": 8
+            },
+            {
+                "field": "map_location_embed_link",
+                "type": "text",
+                "display_name": "Map Location Embed Link",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "display": {
+                        "width": "4"
+                    },
+                    "validation": {
+                        "rule": "required"
+                    }
+                },
+                "order": 9
+            },
+            {
+                "field": "contact_phone",
+                "type": "text",
+                "display_name": "Contact Phone",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "display": {
+                        "width": "4"
+                    },
+                    "validation": {
+                        "rule": "required"
+                    }
+                },
+                "order": 10
+            },
+            {
+                "field": "contact_mail",
+                "type": "text",
+                "display_name": "Contact Mail",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "display": {
+                        "width": "4"
+                    },
+                    "validation": {
+                        "rule": "required|email"
+                    }
+                },
+                "order": 11
+            },
+            {
+                "field": "event_belongstomany_event_category_relationship",
+                "type": "relationship",
+                "display_name": "event_categories",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "display": {
+                        "width": "4"
+                    },
+                    "model": "App\\Models\\EventCategory",
+                    "table": "event_categories",
+                    "type": "belongsToMany",
+                    "column": "id",
+                    "key": "id",
+                    "label": "name",
+                    "pivot_table": "pivot_event_event_ategory",
+                    "pivot": "1",
+                    "taggable": "on"
+                },
+                "order": 12
+            },
+            {
+                "field": "short_description",
+                "type": "text_area",
+                "display_name": "Short Descriptionv",
+                "required": 0,
+                "browse": 0,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 13
+            },
+            {
+                "field": "description",
+                "type": "rich_text_box",
+                "display_name": "Description",
+                "required": 0,
+                "browse": 0,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "display": {
+                        "width": "12"
+                    },
+                    "description": "Event description"
+                },
+                "order": 14
+            },
+            {
+                "field": "created_at",
+                "type": "timestamp",
+                "display_name": "Created At",
+                "required": 0,
+                "browse": 0,
+                "read": 1,
+                "edit": 1,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 15
+            },
+            {
+                "field": "updated_at",
+                "type": "timestamp",
+                "display_name": "Updated At",
+                "required": 0,
+                "browse": 0,
+                "read": 1,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 16
+            }
+        ]
+    },
+    "pages": {
+        "data_type": {
+            "name": "pages",
+            "slug": "pages",
+            "display_name_singular": "Page",
+            "display_name_plural": "Pages",
+            "icon": "voyager-file-text",
+            "model_name": "TCG\\Voyager\\Models\\Page",
+            "policy_name": null,
+            "controller": "",
+            "description": "",
+            "generate_permissions": 1,
+            "server_side": 0,
+            "details": []
+        },
+        "data_rows": [
+            {
+                "field": "id",
+                "type": "number",
+                "display_name": "ID",
+                "required": 1,
+                "browse": 0,
+                "read": 0,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 1
+            },
+            {
+                "field": "author_id",
+                "type": "text",
+                "display_name": "Author",
+                "required": 1,
+                "browse": 0,
+                "read": 0,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 2
+            },
+            {
+                "field": "title",
+                "type": "text",
+                "display_name": "Title",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 3
+            },
+            {
+                "field": "excerpt",
+                "type": "text_area",
+                "display_name": "Excerpt",
+                "required": 1,
+                "browse": 0,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 4
+            },
+            {
+                "field": "body",
+                "type": "rich_text_box",
+                "display_name": "Body",
+                "required": 1,
+                "browse": 0,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 5
+            },
+            {
+                "field": "slug",
+                "type": "text",
+                "display_name": "Slug",
+                "required": 1,
+                "browse": 0,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "slugify": {
+                        "origin": "title"
+                    },
+                    "validation": {
+                        "rule": "unique:pages,slug"
+                    }
+                },
+                "order": 6
+            },
+            {
+                "field": "meta_description",
+                "type": "text",
+                "display_name": "Meta Description",
+                "required": 1,
+                "browse": 0,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 7
+            },
+            {
+                "field": "meta_keywords",
+                "type": "text",
+                "display_name": "Meta Keywords",
+                "required": 1,
+                "browse": 0,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 8
+            },
+            {
+                "field": "status",
+                "type": "select_dropdown",
+                "display_name": "Status",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "default": "INACTIVE",
+                    "options": {
+                        "INACTIVE": "INACTIVE",
+                        "ACTIVE": "ACTIVE"
+                    }
+                },
+                "order": 9
+            },
+            {
+                "field": "created_at",
+                "type": "timestamp",
+                "display_name": "Created At",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 10
+            },
+            {
+                "field": "updated_at",
+                "type": "timestamp",
+                "display_name": "Updated At",
+                "required": 1,
+                "browse": 0,
+                "read": 0,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 11
+            },
+            {
+                "field": "image",
+                "type": "image",
+                "display_name": "Page Image",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 12
+            }
+        ]
+    },
+    "plans": {
+        "data_type": {
+            "name": "plans",
+            "slug": "plans",
+            "display_name_singular": "Plan",
+            "display_name_plural": "Plans",
+            "icon": "voyager-world",
+            "model_name": "App\\Models\\Plan",
+            "policy_name": null,
+            "controller": null,
+            "description": null,
+            "generate_permissions": 1,
+            "server_side": 0,
+            "details": {
+                "order_column": null,
+                "order_display_column": null,
+                "order_direction": "asc",
+                "default_search_key": "name",
+                "scope": null
+            }
+        },
+        "data_rows": [
+            {
+                "field": "id",
+                "type": "text",
+                "display_name": "Id",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 1
+            },
+            {
+                "field": "name",
+                "type": "text",
+                "display_name": "Name",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 2
+            },
+            {
+                "field": "note",
+                "type": "text",
+                "display_name": "Note",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 3
+            },
+            {
+                "field": "price",
+                "type": "number",
+                "display_name": "Price in euros",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 4
+            },
+            {
+                "field": "books_quota",
+                "type": "number",
+                "display_name": "Books Quota per month",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 5
+            },
+            {
+                "field": "created_at",
+                "type": "timestamp",
+                "display_name": "Created At",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 6
+            },
+            {
+                "field": "updated_at",
+                "type": "timestamp",
+                "display_name": "Updated At",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 7
+            }
+        ]
+    },
+    "posts": {
+        "data_type": {
+            "name": "posts",
+            "slug": "posts",
+            "display_name_singular": "Post",
+            "display_name_plural": "Posts",
+            "icon": "voyager-news",
+            "model_name": "TCG\\Voyager\\Models\\Post",
+            "policy_name": "TCG\\Voyager\\Policies\\PostPolicy",
+            "controller": "",
+            "description": "",
+            "generate_permissions": 1,
+            "server_side": 0,
+            "details": []
+        },
+        "data_rows": [
+            {
+                "field": "id",
+                "type": "number",
+                "display_name": "ID",
+                "required": 1,
+                "browse": 0,
+                "read": 0,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 1
+            },
+            {
+                "field": "author_id",
+                "type": "text",
+                "display_name": "Author",
+                "required": 1,
+                "browse": 0,
+                "read": 1,
+                "edit": 1,
+                "add": 0,
+                "delete": 1,
+                "details": [],
+                "order": 2
+            },
+            {
+                "field": "category_id",
+                "type": "text",
+                "display_name": "Category",
+                "required": 1,
+                "browse": 0,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 0,
+                "details": [],
+                "order": 3
+            },
+            {
+                "field": "title",
+                "type": "text",
+                "display_name": "Title",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 4
+            },
+            {
+                "field": "excerpt",
+                "type": "text_area",
+                "display_name": "Excerpt",
+                "required": 1,
+                "browse": 0,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 5
+            },
+            {
+                "field": "body",
+                "type": "rich_text_box",
+                "display_name": "Body",
+                "required": 1,
+                "browse": 0,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 6
+            },
+            {
+                "field": "image",
+                "type": "image",
+                "display_name": "Post Image",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "resize": {
+                        "width": "1000",
+                        "height": "null"
+                    },
+                    "quality": "70%",
+                    "upsize": true,
+                    "thumbnails": [
+                        {
+                            "name": "medium",
+                            "scale": "50%"
+                        },
+                        {
+                            "name": "small",
+                            "scale": "25%"
+                        },
+                        {
+                            "name": "cropped",
+                            "crop": {
+                                "width": "300",
+                                "height": "250"
+                            }
+                        }
+                    ]
+                },
+                "order": 7
+            },
+            {
+                "field": "slug",
+                "type": "text",
+                "display_name": "Slug",
+                "required": 1,
+                "browse": 0,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "slugify": {
+                        "origin": "title",
+                        "forceUpdate": true
+                    },
+                    "validation": {
+                        "rule": "unique:posts,slug"
+                    }
+                },
+                "order": 8
+            },
+            {
+                "field": "meta_description",
+                "type": "text_area",
+                "display_name": "Meta Description",
+                "required": 1,
+                "browse": 0,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 9
+            },
+            {
+                "field": "meta_keywords",
+                "type": "text_area",
+                "display_name": "Meta Keywords",
+                "required": 1,
+                "browse": 0,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 10
+            },
+            {
+                "field": "status",
+                "type": "select_dropdown",
+                "display_name": "Status",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "default": "DRAFT",
+                    "options": {
+                        "PUBLISHED": "published",
+                        "DRAFT": "draft",
+                        "PENDING": "pending"
+                    }
+                },
+                "order": 11
+            },
+            {
+                "field": "created_at",
+                "type": "timestamp",
+                "display_name": "Created At",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 12
+            },
+            {
+                "field": "updated_at",
+                "type": "timestamp",
+                "display_name": "Updated At",
+                "required": 0,
+                "browse": 0,
+                "read": 0,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 13
+            },
+            {
+                "field": "seo_title",
+                "type": "text",
+                "display_name": "SEO Title",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 14
+            },
+            {
+                "field": "featured",
+                "type": "checkbox",
+                "display_name": "Featured",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 15
+            }
+        ]
+    },
+    "publishers": {
+        "data_type": {
+            "name": "publishers",
+            "slug": "publishers",
+            "display_name_singular": "Publisher",
+            "display_name_plural": "Publishers",
+            "icon": "voyager-sound",
+            "model_name": "App\\Models\\Publisher",
+            "policy_name": null,
+            "controller": null,
+            "description": null,
+            "generate_permissions": 1,
+            "server_side": 1,
+            "details": {
+                "order_column": null,
+                "order_display_column": null,
+                "order_direction": "asc",
+                "default_search_key": null,
+                "scope": null
+            }
+        },
+        "data_rows": [
+            {
+                "field": "id",
+                "type": "text",
+                "display_name": "Id",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 1
+            },
+            {
+                "field": "avatar",
+                "type": "image",
+                "display_name": "Avatar",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "validation": {
+                        "edit": {
+                            "rule": "nullable"
+                        },
+                        "add": {
+                            "rule": "required"
+                        }
+                    }
+                },
+                "order": 2
+            },
+            {
+                "field": "name",
+                "type": "text",
+                "display_name": "Name",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "validation": {
+                        "rule": "required"
+                    }
+                },
+                "order": 3
+            },
+            {
+                "field": "slug",
+                "type": "text",
+                "display_name": "Slug",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "slugify": {
+                        "origin": "name",
+                        "forceUpdate": true,
+                        "validation": {
+                            "rule": "required|unique:authors,slug"
+                        }
+                    }
+                },
+                "order": 4
+            },
+            {
+                "field": "description",
+                "type": "rich_text_box",
+                "display_name": "Description",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "validation": {
+                        "rule": "required"
+                    }
+                },
+                "order": 5
+            },
+            {
+                "field": "created_at",
+                "type": "timestamp",
+                "display_name": "Created At",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 6
+            },
+            {
+                "field": "updated_at",
+                "type": "timestamp",
+                "display_name": "Updated At",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 7
+            }
+        ]
+    },
+    "subscriptions": {
+        "data_type": {
+            "name": "subscriptions",
+            "slug": "subscriptions",
+            "display_name_singular": "Subscription",
+            "display_name_plural": "Subscriptions",
+            "icon": null,
+            "model_name": "App\\Models\\Subscription",
+            "policy_name": null,
+            "controller": null,
+            "description": null,
+            "generate_permissions": 1,
+            "server_side": 1,
+            "details": {
+                "order_column": null,
+                "order_display_column": null,
+                "order_direction": "asc",
+                "default_search_key": null,
+                "scope": null
+            }
+        },
+        "data_rows": [
+            {
+                "field": "id",
+                "type": "text",
+                "display_name": "Id",
+                "required": 1,
+                "browse": 0,
+                "read": 0,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 1
+            },
+            {
+                "field": "subscription_hasone_user_relationship",
+                "type": "relationship",
+                "display_name": "user",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 0,
+                "details": {
+                    "model": "App\\User",
+                    "table": "users",
+                    "type": "belongsTo",
+                    "column": "user_id",
+                    "key": "id",
+                    "label": "email",
+                    "pivot_table": "authors",
+                    "pivot": "0",
+                    "taggable": "0"
+                },
+                "order": 2
+            },
+            {
+                "field": "subscription_belongsto_plan_relationship",
+                "type": "relationship",
+                "display_name": "plan",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 0,
+                "details": {
+                    "model": "App\\Models\\Plan",
+                    "table": "plans",
+                    "type": "belongsTo",
+                    "column": "plan_id",
+                    "key": "id",
+                    "label": "name",
+                    "pivot_table": "authors",
+                    "pivot": "0",
+                    "taggable": "0"
+                },
+                "order": 3
+            },
+            {
+                "field": "user_id",
+                "type": "text",
+                "display_name": "User Id",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 4
+            },
+            {
+                "field": "plan_id",
+                "type": "text",
+                "display_name": "Plan Id",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 0,
+                "add": 0,
+                "delete": 1,
+                "details": [],
+                "order": 5
+            },
+            {
+                "field": "start",
+                "type": "date",
+                "display_name": "Start",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 0,
+                "details": [],
+                "order": 6
+            },
+            {
+                "field": "end",
+                "type": "date",
+                "display_name": "End",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 0,
+                "details": [],
+                "order": 7
+            },
+            {
+                "field": "quote",
+                "type": "text",
+                "display_name": "Quote",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 0,
+                "add": 1,
+                "delete": 0,
+                "details": [],
+                "order": 8
+            },
+            {
+                "field": "created_at",
+                "type": "timestamp",
+                "display_name": "Created At",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 0,
+                "add": 0,
+                "delete": 1,
+                "details": [],
+                "order": 9
+            },
+            {
+                "field": "updated_at",
+                "type": "timestamp",
+                "display_name": "Updated At",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 0,
+                "add": 0,
+                "delete": 0,
+                "details": [],
+                "order": 10
+            },
+            {
+                "field": "transaction_amount",
+                "type": "text",
+                "display_name": "Transaction Amount",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 10
+            },
+            {
+                "field": "status",
+                "type": "select_dropdown",
+                "display_name": "Status",
+                "required": 1,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": {
+                    "options": {
+                        "active": "active",
+                        "deactivated": "deactivated",
+                        "pending": "pending"
+                    }
+                },
+                "order": 11
+            },
+            {
+                "field": "transaction_date",
+                "type": "timestamp",
+                "display_name": "Transaction Date",
+                "required": 0,
+                "browse": 1,
+                "read": 1,
+                "edit": 1,
+                "add": 1,
+                "delete": 1,
+                "details": [],
+                "order": 11
+            }
+        ]
+    }
+}
