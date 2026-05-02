@@ -49,4 +49,11 @@ fi
 # passport:keys may create files as root; Apache/PHP run as www-data.
 chown -R www-data:www-data storage
 
+# Cache config/routes/views once at boot so PHP doesn't re-parse on every request.
+if [ "${APP_ENV:-local}" = "production" ]; then
+    php artisan config:cache 2>/dev/null || true
+    php artisan route:cache  2>/dev/null || true
+    php artisan view:cache   2>/dev/null || true
+fi
+
 exec apache2-foreground

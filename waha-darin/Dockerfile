@@ -33,8 +33,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         bcmath \
         zip \
         gd \
-    && a2enmod rewrite \
+    && a2enmod rewrite deflate headers \
     && rm -rf /var/lib/apt/lists/*
+
+# OPcache for ~50% PHP speedup
+RUN { \
+    echo 'opcache.enable=1'; \
+    echo 'opcache.memory_consumption=128'; \
+    echo 'opcache.interned_strings_buffer=8'; \
+    echo 'opcache.max_accelerated_files=10000'; \
+    echo 'opcache.revalidate_freq=0'; \
+    echo 'opcache.validate_timestamps=0'; \
+    echo 'opcache.fast_shutdown=1'; \
+} > /usr/local/etc/php/conf.d/opcache.ini
 
 COPY --from=composer:2.2 /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
@@ -53,9 +64,12 @@ RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoload
     && chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R ug+rwx storage bootstrap/cache
 
-# DocumentRoot = Laravel public/
+# DocumentRoot = Laravel public/ + gzip compression for all text responses
 RUN sed -ri -e 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/*.conf \
-    && sed -ri -e 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
+    && sed -ri -e 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf \
+    && printf '<IfModule mod_deflate.c>\n  AddOutputFilterByType DEFLATE text/html text/plain text/css application/json application/javascript text/xml application/xml\n</IfModule>\n<IfModule mod_expires.c>\n  ExpiresActive On\n  ExpiresByType application/javascript "access plus 1 year"\n  ExpiresByType text/css "access plus 1 year"\n  ExpiresByType image/png "access plus 1 year"\n</IfModule>\n' >> /etc/apache2/conf-available/gzip.conf \
+    && a2enconf gzip 2>/dev/null || true \
+    && a2enmod expires 2>/dev/null || true
 
 COPY docker/entrypoint-preview.sh /usr/local/bin/entrypoint-preview.sh
 RUN chmod +x /usr/local/bin/entrypoint-preview.sh
