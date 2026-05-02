@@ -121,6 +121,6 @@ class BorrowQuotaService
         return DB::table('pivot_order_books')
             ->join('borrow_orders', 'pivot_order_books.borrow_order_id', '=', 'borrow_orders.id')
             ->where('borrow_orders.user_id', $userId)
-            ->whereRaw('LOWER(COALESCE(borrow_orders.status, "")) != ?', ['cancelled']);
+            ->whereRaw("LOWER(COALESCE(borrow_orders.status, '')) != ?", ['cancelled']);
     }
 }
