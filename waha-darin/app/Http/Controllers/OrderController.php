@@ -138,7 +138,11 @@ class OrderController extends Controller
         $order->save();
         $order->books()->sync($request->books);
         $order->loadMissing(['user', 'books']);
-        Mail::to($order->user)->send(new OrderReceived($order));
+        try {
+            Mail::to($order->user)->send(new OrderReceived($order));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Order confirmation email failed: ' . $e->getMessage());
+        }
         // Quota enforcement is handled by the `has.valid.subscription` middleware via
         // Subscription::valid (based on plan quota and monthly borrow count).
         // `quote` is stored as JSON/array and should not be decremented as a scalar.

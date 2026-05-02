@@ -78,7 +78,7 @@ class WeeklyOrderController extends Controller
 
         // Reload user relationship
         $order->loadMissing(['user:id,name,email,phone', 'books']);
-        Mail::to($order->user)->send(new OrderShipped($order));
+        try { Mail::to($order->user)->send(new OrderShipped($order)); } catch (\Throwable $e) { \Illuminate\Support\Facades\Log::error('OrderShipped email failed: '.$e->getMessage()); }
 
         return response()->json([
             'message' => 'Order shipment confirmed.',
@@ -97,7 +97,7 @@ class WeeklyOrderController extends Controller
         $order->save();
 
         $order->loadMissing(['user:id,name,email,phone', 'books']);
-        Mail::to($order->user)->send(new OrderDelivered($order));
+        try { Mail::to($order->user)->send(new OrderDelivered($order)); } catch (\Throwable $e) { \Illuminate\Support\Facades\Log::error('OrderDelivered email failed: '.$e->getMessage()); }
 
         return response()->json([
             'message' => 'Order marked as delivered.',
