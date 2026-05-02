@@ -15,7 +15,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('{path}', function () {
-    return file_get_contents(public_path('_nuxt/index.html'));
+    return response(file_get_contents(public_path('_nuxt/index.html')))
+        ->header('Content-Type', 'text/html; charset=UTF-8')
+        ->header('Cache-Control', 'no-cache, no-store, must-revalidate')
+        ->header('Pragma', 'no-cache')
+        ->header('Expires', '0');
 })->where('path', '^((?!admin|api).)*$');
 
 /* Voyager Admin panel routes */
