@@ -14,7 +14,8 @@ export default ({ app, store, redirect }) => {
     axios.interceptors.request.use((request) => {
         request.baseURL = process.env.apiUrl
 
-        const token = (store.getters['auth/token'] || '').trim()
+        const raw = (store.getters['auth/token'] || '').trim()
+        const token = raw === 'undefined' ? '' : raw
 
         if (token) {
             const bearer = token.match(/^Bearer\s+/i)

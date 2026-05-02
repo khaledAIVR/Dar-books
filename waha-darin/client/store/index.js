@@ -15,9 +15,12 @@ export const actions = {
     },
 
     nuxtClientInit({ commit }) {
-        const token = Cookies.get('token')
+        const raw = Cookies.get('token')
+        const token = raw && raw !== 'undefined' ? raw : null
         if (token) {
             commit('auth/SET_TOKEN', token)
+        } else {
+            Cookies.remove('token')
         }
 
         const locale = Cookies.get('locale')
