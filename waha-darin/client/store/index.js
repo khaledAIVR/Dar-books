@@ -15,12 +15,18 @@ export const actions = {
     },
 
     nuxtClientInit({ commit }) {
-        const raw = Cookies.get('token')
+        // localStorage is primary; fall back to cookie
+        const fromStorage = typeof window !== 'undefined'
+            ? window.localStorage.getItem('token')
+            : null
+        const fromCookie = Cookies.get('token')
+        const raw = fromStorage || fromCookie
         const token = raw && raw !== 'undefined' ? raw : null
         if (token) {
             commit('auth/SET_TOKEN', token)
         } else {
             Cookies.remove('token')
+            if (typeof window !== 'undefined') window.localStorage.removeItem('token')
         }
 
         const locale = Cookies.get('locale')

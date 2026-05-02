@@ -45,14 +45,12 @@ export const actions = {
         const clean = String(token || '').trim()
         commit('SET_TOKEN', clean)
 
-        const opts = { sameSite: 'lax' }
-        if (remember) {
-            opts.expires = 365
+        // localStorage is the primary store — no SameSite/Secure issues
+        if (typeof window !== 'undefined') {
+            window.localStorage.setItem('token', clean)
         }
-        if (typeof window !== 'undefined' && window.location.protocol === 'https:') {
-            opts.secure = true
-        }
-        Cookies.set('token', clean, opts)
+        // Cookie kept as fallback for compatibility
+        Cookies.set('token', clean, { expires: remember ? 365 : 7 })
     },
 
     async fetchUser({ commit }) {
@@ -69,6 +67,7 @@ export const actions = {
 
                 if (status === 401) {
                     Cookies.remove('token')
+                    if (typeof window !== 'undefined') window.localStorage.removeItem('token')
                     commit('FETCH_USER_FAILURE')
 
                     return
@@ -109,6 +108,7 @@ export const actions = {
         } catch (e) {}
 
         Cookies.remove('token')
+        if (typeof window !== 'undefined') window.localStorage.removeItem('token')
 
         commit('LOGOUT')
     },
