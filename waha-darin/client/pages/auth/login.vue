@@ -112,7 +112,9 @@
                                         class="spinner-border text-light mx-2"
                                         role="status"
                                     >
-                                        <span class="sr-only">{{ $t('Loading') }}</span>
+                                        <span class="sr-only">{{
+                                            $t('Loading')
+                                        }}</span>
                                     </div>
                                     {{ $t('Login') }}
                                 </button>
@@ -222,6 +224,14 @@ export default {
                 const response = await this.form.post('/login')
                 data = response.data
             } catch (e) {
+                return
+            }
+
+            if (!data || !data.token) {
+                if (data && data.errors) {
+                    this.form.errors.set(data.errors)
+                }
+
                 return
             }
 

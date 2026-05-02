@@ -13,6 +13,8 @@ export default ({ app, store, redirect }) => {
     // Request interceptor
     axios.interceptors.request.use((request) => {
         request.baseURL = process.env.apiUrl
+        request.headers.Accept = 'application/json'
+        request.headers.common.Accept = 'application/json'
 
         const bearer = authHeader(store.getters['auth/token'])
 

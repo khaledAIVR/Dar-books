@@ -3,14 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use Illuminate\Support\Facades\Auth;
-use App\Exceptions\VerifyEmailException;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
@@ -74,20 +71,29 @@ class LoginController extends Controller
      * Get the failed login response instance.
      *
      * @param Request $request
-     * @return void
-     *
-     * @throws ValidationException
+     * @return JsonResponse
      */
     protected function sendFailedLoginResponse(Request $request)
     {
         $user = $this->guard()->user();
         if ($user instanceof MustVerifyEmail && ! $user->hasVerifiedEmail()) {
-            throw VerifyEmailException::forUser($user);
+            return response()->json([
+                'message' => trans('auth.failed'),
+                'errors' => [
+                    $this->username() => [__('auth.You must :linkOpen verify :linkClose your email first.', [
+                        'linkOpen' => '<a href="/email/resend?email='.urlencode($user->email).'">',
+                        'linkClose' => '</a>',
+                    ])],
+                ],
+            ], 422);
         }
 
-        throw ValidationException::withMessages([
-            $this->username() => [trans('auth.failed')],
-        ]);
+        return response()->json([
+            'message' => trans('auth.failed'),
+            'errors' => [
+                $this->username() => [trans('auth.failed')],
+            ],
+        ], 422);
     }
 
     /**

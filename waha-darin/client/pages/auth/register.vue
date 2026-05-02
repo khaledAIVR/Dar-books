@@ -199,7 +199,9 @@
                                         class="spinner-border text-light mx-2"
                                         role="status"
                                     >
-                                        <span class="sr-only">{{ $t('Loading') }}</span>
+                                        <span class="sr-only">{{
+                                            $t('Loading')
+                                        }}</span>
                                     </div>
                                     {{ $t('Create New Account') }}
                                 </button>
@@ -244,6 +246,10 @@ export default {
                 const {
                     data: { token }
                 } = await this.form.post('/login')
+
+                if (!token) {
+                    return
+                }
 
                 // Save the token.
                 this.$store.dispatch('auth/saveToken', { token })

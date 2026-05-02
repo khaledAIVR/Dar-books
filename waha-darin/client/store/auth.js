@@ -57,10 +57,16 @@ export const actions = {
         const headers = {}
         const bearer = authHeader(token)
 
-        if (bearer) {
-            commit('SET_TOKEN', token)
-            headers.Authorization = bearer
+        if (!bearer) {
+            clearStoredToken()
+            commit('FETCH_USER_FAILURE')
+
+            return
         }
+
+        commit('SET_TOKEN', token)
+        headers.Accept = 'application/json'
+        headers.Authorization = bearer
 
         let lastError = null
         for (let attempt = 0; attempt < 3; attempt++) {
