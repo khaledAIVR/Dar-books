@@ -1,5 +1,7 @@
+import { hydrateStoredToken } from '~/utils/auth-token'
+
 export default async ({ store, redirect }) => {
-    const token = store.getters['auth/token']
+    const token = hydrateStoredToken(store)
 
     if (token && !store.getters['auth/check']) {
         await store.dispatch('auth/fetchUser')

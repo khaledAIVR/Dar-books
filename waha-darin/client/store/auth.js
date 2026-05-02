@@ -1,5 +1,11 @@
 import axios from 'axios'
-import Cookies from 'js-cookie'
+import {
+    authHeader,
+    clearStoredToken,
+    cleanToken,
+    getStoredToken,
+    storeToken
+} from '~/utils/auth-token'
 
 // state
 export const state = () => ({
@@ -42,22 +48,24 @@ export const mutations = {
 // actions
 export const actions = {
     saveToken({ commit }, { token, remember }) {
-        const clean = String(token || '').trim()
+        const clean = storeToken(token, remember)
         commit('SET_TOKEN', clean)
-
-        // localStorage is the primary store — no SameSite/Secure issues
-        if (typeof window !== 'undefined') {
-            window.localStorage.setItem('token', clean)
-        }
-        // Cookie kept as fallback for compatibility
-        Cookies.set('token', clean, { expires: remember ? 365 : 7 })
     },
 
-    async fetchUser({ commit }) {
+    async fetchUser({ commit, getters }) {
+        const token = cleanToken(getters.token) || getStoredToken()
+        const headers = {}
+        const bearer = authHeader(token)
+
+        if (bearer) {
+            commit('SET_TOKEN', token)
+            headers.Authorization = bearer
+        }
+
         let lastError = null
         for (let attempt = 0; attempt < 3; attempt++) {
             try {
-                const { data } = await axios.get('/user')
+                const { data } = await axios.get('/user', { headers })
                 commit('FETCH_USER_SUCCESS', data)
 
                 return
@@ -66,8 +74,7 @@ export const actions = {
                 const status = e.response && e.response.status
 
                 if (status === 401) {
-                    Cookies.remove('token')
-                    if (typeof window !== 'undefined') window.localStorage.removeItem('token')
+                    clearStoredToken()
                     commit('FETCH_USER_FAILURE')
 
                     return
@@ -107,8 +114,7 @@ export const actions = {
             await axios.post('/logout')
         } catch (e) {}
 
-        Cookies.remove('token')
-        if (typeof window !== 'undefined') window.localStorage.removeItem('token')
+        clearStoredToken()
 
         commit('LOGOUT')
     },

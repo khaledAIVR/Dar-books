@@ -1,5 +1,6 @@
 import Cookies from 'js-cookie'
 import { cookieFromRequest } from '~/utils'
+import { clearStoredToken, getStoredToken } from '~/utils/auth-token'
 
 export const actions = {
     nuxtServerInit({ commit }, { req }) {
@@ -15,18 +16,11 @@ export const actions = {
     },
 
     nuxtClientInit({ commit }) {
-        // localStorage is primary; fall back to cookie
-        const fromStorage = typeof window !== 'undefined'
-            ? window.localStorage.getItem('token')
-            : null
-        const fromCookie = Cookies.get('token')
-        const raw = fromStorage || fromCookie
-        const token = raw && raw !== 'undefined' ? raw : null
+        const token = getStoredToken()
         if (token) {
             commit('auth/SET_TOKEN', token)
         } else {
-            Cookies.remove('token')
-            if (typeof window !== 'undefined') window.localStorage.removeItem('token')
+            clearStoredToken()
         }
 
         const locale = Cookies.get('locale')

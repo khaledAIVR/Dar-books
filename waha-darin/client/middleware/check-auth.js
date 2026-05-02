@@ -1,14 +1,13 @@
 import axios from 'axios'
+import { authHeader, hydrateStoredToken } from '~/utils/auth-token'
 
-export default async ({ store, req }) => {
-    const token = store.getters['auth/token']
+export default async ({ store }) => {
+    const token = hydrateStoredToken(store)
 
     if (process.server) {
-        if (token) {
-            axios.defaults.headers.common.Authorization = `Bearer ${token}`
-        } else {
-            delete axios.defaults.headers.common.Authorization
-        }
+        const bearer = authHeader(token)
+        if (bearer) axios.defaults.headers.common.Authorization = bearer
+        else delete axios.defaults.headers.common.Authorization
     }
 
     if (!store.getters['auth/check'] && token) {

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import swal from 'sweetalert2'
+import { authHeader } from '~/utils/auth-token'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
@@ -14,13 +14,9 @@ export default ({ app, store, redirect }) => {
     axios.interceptors.request.use((request) => {
         request.baseURL = process.env.apiUrl
 
-        const raw = (store.getters['auth/token'] || '').trim()
-        const token = raw === 'undefined' ? '' : raw
+        const bearer = authHeader(store.getters['auth/token'])
 
-        if (token) {
-            const bearer = token.match(/^Bearer\s+/i)
-                ? token
-                : `Bearer ${token}`
+        if (bearer) {
             request.headers.Authorization = bearer
             request.headers.common.Authorization = bearer
         }
