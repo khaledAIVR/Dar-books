@@ -127,10 +127,12 @@ class BrevoTransport extends Transport
     {
         $out = [];
         foreach ($addresses as $email => $name) {
-            $out[] = [
-                'email' => (string) $email,
-                'name' => (string) ($name ?? ''),
-            ];
+            $email = (string) $email;
+            $resolvedName = (string) ($name ?? '');
+            if ($resolvedName === '') {
+                $resolvedName = strstr($email, '@', true) ?: $email;
+            }
+            $out[] = ['email' => $email, 'name' => $resolvedName];
         }
 
         return $out;
