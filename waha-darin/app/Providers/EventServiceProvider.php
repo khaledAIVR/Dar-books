@@ -3,9 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -15,9 +13,12 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        Registered::class => [
-            SendEmailVerificationNotification::class,
-        ],
+        /*
+         * Email verification mail is triggered from Auth\RegisterController with
+         * try/catch + honest HTTP responses. Laravel's listener is omitted here
+         * to avoid duplicate sends and to avoid reporting "sent" when SMTP fails.
+         */
+        Registered::class => [],
     ];
 
     /**
@@ -27,10 +28,6 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (config('waha.skip_email_verification')) {
-            $this->listen[Registered::class] = [];
-        }
-
         parent::boot();
     }
 }

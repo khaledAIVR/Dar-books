@@ -96,7 +96,13 @@ class VerificationController extends Controller
             ]);
         }
 
-        $user->sendEmailVerificationNotification();
+        try {
+            $user->sendEmailVerificationNotification();
+        } catch (\Throwable $e) {
+            report($e);
+
+            return response()->json(['message' => trans('verification.mail_failed')], 503);
+        }
 
         return response()->json(['status' => trans('verification.sent')]);
     }

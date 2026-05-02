@@ -235,31 +235,53 @@ export default {
 
     methods: {
         async register() {
-            // Register the user.
-            const { data } = await this.form.post('/register')
+            try {
+                // Register the user.
+                const { data } = await this.form.post('/register')
 
-            // Must verify email fist.
-            if (data.status) {
-                this.$router.push({ name: 'verification.resend' })
-            } else {
-                // Log in the user.
-                const {
-                    data: { token }
-                } = await this.form.post('/login')
-
-                if (!token) {
+                // Must verify email first.
+                if (data.status) {
+                    this.$router.push({
+                        name: 'verification.resend',
+                        query: { email: this.form.email }
+                    })
                     return
                 }
 
-                // Save the token.
-                this.$store.dispatch('auth/saveToken', { token })
+                await this.afterRegisterLogin(data)
+            } catch (e) {
+                if (e?.response?.status === 503) {
+                    const msg = e.response?.data?.message
+                    if (msg) this.$toast.error(msg)
+                    this.$router.push({
+                        name: 'verification.resend',
+                        query: { email: this.form.email }
+                    })
+                    return
+                }
 
-                // Update the user.
-                await this.$store.dispatch('auth/updateUser', { user: data })
-
-                // Redirect home.
-                this.$router.push({ name: 'home' })
+                throw e
             }
+        },
+
+        async afterRegisterLogin(userPayload) {
+            // Log in the user.
+            const {
+                data: { token }
+            } = await this.form.post('/login')
+
+            if (!token) {
+                return
+            }
+
+            // Save the token.
+            this.$store.dispatch('auth/saveToken', { token })
+
+            // Update the user.
+            await this.$store.dispatch('auth/updateUser', { user: userPayload })
+
+            // Redirect home.
+            this.$router.push({ name: 'home' })
         }
     },
     head() {

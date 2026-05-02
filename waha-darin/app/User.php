@@ -106,11 +106,7 @@ class User extends \TCG\Voyager\Models\User implements JWTSubject, MustVerifyEma
      */
     public function sendEmailVerificationNotification()
     {
-        try {
-            $this->notify(new VerifyEmail);
-        } catch (\Throwable $e) {
-            \Illuminate\Support\Facades\Log::error('Verification email failed: ' . $e->getMessage());
-        }
+        $this->notify(new VerifyEmail);
     }
 
     /**

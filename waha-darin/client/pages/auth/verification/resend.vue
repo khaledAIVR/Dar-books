@@ -122,11 +122,21 @@ export default {
 
     methods: {
         async send() {
-            const { data } = await this.form.post('/email/resend')
+            try {
+                await this.form.post('/email/resend')
 
-            this.statusKey = 'verification_link_sent'
+                this.statusKey = 'verification_link_sent'
 
-            this.form.reset()
+                this.form.reset()
+            } catch (e) {
+                if (e?.response?.status === 503) {
+                    const msg = e.response?.data?.message
+                    if (msg) this.$toast.error(msg)
+                    return
+                }
+
+                throw e
+            }
         }
     }
 }

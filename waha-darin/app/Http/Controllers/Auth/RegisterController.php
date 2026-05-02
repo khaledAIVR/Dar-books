@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Notifications\VerifyEmail;
 use App\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -82,6 +83,41 @@ class RegisterController extends Controller
     public function guard()
     {
         return Auth::guard('api');
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse|Response|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        $user = $this->create($request->all());
+
+        $verificationMailFailed = false;
+
+        if (
+            $user instanceof MustVerifyEmail &&
+            !$user->hasVerifiedEmail() &&
+            !config('waha.skip_email_verification')
+        ) {
+            try {
+                $user->notify(new VerifyEmail);
+            } catch (\Throwable $e) {
+                report($e);
+                $verificationMailFailed = true;
+            }
+        }
+
+        event(new Registered($user));
+
+        if ($verificationMailFailed) {
+            return response()->json(['message' => trans('verification.mail_failed')], 503);
+        }
+
+        return $this->registered($request, $user) ?: redirect($this->redirectPath());
     }
 
 }
