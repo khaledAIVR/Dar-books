@@ -4,12 +4,16 @@ namespace App\Models;
 
 use App\Services\BorrowQuotaService;
 use App\User;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Subscription extends Model
 {
-    protected $appends = ['valid'];
+    /**
+     * Do not append `valid` globally: Voyager serialize() runs on every browse row and it is expensive.
+     * Use {@see Subscription::appendValidForApi()} before returning subscriptions as JSON to clients.
+     */
+    protected $appends = [];
+
     protected $dates = ['created_at', 'updated_at', 'start', 'end', 'transaction_date'];
     protected $casts = ['quote' => 'array'];
 
@@ -34,31 +38,50 @@ class Subscription extends Model
             return 0;
         }
 
-        return app(BorrowQuotaService::class)->remainingBorrowSlotsForSubscription($this, (int) auth()->id());
+        try {
+            return app(BorrowQuotaService::class)->remainingBorrowSlotsForSubscription($this, (int) auth()->id());
+        } catch (\Throwable $e) {
+            report($e);
+
+            return 0;
+        }
+    }
+
+    public function appendValidForApi(): self
+    {
+        return $this->append('valid');
     }
 
 
     public function getMonthAttribute()
     {
+        if (! $this->start) {
+            return 0;
+        }
+
         return $this->getCurrentMonth();
     }
 
     public function getAvailableAttribute()
     {
+        if (! $this->start) {
+            return null;
+        }
+
         $currentMonth = $this->getCurrentMonth();
+
         return $this->currentMonthQuote($currentMonth);
     }
 
     private function getCurrentMonth()
     {
-        $start = $this->start;
-        $now = now();
-        return $start->diffInMonths($now);
+        return $this->start->diffInMonths(now());
     }
 
     private function currentMonthQuote($currentMonth)
     {
-//        $quote = json_decode($this->quote);
-//        return $quote[$currentMonth];
+        //        $quote = json_decode($this->quote);
+        //        return $quote[$currentMonth];
+        return null;
     }
 }

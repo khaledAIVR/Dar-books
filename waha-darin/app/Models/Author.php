@@ -7,10 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Author extends Model
 {
-    /**
-     * @var mixed
-     */
-    private $name;
     protected $appends = ['avatar_photo'];
 
     public function books()

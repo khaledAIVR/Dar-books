@@ -25,6 +25,7 @@ class SubscriptionController extends Controller
         $subscription->end   = Carbon::now()->addYear();
         $subscription->status = "pending";
         $subscription->save();
-        return $subscription->load("plan");
+
+        return $subscription->load('plan')->appendValidForApi();
     }
 }

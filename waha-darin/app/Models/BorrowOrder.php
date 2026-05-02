@@ -25,7 +25,6 @@ use Illuminate\Support\Carbon;
 class BorrowOrder extends Model
 {
     protected $casts = [
-        'books' => 'array',
         'shipment_confirmed_at' => 'datetime',
         'delivered_at' => 'datetime',
         'return_shipment_added_at' => 'datetime',

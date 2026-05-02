@@ -34,5 +34,7 @@ class PermissionsTableSeeder extends Seeder
         Permission::generateFor('settings');
 
         Permission::generateFor('bank_account_details');
+
+        Permission::generateFor('hooks');
     }
 }
