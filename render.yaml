@@ -4,11 +4,9 @@
 # Keep rootDir: waha-darin so Docker build context and Dockerfile path are correct.
 # In the Render UI: connect repo Dar-books, Root Directory = waha-darin, Dockerfile path = ./Dockerfile
 #
-# Only if you had a separate repo whose root IS the Laravel app (no waha-darin folder), remove rootDir
-# and set dockerfilePath to ./Dockerfile at that repo root.
-#
-# Set secrets in the Render dashboard (never commit real keys): APP_KEY, JWT_SECRET, DATABASE_URL, MAIL_PASSWORD, etc.
-# See waha-darin/docs/DEPLOY_PREVIEW.md → "Render + Neon" for the full variable list.
+# Set secrets in the Render dashboard (never commit real keys):
+#   APP_KEY, JWT_SECRET, DATABASE_URL, BREVO_API_KEY
+# See waha-darin/docs/DEPLOY_PREVIEW.md for the full variable list.
 
 services:
   - type: web
@@ -29,22 +27,11 @@ services:
       - key: SKIP_EMAIL_VERIFICATION
         value: "false"
       - key: MAIL_MAILER
-        value: smtp
-      - key: MAIL_DRIVER
-        value: smtp
-      - key: MAIL_HOST
-        value: smtp-relay.brevo.com
-      - key: MAIL_PORT
-        value: "587"
-      - key: MAIL_USERNAME
-        value: a995af001@smtp-brevo.com
-      - key: MAIL_ENCRYPTION
-        value: tls
-      # MAIL_PASSWORD (Brevo SMTP key) → set as secret in Render dashboard
+        value: brevo
       - key: MAIL_FROM_ADDRESS
-        value: info@darbooks.de
-      # Optional: override in dashboard to match APP_NAME
+        value: mohammad.khaled.moslemany@gmail.com
       - key: MAIL_FROM_NAME
         value: Dar Books
+      # BREVO_API_KEY → set as secret in Render dashboard
       - key: DB_CONNECTION
         value: pgsql
