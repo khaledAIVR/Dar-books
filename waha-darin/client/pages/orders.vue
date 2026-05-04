@@ -53,7 +53,11 @@
                                     href="#current"
                                     role="tab"
                                     aria-controls="current"
-                                    :aria-selected="activeTab === 'current' ? 'true' : 'false'"
+                                    :aria-selected="
+                                        activeTab === 'current'
+                                            ? 'true'
+                                            : 'false'
+                                    "
                                     @click.prevent="setActiveTab('current')"
                                 >
                                     <h4 class="font-weight-light">
@@ -65,11 +69,17 @@
                                 <a
                                     id="completed-tab"
                                     class="nav-link"
-                                    :class="{ active: activeTab === 'completed' }"
+                                    :class="{
+                                        active: activeTab === 'completed'
+                                    }"
                                     href="#completed"
                                     role="tab"
                                     aria-controls="completed"
-                                    :aria-selected="activeTab === 'completed' ? 'true' : 'false'"
+                                    :aria-selected="
+                                        activeTab === 'completed'
+                                            ? 'true'
+                                            : 'false'
+                                    "
                                     @click.prevent="setActiveTab('completed')"
                                 >
                                     <h4 class="font-weight-light">
@@ -83,7 +93,10 @@
                         <div
                             id="current"
                             class="tab-pane fade"
-                            :class="{ show: activeTab === 'current', active: activeTab === 'current' }"
+                            :class="{
+                                show: activeTab === 'current',
+                                active: activeTab === 'current'
+                            }"
                             role="tabpanel"
                             aria-labelledby="current-tab"
                         >
@@ -101,7 +114,10 @@
                         <div
                             id="completed"
                             class="tab-pane fade"
-                            :class="{ show: activeTab === 'completed', active: activeTab === 'completed' }"
+                            :class="{
+                                show: activeTab === 'completed',
+                                active: activeTab === 'completed'
+                            }"
                             role="tabpanel"
                             aria-labelledby="completed-tab"
                         >
@@ -145,8 +161,8 @@ export default {
                 completed = data[1] || []
             } else if (data && typeof data === 'object') {
                 // Legacy groupBy('completed') JSON can come back as { "0": [...], "1": [...] }
-                current = data[0] || data['0'] || data.false || data['false'] || []
-                completed = data[1] || data['1'] || data.true || data['true'] || []
+                current = data[0] || data['0'] || data.false || []
+                completed = data[1] || data['1'] || data.true || []
             }
             this.orders = [current, completed]
 
@@ -164,16 +180,38 @@ export default {
     },
     computed: {
         currentOrders() {
-            return (this.orders && this.orders[0]) ? this.orders[0] : []
+            return this.orders && this.orders[0] ? this.orders[0] : []
         },
         completedOrders() {
-            return (this.orders && this.orders[1]) ? this.orders[1] : []
+            return this.orders && this.orders[1] ? this.orders[1] : []
         }
     },
     watch: {
         '$route.hash'() {
             this.activateTabFromHash()
         }
+    },
+    mounted() {
+        this.$fetch().finally(() => {
+            this.$nextTick(() => {
+                this.activateTabFromHash()
+                if (!this.$route.hash) {
+                    this.$router.replace({ hash: '#current' }).catch(() => {})
+                }
+            })
+        })
+        document.addEventListener(
+            'visibilitychange',
+            this.handleVisibilityChange
+        )
+        this.startPolling()
+    },
+    beforeDestroy() {
+        document.removeEventListener(
+            'visibilitychange',
+            this.handleVisibilityChange
+        )
+        this.stopPolling()
     },
     methods: {
         setActiveTab(tab) {
@@ -186,28 +224,30 @@ export default {
         },
         activateTabFromHash() {
             if (!process.client) return
-            const hash = (this.$route && this.$route.hash) ? this.$route.hash : ''
+            const hash = this.$route && this.$route.hash ? this.$route.hash : ''
             if (hash === '#completed') {
                 this.activeTab = 'completed'
             } else if (hash === '#current') {
                 this.activeTab = 'current'
             }
+        },
+        startPolling() {
+            if (this._pollTimer || (process.client && document.hidden)) return
+            this._pollTimer = setInterval(() => this.$fetch(), 30000)
+        },
+        stopPolling() {
+            if (!this._pollTimer) return
+            clearInterval(this._pollTimer)
+            this._pollTimer = null
+        },
+        handleVisibilityChange() {
+            if (document.hidden) {
+                this.stopPolling()
+            } else {
+                this.$fetch()
+                this.startPolling()
+            }
         }
-    },
-    mounted() {
-        this.$fetch().finally(() => {
-            this.$nextTick(() => {
-                this.activateTabFromHash()
-                if (!this.$route.hash) {
-                    this.$router.replace({ hash: '#current' }).catch(() => {})
-                }
-            })
-        })
-        // Poll every 30 s for live status updates
-        this._pollTimer = setInterval(() => this.$fetch(), 30000)
-    },
-    beforeDestroy() {
-        clearInterval(this._pollTimer)
     }
 }
 </script>

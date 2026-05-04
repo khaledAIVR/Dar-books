@@ -15,6 +15,10 @@
                         <li v-if="bankDetails && bankDetails.name">
                             {{ $t('Account name:') }} {{ bankDetails.name }}
                         </li>
+                        <li v-if="bankDetails && bankDetails.account_number">
+                            {{ $t('Account Number:') }}
+                            {{ bankDetails.account_number }}
+                        </li>
                         <li v-if="bankDetails && bankDetails.iban">
                             {{ $t('IBAN:') }} {{ bankDetails.iban }}
                         </li>
@@ -25,6 +29,7 @@
                             v-if="
                                 !bankDetails ||
                                     (!bankDetails.name &&
+                                        !bankDetails.account_number &&
                                         !bankDetails.iban &&
                                         !bankDetails.swift_code)
                             "
@@ -138,16 +143,21 @@
             </div>
         </div>
 
-        <p class="terms-line mb-3">
-            {{ $t('I agree to the terms and conditions') }}
+        <label class="terms-line d-flex align-items-center mb-3">
+            <input
+                v-model="termsAgreed"
+                type="checkbox"
+                class="terms-checkbox"
+            />
+            <span>{{ $t('I agree to the terms and conditions') }}</span>
             <button
                 type="button"
                 class="btn btn-link p-0 align-baseline"
-                @click="openTermsModal"
+                @click.prevent="openTermsModal"
             >
                 {{ $t('Terms and conditions') }}
             </button>
-        </p>
+        </label>
 
         <button
             type="submit"
@@ -171,8 +181,6 @@
             body-class="p-0"
             hide-header-close
             scrollable
-            @show="onTermsModalShow"
-            @hidden="onTermsModalHidden"
         >
             <template #modal-header>
                 <div
@@ -191,30 +199,9 @@
                     />
                 </div>
             </template>
-            <div
-                ref="termsScroll"
-                class="terms-modal-body"
-                @scroll="onTermsScroll"
-            >
+            <div class="terms-modal-body">
                 <div class="terms-content p-4" v-html="termsContentFormatted" />
             </div>
-            <template #modal-footer>
-                <div
-                    class="w-100 d-flex justify-content-between align-items-center"
-                >
-                    <span v-if="!hasScrolledToEnd" class="text-muted small">
-                        {{ $t('Scroll to the end to continue') }}
-                    </span>
-                    <span v-else />
-                    <b-button
-                        v-if="hasScrolledToEnd"
-                        variant="primary"
-                        @click="agreeAndCloseTerms"
-                    >
-                        {{ $t('Read it all') }}
-                    </b-button>
-                </div>
-            </template>
         </b-modal>
     </div>
 </template>
@@ -224,7 +211,6 @@ import {
     BFormDatepicker,
     BFormInput,
     BModal,
-    BButton,
     BButtonClose
 } from 'bootstrap-vue'
 import axios from 'axios'
@@ -236,7 +222,6 @@ export default {
         BFormDatepicker,
         BFormInput,
         BModal,
-        BButton,
         BButtonClose
     },
     props: {
@@ -260,7 +245,6 @@ export default {
             donation: 0,
             response: null,
             showTermsModal: false,
-            hasScrolledToEnd: false,
             termsAgreed: false
         }
     },
@@ -300,34 +284,13 @@ export default {
             this.formData.amount = String(this.toBePaid)
         },
         openTermsModal() {
-            this.hasScrolledToEnd = false
             this.showTermsModal = true
-        },
-        onTermsModalShow() {
-            this.hasScrolledToEnd = false
-            this.$nextTick(() => this.checkTermsScroll())
-        },
-        onTermsModalHidden() {
-            this.hasScrolledToEnd = false
-        },
-        onTermsScroll() {
-            this.checkTermsScroll()
-        },
-        checkTermsScroll() {
-            const el = this.$refs.termsScroll
-            if (!el) return
-            const threshold = 80
-            const atEnd =
-                el.scrollHeight - el.scrollTop - el.clientHeight <= threshold
-            if (atEnd) this.hasScrolledToEnd = true
-        },
-        agreeAndCloseTerms() {
-            this.termsAgreed = true
-            this.showTermsModal = false
         },
         async submit() {
             if (!this.termsAgreed) {
-                this.openTermsModal()
+                this.$toast.error(
+                    this.$t('I agree to the terms and conditions')
+                )
                 return
             }
             const data = {
@@ -375,6 +338,12 @@ export default {
 }
 .terms-line {
     font-size: 0.95rem;
+    gap: 0.5rem;
+}
+.terms-checkbox {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 auto;
 }
 .terms-line .btn-link {
     font-weight: 600;

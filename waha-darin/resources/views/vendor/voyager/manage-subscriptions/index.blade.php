@@ -139,7 +139,7 @@
     #manage-subscriptions-app .sub-badge.is-pending      { background:#fef3c7; color:#92400e; }
     #manage-subscriptions-app .sub-badge.is-active       { background:#d1fae5; color:#065f46; }
     #manage-subscriptions-app .sub-badge.is-deactivated  { background:#fee2e2; color:#991b1b; }
-    #manage-subscriptions-app .sub-badge.is-expired      { background:#e5e7eb; color:#374151; }
+    #manage-subscriptions-app .sub-badge.is-expired      { background:#fee2e2; color:#991b1b; }
 
     #manage-subscriptions-app .sub-card__body { padding:14px 16px 16px; }
     #manage-subscriptions-app .sub-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:14px; }
@@ -402,4 +402,3 @@
     });
 </script>
 @endpush
-

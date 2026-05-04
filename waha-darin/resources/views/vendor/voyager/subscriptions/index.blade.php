@@ -134,8 +134,10 @@
     #subscriptions-app .sub-card__date { font-size:12px; white-space:nowrap; }
 
     #subscriptions-app .sub-badge { display:inline-flex; align-items:center; justify-content:center; border-radius:999px; padding:6px 10px; background:#fef3c7; border:1px solid rgba(0,0,0,0.10); font-weight:800; letter-spacing:.04em; text-transform:uppercase; font-size:11px; white-space:nowrap; }
-    #subscriptions-app .sub-badge.is-active { background:#dcfce7; }
-    #subscriptions-app .sub-badge.is-deactivated { background:#fee2e2; }
+    #subscriptions-app .sub-badge.is-pending { background:#fef3c7; color:#92400e; }
+    #subscriptions-app .sub-badge.is-active { background:#dcfce7; color:#166534; }
+    #subscriptions-app .sub-badge.is-deactivated,
+    #subscriptions-app .sub-badge.is-expired { background:#fee2e2; color:#991b1b; }
 
     #subscriptions-app .sub-card__body { padding:14px 16px 16px; }
     #subscriptions-app .sub-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:14px; }
@@ -244,6 +246,7 @@
         function statusLabel(status) {
             if (status === 'active') return '{{ __('Activated') }}';
             if (status === 'deactivated') return '{{ __('Deactivated') }}';
+            if (status === 'expired') return '{{ __('Expired') }}';
             return '{{ __('Pending') }}';
         }
 
@@ -257,8 +260,10 @@
 
             const statusEl = fragment.querySelector('[data-field="status"]');
             statusEl.textContent = String(statusLabel(status)).toUpperCase();
+            statusEl.classList.toggle('is-pending', status === 'pending');
             statusEl.classList.toggle('is-active', status === 'active');
             statusEl.classList.toggle('is-deactivated', status === 'deactivated');
+            statusEl.classList.toggle('is-expired', status === 'expired');
 
             fragment.querySelector('[data-field="created"]').textContent = formatDateTime(sub.created_at);
 
@@ -388,4 +393,3 @@
     });
 </script>
 @endpush
-

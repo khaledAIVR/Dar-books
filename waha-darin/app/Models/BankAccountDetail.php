@@ -12,13 +12,28 @@ class BankAccountDetail extends Model
 
     /**
      * Get the single bank account details row used for subscription checkout.
-     * Creates a default row if none exists.
+     * Returns null if no admin-managed row exists.
      *
      * @return self|null
      */
     public static function forCheckout()
     {
-        $row = self::first();
+        $row = self::query()
+            ->where(function ($query) {
+                $query->whereNotNull('iban')
+                    ->where('iban', '!=', '');
+            })
+            ->orWhere(function ($query) {
+                $query->whereNotNull('account_number')
+                    ->where('account_number', '!=', '');
+            })
+            ->orWhere(function ($query) {
+                $query->whereNotNull('swift_code')
+                    ->where('swift_code', '!=', '');
+            })
+            ->orderBy('id')
+            ->first();
+
         if ($row) {
             return $row;
         }
