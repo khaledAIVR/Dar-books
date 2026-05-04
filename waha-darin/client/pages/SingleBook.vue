@@ -1,6 +1,5 @@
 <template>
     <div>
-        <add-to-cart-modal />
         <auth-alert />
 
         <div>
@@ -192,7 +191,6 @@ export default {
         LazyImage,
         Swiper,
         SwiperSlide,
-        'add-to-cart-modal': () => import('~/components/global/AddToCartModal'),
         'category-books-slider': () =>
             import('~/components/home/CategoryBooksSlider')
     },

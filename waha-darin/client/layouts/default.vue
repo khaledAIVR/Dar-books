@@ -2,6 +2,7 @@
     <main class="">
         <Navbar />
         <!--        <Search/>-->
+        <add-to-cart-modal />
         <add-to-fav-list-modal />
 
         <div class="container-fluid py-5">

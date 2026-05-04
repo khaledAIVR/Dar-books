@@ -26,12 +26,14 @@
                     <nuxt-link
                         :to="{ name: 'favourite' }"
                         class="btn btn-primary btn-lg p-0 m-0 align-baseline"
+                        @click.native="$modal.hide('add-to-fav-list')"
                     >
                         {{ $t('View Favorite') }}
                     </nuxt-link>
                     <nuxt-link
                         :to="{ name: 'home' }"
                         class="btn btn-primary-light btn-lg p-0 m-0 align-baseline"
+                        @click.native="$modal.hide('add-to-fav-list')"
                     >
                         {{ $t('Browse more books') }}
                     </nuxt-link>
@@ -59,7 +61,7 @@ export default {
             book: {}
         }
     },
-    created() {
+    mounted() {
         this.modalWidth =
             window.innerWidth < MODAL_WIDTH ? MODAL_WIDTH / 2 : MODAL_WIDTH
     },
