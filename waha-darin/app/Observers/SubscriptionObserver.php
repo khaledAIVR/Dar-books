@@ -46,13 +46,24 @@ class SubscriptionObserver
         $subscription->loadMissing('user');
         $status = strtolower((string) $subscription->status);
 
-        $this->sendMail(fn() => match($status) {
-            'active'                        => Mail::to($subscription->user)->send(new StartSubscription($subscription)),
-            'pending'                       => Mail::to($subscription->user)->send(new PendingSubscription($subscription)),
-            'expired'                       => Mail::to($subscription->user)->send(new ExpiredSubscription($subscription)),
-            'deactivated', 'inactive'       => Mail::to($subscription->user)->send(new DeactivatedSubscription($subscription)),
-            default => null,
-        });
+        $user = $subscription->user;
+        if ($status === 'active') {
+            $this->sendMail(function () use ($user, $subscription) {
+                Mail::to($user)->send(new StartSubscription($subscription));
+            });
+        } elseif ($status === 'pending') {
+            $this->sendMail(function () use ($user, $subscription) {
+                Mail::to($user)->send(new PendingSubscription($subscription));
+            });
+        } elseif ($status === 'expired') {
+            $this->sendMail(function () use ($user, $subscription) {
+                Mail::to($user)->send(new ExpiredSubscription($subscription));
+            });
+        } elseif (in_array($status, ['deactivated', 'inactive'], true)) {
+            $this->sendMail(function () use ($user, $subscription) {
+                Mail::to($user)->send(new DeactivatedSubscription($subscription));
+            });
+        }
     }
 
     /**
