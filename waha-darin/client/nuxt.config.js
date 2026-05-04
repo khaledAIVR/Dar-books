@@ -3,6 +3,11 @@ const { join } = require('path')
 require('dotenv').config({ path: join(__dirname, '..', '.env') })
 const { copySync, removeSync, pathExistsSync } = require('fs-extra')
 
+const appName =
+    process.env.APP_NAME && String(process.env.APP_NAME).trim() !== ''
+        ? process.env.APP_NAME
+        : 'DarBooks'
+
 module.exports = {
     mode: 'spa', // Comment this for SSR
 
@@ -16,26 +21,33 @@ module.exports = {
     env: {
         // Prefer explicit API_URL (set in Laravel root .env for split dev, e.g. http://127.0.0.1:8001/api).
         // Default `/api` avoids localhost vs 127.0.0.1 mismatch when Laravel serves the built SPA on one port.
-        apiUrl: process.env.API_URL && String(process.env.API_URL).trim() !== ''
-            ? process.env.API_URL
-            : '/api',
-        appName: process.env.APP_NAME || 'Waha Darin',
+        apiUrl:
+            process.env.API_URL && String(process.env.API_URL).trim() !== ''
+                ? process.env.API_URL
+                : '/api',
+        appName,
         appLocale: process.env.APP_LOCALE || 'ar',
         githubAuth: !!process.env.GITHUB_CLIENT_ID
     },
 
     head: {
-        title: process.env.APP_NAME,
-        titleTemplate: '%s - ' + process.env.APP_NAME,
+        title: appName,
+        titleTemplate(titleChunk) {
+            return titleChunk ? `${titleChunk} - ${appName}` : appName
+        },
         meta: [
             { charset: 'utf-8' },
             {
                 name: 'viewport',
                 content: 'width=device-width, initial-scale=1'
             },
-            { hid: 'description', name: 'description', content: 'Waha Darin' }
+            { hid: 'description', name: 'description', content: appName }
         ],
-        link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+        link: [
+            { rel: 'icon', type: 'image/png', href: '/icon.png' },
+            { rel: 'shortcut icon', type: 'image/png', href: '/icon.png' },
+            { rel: 'apple-touch-icon', href: '/icon.png' }
+        ]
     },
 
     loading: { color: '#F99D0F', throttle: 0, height: '5px' },
