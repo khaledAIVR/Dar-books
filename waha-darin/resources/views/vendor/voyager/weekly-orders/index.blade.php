@@ -225,6 +225,46 @@
         font-weight: 800;
     }
 
+    #weekly-orders-app .wo-tab[data-tab="received"] {
+        background: #e5e7eb;
+        color: #374151;
+        border-color: #d1d5db;
+    }
+
+    #weekly-orders-app .wo-tab[data-tab="shipped"] {
+        background: #dbeafe;
+        color: #1d4ed8;
+        border-color: #bfdbfe;
+    }
+
+    #weekly-orders-app .wo-tab[data-tab="delivered"] {
+        background: #d1fae5;
+        color: #065f46;
+        border-color: #a7f3d0;
+    }
+
+    #weekly-orders-app .wo-tab[data-tab="returned"] {
+        background: #ccfbf1;
+        color: #0f766e;
+        border-color: #99f6e4;
+    }
+
+    #weekly-orders-app .wo-tab[data-tab="received"] .wo-count {
+        background: rgba(55, 65, 81, 0.14);
+    }
+
+    #weekly-orders-app .wo-tab[data-tab="shipped"] .wo-count {
+        background: rgba(29, 78, 216, 0.14);
+    }
+
+    #weekly-orders-app .wo-tab[data-tab="delivered"] .wo-count {
+        background: rgba(6, 95, 70, 0.14);
+    }
+
+    #weekly-orders-app .wo-tab[data-tab="returned"] .wo-count {
+        background: rgba(15, 118, 110, 0.14);
+    }
+
     #weekly-orders-app .wo-panels {
         padding: 14px;
     }

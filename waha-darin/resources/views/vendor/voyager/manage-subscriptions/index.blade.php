@@ -117,6 +117,12 @@
     #manage-subscriptions-app .sub-tab:hover { background: rgba(0,0,0,0.02); }
     #manage-subscriptions-app .sub-tab.is-active { border-color: rgba(0,0,0,0.20); box-shadow: 0 1px 0 rgba(0,0,0,0.06); }
     #manage-subscriptions-app .sub-count { display:inline-flex; align-items:center; justify-content:center; min-width:22px; height:22px; padding:0 6px; border-radius:999px; background: rgba(0,0,0,0.07); font-size:12px; font-weight:800; }
+    #manage-subscriptions-app .sub-tab[data-tab="pending"] { background:#fef3c7; color:#92400e; border-color:#fde68a; }
+    #manage-subscriptions-app .sub-tab[data-tab="active"] { background:#d1fae5; color:#065f46; border-color:#a7f3d0; }
+    #manage-subscriptions-app .sub-tab[data-tab="deactivated"] { background:#fee2e2; color:#991b1b; border-color:#fecaca; }
+    #manage-subscriptions-app .sub-tab[data-tab="pending"] .sub-count { background:rgba(146,64,14,0.14); }
+    #manage-subscriptions-app .sub-tab[data-tab="active"] .sub-count { background:rgba(6,95,70,0.14); }
+    #manage-subscriptions-app .sub-tab[data-tab="deactivated"] .sub-count { background:rgba(153,27,27,0.14); }
 
     #manage-subscriptions-app .sub-panels { padding:14px; }
     #manage-subscriptions-app .sub-panel { display:none; margin:0; padding:0; }
