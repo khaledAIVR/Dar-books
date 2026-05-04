@@ -20,9 +20,6 @@ export default {
     computed: mapGetters({
         locale: 'lang/locale'
     }),
-    created() {
-        this.$store.dispatch('book/fetchBooks')
-    },
     head() {
         return {
             htmlAttrs: {

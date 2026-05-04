@@ -4,7 +4,7 @@ export default async ({ store, redirect }) => {
     const token = hydrateStoredToken(store)
 
     if (token && !store.getters['auth/check']) {
-        await store.dispatch('auth/fetchUser')
+        await store.dispatch('auth/fetchUser', { force: true })
     }
 
     // Only redirect when there is no token at all.

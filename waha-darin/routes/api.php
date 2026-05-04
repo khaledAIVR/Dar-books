@@ -31,6 +31,7 @@ Route::group(['middleware' => 'auth:api'], function () {
             $q->select('id', 'user_id', 'plan_id', 'status', 'start', 'end')
               ->with('plan:id,name,price');
         }]);
+        $user->setAttribute('is_super_admin', $user->isSuperAdmin());
         return $user;
     });
 

@@ -72,7 +72,7 @@
         <div
             v-if="loading"
             class="d-flex justify-content-center align-items-center p-5"
-            style="min-height: 100vh"
+            style="min-height: 260px"
         >
             <div class="spinner-border text-primary" role="status">
                 <span class="sr-only">{{ $t('Loading') }}</span>
@@ -126,20 +126,14 @@ export default {
             return this.$store.getters['book/books']
         }
     },
-    mounted() {
-        this.initSwiperWhenBooksDone()
-    },
-    methods: {
-        initSwiperWhenBooksDone() {
-            const that = this
-            const doWeHaveBooks = () => {
-                if (that.books && that.books.length > 1) {
-                    that.loading = false
-                    clearInterval(checkInterval)
+    watch: {
+        books: {
+            immediate: true,
+            handler(books) {
+                if (books && books.length > 1) {
+                    this.loading = false
                 }
             }
-
-            const checkInterval = setInterval(doWeHaveBooks, 100)
         }
     }
 }

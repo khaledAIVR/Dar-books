@@ -21,14 +21,6 @@
 import { mapGetters } from 'vuex'
 
 export default {
-    head() {
-        return {
-            htmlAttrs: {
-                lang: this.locale,
-                dir: this.locale === 'ar' ? 'rtl' : 'ltr'
-            }
-        }
-    },
     components: {
         Footer: require('~/components/layout/Footer').default,
         Navbar: require('~/components/layout/Navbar').default,
@@ -37,8 +29,13 @@ export default {
     computed: mapGetters({
         locale: 'lang/locale'
     }),
-    created() {
-        this.$store.dispatch('book/fetchBooks')
+    head() {
+        return {
+            htmlAttrs: {
+                lang: this.locale,
+                dir: this.locale === 'ar' ? 'rtl' : 'ltr'
+            }
+        }
     }
 }
 </script>

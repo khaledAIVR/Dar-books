@@ -84,14 +84,43 @@ export default {
             favloading: false
         }
     },
+    computed: {
+        user() {
+            return this.$store.getters['auth/user']
+        }
+    },
     methods: {
         AddToCartForm() {
             if (this.$store.getters['auth/check']) {
+                if (this.needsSubscriptionRedirect()) {
+                    this.redirectToPricing()
+                    return
+                }
+
                 this.cartloading = true
                 this.addBookToCart()
             } else {
                 this.$modal.show('auth-alert')
             }
+        },
+
+        needsSubscriptionRedirect() {
+            if (!this.user || this.user.is_super_admin) return false
+
+            const subscription = this.user.subscription
+            if (!subscription || subscription.status !== 'active') return true
+            if (!subscription.end) return true
+
+            return new Date(subscription.end).getTime() < Date.now()
+        },
+
+        redirectToPricing() {
+            this.$toast.error(
+                this.$t(
+                    'Your subscription is not active. Please subscribe first.'
+                )
+            )
+            this.$router.push({ name: 'pricing' })
         },
 
         async addBookToCart() {
@@ -108,12 +137,7 @@ export default {
                     res.data &&
                     res.data.subscription === false
                 ) {
-                    this.$toast.error(
-                        this.$t(
-                            'Your subscription is not active. Please subscribe first.'
-                        )
-                    )
-                    this.$router.push({ name: 'pricing' })
+                    this.redirectToPricing()
                     return
                 }
 

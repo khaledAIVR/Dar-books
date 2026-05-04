@@ -49,7 +49,10 @@ export default {
             try {
                 this.$nuxt.$loading.start()
             } catch (e) {}
-            await this.$store.dispatch('category/fetchCategories', {})
+            await Promise.all([
+                this.$store.dispatch('book/fetchBooks'),
+                this.$store.dispatch('category/fetchCategories', {})
+            ])
         },
         infiniteScroll($state) {
             if (

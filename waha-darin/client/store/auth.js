@@ -7,6 +7,10 @@ import {
     storeToken
 } from '~/utils/auth-token'
 
+let fetchUserRequest = null
+let lastFetchUserFailureAt = 0
+const FETCH_USER_RETRY_COOLDOWN_MS = 30000
+
 // state
 export const state = () => ({
     user: null,
@@ -52,7 +56,24 @@ export const actions = {
         commit('SET_TOKEN', clean)
     },
 
-    async fetchUser({ commit, getters }) {
+    async fetchUser({ commit, getters }, options = {}) {
+        if (getters.check && !options.force) {
+            return
+        }
+
+        if (fetchUserRequest) {
+            return fetchUserRequest
+        }
+
+        const now = Date.now()
+        if (
+            !options.force &&
+            lastFetchUserFailureAt &&
+            now - lastFetchUserFailureAt < FETCH_USER_RETRY_COOLDOWN_MS
+        ) {
+            return
+        }
+
         const token = cleanToken(getters.token) || getStoredToken()
         const headers = {}
         const bearer = authHeader(token)
@@ -68,46 +89,57 @@ export const actions = {
         headers.Accept = 'application/json'
         headers.Authorization = bearer
 
-        let lastError = null
-        for (let attempt = 0; attempt < 3; attempt++) {
-            try {
-                const { data } = await axios.get('/user', { headers })
-                commit('FETCH_USER_SUCCESS', data)
-
-                return
-            } catch (e) {
-                lastError = e
-                const status = e.response && e.response.status
-
-                if (status === 401) {
-                    clearStoredToken()
-                    commit('FETCH_USER_FAILURE')
+        fetchUserRequest = (async () => {
+            let lastError = null
+            for (let attempt = 0; attempt < 3; attempt++) {
+                try {
+                    const { data } = await axios.get('/user', { headers })
+                    commit('FETCH_USER_SUCCESS', data)
+                    lastFetchUserFailureAt = 0
 
                     return
+                } catch (e) {
+                    lastError = e
+                    const status = e.response && e.response.status
+
+                    if (status === 401) {
+                        clearStoredToken()
+                        commit('FETCH_USER_FAILURE')
+                        lastFetchUserFailureAt = 0
+
+                        return
+                    }
+
+                    const retry =
+                        attempt < 2 &&
+                        (!status ||
+                            status >= 500 ||
+                            status === 429 ||
+                            status === 408)
+
+                    if (retry) {
+                        await new Promise((resolve) =>
+                            setTimeout(resolve, 500 * (attempt + 1))
+                        )
+
+                        continue
+                    }
+
+                    break
                 }
-
-                const retry =
-                    attempt < 2 &&
-                    (!status ||
-                        status >= 500 ||
-                        status === 429 ||
-                        status === 408)
-
-                if (retry) {
-                    await new Promise((resolve) =>
-                        setTimeout(resolve, 500 * (attempt + 1))
-                    )
-
-                    continue
-                }
-
-                break
             }
-        }
 
-        if (process.env.NODE_ENV === 'development') {
-            // eslint-disable-next-line no-console
-            console.warn('[auth/fetchUser] failed after retries', lastError)
+            if (process.env.NODE_ENV === 'development') {
+                // eslint-disable-next-line no-console
+                console.warn('[auth/fetchUser] failed after retries', lastError)
+            }
+            lastFetchUserFailureAt = Date.now()
+        })()
+
+        try {
+            return await fetchUserRequest
+        } finally {
+            fetchUserRequest = null
         }
     },
 

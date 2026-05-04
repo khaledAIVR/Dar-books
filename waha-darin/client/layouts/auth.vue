@@ -22,9 +22,6 @@ export default {
     computed: mapGetters({
         locale: 'lang/locale'
     }),
-    created() {
-        this.$store.dispatch('book/fetchBooks')
-    },
     head() {
         return {
             htmlAttrs: {
@@ -44,7 +41,7 @@ export default {
         flex-direction: column;
         justify-content: center;
         &.auth-bg {
-            background: url('~static/authBg.png') no-repeat;
+            background: url('~static/authBg.webp') no-repeat;
             min-height: 100vh;
         }
     }

@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { shuffledCopy } from '~/utils'
 
+let fetchBooksRequest = null
+
 // state
 export const state = () => ({
     books: []
@@ -20,15 +22,25 @@ export const mutations = {
 
 // actions
 export const actions = {
-    async fetchBooks({ commit, state }) {
+    fetchBooks({ commit, state }) {
         if (state.books.length > 0) {
             return
         }
-        try {
-            const { data } = await axios.get('/books')
-            commit('SET_BOOKS', shuffledCopy(data.data))
-        } catch (e) {
-            commit('FETCH_BOOKS_FAILURE')
+        if (fetchBooksRequest) {
+            return fetchBooksRequest
         }
+
+        fetchBooksRequest = (async () => {
+            try {
+                const { data } = await axios.get('/books')
+                commit('SET_BOOKS', shuffledCopy(data.data))
+            } catch (e) {
+                commit('FETCH_BOOKS_FAILURE')
+            } finally {
+                fetchBooksRequest = null
+            }
+        })()
+
+        return fetchBooksRequest
     }
 }

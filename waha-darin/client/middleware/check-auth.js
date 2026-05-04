@@ -11,6 +11,10 @@ export default async ({ store }) => {
     }
 
     if (!store.getters['auth/check'] && token) {
-        await store.dispatch('auth/fetchUser')
+        if (process.client) {
+            store.dispatch('auth/fetchUser')
+        } else {
+            await store.dispatch('auth/fetchUser')
+        }
     }
 }
