@@ -653,6 +653,13 @@
             updateBulkUI();
         }
 
+        function badgeDataStatusKey(rawStatus) {
+            var s = (rawStatus || 'Received').toLowerCase().replace(/\s+/g, '');
+            /* API uses ReturnedBack; tabs / CSS use "returned" */
+            if (s === 'returnedback') return 'returned';
+            return s;
+        }
+
         function populateOrder(fragment, order, listType) {
             const shipping = order.shipping || {};
             const user = order.user || {};
@@ -660,7 +667,7 @@
             fragment.querySelector('[data-field="id"]').textContent = order.id;
             fragment.querySelector('[data-field="user"]').textContent = formatRecipientLabel(shipping);
             const statusEl = fragment.querySelector('[data-field="status"]');
-            const statusKey = (order.status || 'Received').toLowerCase().replace(/\s+/g, '');
+            const statusKey = badgeDataStatusKey(order.status);
             statusEl.textContent = (order.status || 'Received').toUpperCase();
             statusEl.setAttribute('data-status', statusKey);
             fragment.querySelector('[data-field="created"]').textContent = formatDateTime(order.created_at);
