@@ -13,12 +13,9 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        /*
-         * Email verification mail is triggered from Auth\RegisterController with
-         * try/catch + honest HTTP responses. Laravel's listener is omitted here
-         * to avoid duplicate sends and to avoid reporting "sent" when SMTP fails.
-         */
-        Registered::class => [],
+        Registered::class => [
+            \Illuminate\Auth\Listeners\SendEmailVerificationNotification::class,
+        ],
     ];
 
     /**

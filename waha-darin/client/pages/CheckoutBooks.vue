@@ -261,43 +261,39 @@ export default {
                 })
             }
         },
-        submitBorrowForm() {
+        async submitBorrowForm() {
+            if (!this.formData.selectedDateStart || !this.formData.selectedDateStart.dateString) {
+                return this.$toast.error(this.$t('Please select a delivery date'))
+            }
             this.loading = true
-            const books = []
-            this.formData.selectedBooks.forEach(function(book) {
-                books.push(book.id)
-            })
-
+            const books = this.formData.selectedBooks.map((b) => b.id)
             const submitFormData = {
                 books,
-
                 startDate: this.formData.selectedDateStart.dateString,
-
                 name: this.formData.fullName,
                 phone: this.formData.phone,
-
                 addressLineOne: this.formData.addressLineOne,
                 addressLineTwo: this.formData.addressLineTwo,
                 country: this.formData.country,
                 region: this.formData.region,
                 zipCode: this.formData.zipCode
             }
-            const that = this
-            axios
-                .post('orders', submitFormData)
-                .then((res) => {
-                    that.serverResponse.code = res.data.code
-                    that.serverResponse.status = res.data.status
-                    that.serverResponse.icon = res.data.icon
-                    that.serverResponse.message = res.data.message
-                    that.serverResponse.message = res.data.message
-                    that.serverResponse.subMessage = res.data.subMessage
-                    that.loading = false
-                    that.done = true
-                })
-                .catch((error) => {
-                    // debugger
-                })
+            try {
+                const res = await axios.post('orders', submitFormData)
+                this.serverResponse = { ...this.serverResponse, ...res.data }
+                this.done = true
+            } catch (error) {
+                const data = error?.response?.data
+                // Subscription not active → redirect to pricing
+                if (error?.response?.status === 403 && data?.subscription === false) {
+                    this.$toast.error(this.$t('Your subscription is not active. Please subscribe first.'))
+                    return this.$router.push({ name: 'pricing' })
+                }
+                this.serverResponse.message = data?.message || this.$t('An error occurred. Please try again.')
+                this.done = true
+            } finally {
+                this.loading = false
+            }
         }
     }
 }

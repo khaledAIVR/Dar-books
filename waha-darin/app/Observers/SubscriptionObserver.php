@@ -2,14 +2,11 @@
 
 namespace App\Observers;
 
-use App\Mail\subscription\BeforeEndSubscription;
 use App\Mail\subscription\DeactivatedSubscription;
-use App\Mail\subscription\EndSubscription;
 use App\Mail\subscription\ExpiredSubscription;
 use App\Mail\subscription\PendingSubscription;
 use App\Mail\subscription\StartSubscription;
 use App\Models\Subscription;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 
 class SubscriptionObserver
@@ -22,12 +19,14 @@ class SubscriptionObserver
      */
     public function created(Subscription $subscription)
     {
-        // New subscriptions start as pending until bank transfer is reviewed.
-        // Send a pending notification to the user.
         $status = strtolower((string) $subscription->status);
         if ($status === 'pending') {
             $subscription->loadMissing('user');
-            Mail::to($subscription->user)->send(new PendingSubscription($subscription));
+            try {
+                Mail::to($subscription->user)->send(new PendingSubscription($subscription));
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error('Subscription pending email failed: ' . $e->getMessage());
+            }
         }
     }
 
@@ -47,30 +46,13 @@ class SubscriptionObserver
         $subscription->loadMissing('user');
         $status = strtolower((string) $subscription->status);
 
-        if ($status === 'active') {
-            $startSubscription      = new StartSubscription($subscription);
-            $endSubscription        = new EndSubscription($subscription);
-            $beforeEndSubscription  = new BeforeEndSubscription($subscription);
-            Mail::to($subscription->user)->send($startSubscription);
-            Mail::to($subscription->user)->later($subscription->end, $endSubscription);
-            Mail::to($subscription->user)->later($subscription->end->subWeeks(2), $beforeEndSubscription);
-            return;
-        }
-
-        if ($status === 'pending') {
-            Mail::to($subscription->user)->send(new PendingSubscription($subscription));
-            return;
-        }
-
-        if ($status === 'expired') {
-            Mail::to($subscription->user)->send(new ExpiredSubscription($subscription));
-            return;
-        }
-
-        if (in_array($status, ['deactivated', 'inactive'], true)) {
-            Mail::to($subscription->user)->send(new DeactivatedSubscription($subscription));
-            return;
-        }
+        $this->sendMail(fn() => match($status) {
+            'active'                        => Mail::to($subscription->user)->send(new StartSubscription($subscription)),
+            'pending'                       => Mail::to($subscription->user)->send(new PendingSubscription($subscription)),
+            'expired'                       => Mail::to($subscription->user)->send(new ExpiredSubscription($subscription)),
+            'deactivated', 'inactive'       => Mail::to($subscription->user)->send(new DeactivatedSubscription($subscription)),
+            default => null,
+        });
     }
 
     /**
@@ -79,6 +61,15 @@ class SubscriptionObserver
      * @param  \App\Models\Subscription  $subscription
      * @return void
      */
+    private function sendMail(callable $fn): void
+    {
+        try {
+            $fn();
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Subscription email failed: ' . $e->getMessage());
+        }
+    }
+
     public function deleted(Subscription $subscription)
     {
         //

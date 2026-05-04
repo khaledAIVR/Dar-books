@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { authHeader } from '~/utils/auth-token'
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
 export default ({ app, store, redirect }) => {
     axios.defaults.baseURL = process.env.apiUrl

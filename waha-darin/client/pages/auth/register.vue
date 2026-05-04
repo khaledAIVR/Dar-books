@@ -186,13 +186,27 @@
                             </div>
                         </div>
 
+                        <div class="form-group row">
+                            <div class="col-12 d-flex align-items-center">
+                                <input
+                                    id="terms"
+                                    v-model="agreedToTerms"
+                                    type="checkbox"
+                                    class="ml-1 mr-2"
+                                />
+                                <label for="terms" class="mb-0 font-weight-light" style="cursor:pointer">
+                                    {{ $t('I agree to the Terms and Conditions') }}
+                                </label>
+                            </div>
+                        </div>
+
                         <div class="form-group row mb-0">
                             <div class="col-12">
                                 <button
                                     type="submit"
                                     class="btn btn-primary d-flex w-100 justify-content-center align-items-center btn-50"
-                                    :disabled="form.busy"
-                                    :class="{ disabled: form.busy }"
+                                    :disabled="form.busy || !agreedToTerms"
+                                    :class="{ disabled: form.busy || !agreedToTerms }"
                                 >
                                     <div
                                         v-if="form.busy"
@@ -225,6 +239,7 @@ export default {
     middleware: 'guest',
 
     data: () => ({
+        agreedToTerms: false,
         form: new Form({
             name: '',
             email: '',

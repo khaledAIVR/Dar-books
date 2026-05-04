@@ -25,18 +25,17 @@
                 <div class="d-flex justify-content-center mt-3">
                     <nuxt-link
                         :to="{ name: 'cart' }"
-                        type="submit"
                         class="btn btn-primary btn-lg p-0 m-0 align-baseline"
+                        @click.native="$modal.hide('add-to-cart')"
                     >
                         {{ $t('View cart') }}
                     </nuxt-link>
-                    <nuxt-link
-                        :to="{ name: 'home' }"
-                        type="submit"
+                    <button
                         class="btn btn-primary-light btn-lg p-0 m-0 align-baseline"
+                        @click="$modal.hide('add-to-cart')"
                     >
                         {{ $t('Browse more books') }}
-                    </nuxt-link>
+                    </button>
                 </div>
             </div>
             <div

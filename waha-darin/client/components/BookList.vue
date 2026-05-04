@@ -33,11 +33,21 @@
                     {{ book.author.name }}
                 </nuxt-link>
             </nuxt-link>
+            <button
+                class="btn btn-primary btn-sm mt-1 w-100 add-cart-btn"
+                :disabled="cartAdding"
+                @click.prevent="addToCart"
+            >
+                <span v-if="cartAdding" class="spinner-border spinner-border-sm" role="status" />
+                <span v-else>{{ $t('Add to cart') }}</span>
+            </button>
         </div>
     </div>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
     name: 'BookList',
     components: {
@@ -52,6 +62,7 @@ export default {
     },
     data() {
         return {
+            cartAdding: false,
             popoverText: {
                 details: this.$t('Details'),
                 author: this.$t('Author:')
@@ -61,6 +72,23 @@ export default {
                 emptyStarColor: '#C2C2C2',
                 starWidth: 18,
                 starHeight: 18
+            }
+        }
+    },
+    methods: {
+        async addToCart() {
+            if (!this.$store.getters['auth/check']) {
+                return this.$router.push({ name: 'login' })
+            }
+            this.cartAdding = true
+            try {
+                await axios.patch(`/cart/${this.book.id}`)
+                this.$modal.show('add-to-cart')
+            } catch (e) {
+                const msg = e?.response?.data?.message
+                this.$toast.error(msg || this.$t('Error adding to cart'))
+            } finally {
+                this.cartAdding = false
             }
         }
     }

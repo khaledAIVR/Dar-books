@@ -81,7 +81,7 @@
                                     'is-invalid': form.errors.has('age')
                                 }"
                                 type="text"
-                                name="phageone"
+                                name="age"
                                 class="form-control"
                                 :placeholder="$t('Age')"
                             />
@@ -130,7 +130,7 @@
                                     )
                                 }"
                                 type="text"
-                                name="address_line_one"
+                                name="address_line_two"
                                 class="form-control"
                                 :placeholder="$t('Address line two')"
                             />
