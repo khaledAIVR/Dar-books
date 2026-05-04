@@ -196,15 +196,18 @@ export default {
     },
     mounted() {
         this.$fetch().finally(() => {
-            // Ensure correct tab opens when URL contains #completed
             this.$nextTick(() => {
                 this.activateTabFromHash()
-                // default hash if missing
                 if (!this.$route.hash) {
                     this.$router.replace({ hash: '#current' }).catch(() => {})
                 }
             })
         })
+        // Poll every 30 s for live status updates
+        this._pollTimer = setInterval(() => this.$fetch(), 30000)
+    },
+    beforeDestroy() {
+        clearInterval(this._pollTimer)
     }
 }
 </script>

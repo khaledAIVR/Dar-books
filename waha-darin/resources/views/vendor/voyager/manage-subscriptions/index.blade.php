@@ -135,8 +135,11 @@
     #manage-subscriptions-app .sub-card__date { font-size:12px; white-space:nowrap; }
 
     #manage-subscriptions-app .sub-badge { display:inline-flex; align-items:center; justify-content:center; border-radius:999px; padding:6px 10px; background:#fef3c7; border:1px solid rgba(0,0,0,0.10); font-weight:800; letter-spacing:.04em; text-transform:uppercase; font-size:11px; white-space:nowrap; }
-    #manage-subscriptions-app .sub-badge.is-active { background:#dcfce7; }
-    #manage-subscriptions-app .sub-badge.is-deactivated { background:#fee2e2; }
+    /* Traffic light */
+    #manage-subscriptions-app .sub-badge.is-pending      { background:#fef3c7; color:#92400e; }
+    #manage-subscriptions-app .sub-badge.is-active       { background:#d1fae5; color:#065f46; }
+    #manage-subscriptions-app .sub-badge.is-deactivated  { background:#fee2e2; color:#991b1b; }
+    #manage-subscriptions-app .sub-badge.is-expired      { background:#e5e7eb; color:#374151; }
 
     #manage-subscriptions-app .sub-card__body { padding:14px 16px 16px; }
     #manage-subscriptions-app .sub-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:14px; }
@@ -259,8 +262,7 @@
 
             const statusEl = fragment.querySelector('[data-field="status"]');
             statusEl.textContent = String(statusLabel(status)).toUpperCase();
-            statusEl.classList.toggle('is-active', status === 'active');
-            statusEl.classList.toggle('is-deactivated', status === 'deactivated' || status === 'expired');
+            statusEl.className = 'sub-badge is-' + status;
 
             fragment.querySelector('[data-field="created"]').textContent = formatDateTime(sub.created_at);
 
@@ -387,6 +389,16 @@
 
         setActiveTab('pending');
         fetchSubscriptions();
+
+        var _pollTimer = setInterval(fetchSubscriptions, 30000);
+        document.addEventListener('visibilitychange', function () {
+            if (document.hidden) {
+                clearInterval(_pollTimer);
+            } else {
+                fetchSubscriptions();
+                _pollTimer = setInterval(fetchSubscriptions, 30000);
+            }
+        });
     });
 </script>
 @endpush

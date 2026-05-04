@@ -357,7 +357,7 @@
         justify-content: center;
         border-radius: 999px;
         padding: 6px 10px;
-        background: #fef3c7;
+        background: #e5e7eb;
         border: 1px solid rgba(0, 0, 0, 0.10);
         font-weight: 800;
         letter-spacing: 0.04em;
@@ -365,6 +365,14 @@
         font-size: 11px;
         white-space: nowrap;
     }
+    /* Traffic light status colors */
+    #weekly-orders-app .wo-badge[data-status="received"]               { background:#e5e7eb; color:#374151; }
+    #weekly-orders-app .wo-badge[data-status="shipped"]                { background:#dbeafe; color:#1d4ed8; }
+    #weekly-orders-app .wo-badge[data-status="delivered"]              { background:#d1fae5; color:#065f46; }
+    #weekly-orders-app .wo-badge[data-status="waitingreturnshipment"]  { background:#fed7aa; color:#92400e; }
+    #weekly-orders-app .wo-badge[data-status="returned"],
+    #weekly-orders-app .wo-badge[data-status="completed"]              { background:#ccfbf1; color:#0f766e; }
+    #weekly-orders-app .wo-badge[data-status="cancelled"]              { background:#fee2e2; color:#991b1b; }
 
     #weekly-orders-app .wo-order__body {
         padding: 14px 16px 16px;
@@ -610,7 +618,10 @@
 
             fragment.querySelector('[data-field="id"]').textContent = order.id;
             fragment.querySelector('[data-field="user"]').textContent = formatRecipientLabel(shipping);
-            fragment.querySelector('[data-field="status"]').textContent = (order.status || 'Received').toUpperCase();
+            const statusEl = fragment.querySelector('[data-field="status"]');
+            const statusKey = (order.status || 'Received').toLowerCase().replace(/\s+/g, '');
+            statusEl.textContent = (order.status || 'Received').toUpperCase();
+            statusEl.setAttribute('data-status', statusKey);
             fragment.querySelector('[data-field="created"]').textContent = formatDateTime(order.created_at);
 
             fragment.querySelector('[data-field="customer-name"]').textContent = shipping.name || '{{ __('N/A') }}';
@@ -1045,6 +1056,17 @@
 
         setActiveTab('received');
         fetchOrders();
+
+        // Auto-refresh every 30 s so status updates appear without manual reload
+        var _pollTimer = setInterval(fetchOrders, 30000);
+        document.addEventListener('visibilitychange', function () {
+            if (document.hidden) {
+                clearInterval(_pollTimer);
+            } else {
+                fetchOrders();
+                _pollTimer = setInterval(fetchOrders, 30000);
+            }
+        });
     });
 </script>
 @endpush

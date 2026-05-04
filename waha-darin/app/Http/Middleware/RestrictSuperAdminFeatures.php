@@ -40,24 +40,46 @@ class RestrictSuperAdminFeatures
 
     private function requiresSuperAdmin(Request $request): bool
     {
-        // Restrict "Manage Plans" (Voyager BREAD)
-        if ($request->is('admin/plans') || $request->is('admin/plans/*')) {
-            return true;
+        // Routes only super-admins may access
+        $superAdminPaths = [
+            'admin/users',
+            'admin/users/*',
+            'admin/roles',
+            'admin/roles/*',
+            'admin/plans',
+            'admin/plans/*',
+            'admin/bank_account_details',
+            'admin/bank_account_details/*',
+            'admin/book-import',
+            'admin/book-import/*',
+            'admin/database',
+            'admin/database/*',
+            'admin/bread',
+            'admin/bread/*',
+            'admin/compass',
+            'admin/compass/*',
+            'admin/hooks',
+            'admin/menus',
+            'admin/menus/*',
+            'admin/media',
+            'admin/media/*',
+            'admin/pages',
+            'admin/pages/*',
+            'admin/posts',
+            'admin/posts/*',
+            'admin/settings',
+            'admin/settings/*',
+        ];
+
+        foreach ($superAdminPaths as $path) {
+            if ($request->is($path)) {
+                return true;
+            }
         }
 
-        // Restrict "Bank Account" (Voyager BREAD) – subscription checkout bank details
-        if ($request->is('admin/bank_account_details') || $request->is('admin/bank_account_details/*')) {
-            return true;
-        }
-
-        // Restrict "Import Books" tool
-        if ($request->is('admin/book-import') || $request->is('admin/book-import/*')) {
-            return true;
-        }
-
-        // Restrict Voyager bulk delete (DELETE /admin/{slug}/0 with ids in request)
+        // Restrict Voyager bulk delete
         if ($request->isMethod('delete') && $request->filled('ids')) {
-            $segments = $request->segments(); // e.g. ['admin', 'books', '0']
+            $segments = $request->segments();
             if (count($segments) >= 3 && end($segments) === '0') {
                 return true;
             }
