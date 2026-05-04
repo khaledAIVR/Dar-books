@@ -155,19 +155,10 @@
 
 @section('css')
 <style>
-    /* Weekly Orders — rebuilt UI (no Bootstrap tabs to avoid theme conflicts) */
+    /* Weekly Orders — clean layout (aligned with manage-subscriptions) */
 
     #weekly-orders-app {
-        /* Page chrome: cool → warm backdrop (outside order cards) */
-        background: linear-gradient(
-            145deg,
-            #eef6ff 0%,
-            #f3f0ff 28%,
-            #fdf2f8 62%,
-            #fff1f2 100%
-        );
-        margin: -24px -15px 0;
-        padding: 22px 24px 28px;
+        padding: 18px 24px;
     }
 
     #weekly-orders-app .wo-header {
@@ -178,80 +169,25 @@
         margin-bottom: 16px;
     }
 
-    #weekly-orders-app .wo-title {
-        position: relative;
-        padding-inline-start: 14px;
-    }
-
-    #weekly-orders-app .wo-title::before {
-        content: '';
-        position: absolute;
-        inset-inline-start: 0;
-        top: 0.2em;
-        bottom: 0.2em;
-        width: 4px;
-        border-radius: 4px;
-        background: linear-gradient(180deg, #1d4ed8 0%, #7c3aed 42%, #db2777 78%, #b91c1c 100%);
-    }
-
-    #weekly-orders-app .wo-actions .btn-outline-primary {
-        border-color: #6366f1;
-        color: #4338ca;
-        background: rgba(255, 255, 255, 0.85);
-    }
-
-    #weekly-orders-app .wo-actions .btn-outline-primary:hover {
-        background: linear-gradient(135deg, #eff6ff 0%, #faf5ff 50%, #fff1f2 100%);
-        border-color: #4f46e5;
-        color: #3730a3;
-    }
-
     #weekly-orders-app .wo-shell {
-        position: relative;
         background: #fff;
-        border: 1px solid rgba(99, 102, 241, 0.12);
+        border: 1px solid rgba(0, 0, 0, 0.08);
         border-radius: 14px;
         overflow: hidden;
-        box-shadow:
-            0 1px 2px rgba(16, 24, 40, 0.05),
-            0 12px 40px rgba(37, 99, 235, 0.06),
-            0 12px 40px rgba(185, 28, 28, 0.04);
-    }
-
-    /* Top stripe: blue → red (outside row content) */
-    #weekly-orders-app .wo-shell::before {
-        content: '';
-        display: block;
-        height: 5px;
-        width: 100%;
-        background: linear-gradient(
-            90deg,
-            #1d4ed8 0%,
-            #5b21b6 34%,
-            #be185d 68%,
-            #b91c1c 100%
-        );
     }
 
     #weekly-orders-app .wo-loading {
         padding: 28px;
         text-align: center;
-        color: #5b21b6;
-        background: linear-gradient(180deg, rgba(219, 234, 254, 0.35) 0%, transparent 100%);
+        color: #667085;
     }
 
     #weekly-orders-app .wo-tabs {
         display: flex;
         gap: 10px;
         padding: 12px 14px;
-        background: linear-gradient(
-            90deg,
-            rgba(219, 234, 254, 0.95) 0%,
-            rgba(237, 233, 254, 0.88) 34%,
-            rgba(252, 231, 243, 0.88) 67%,
-            rgba(254, 226, 226, 0.95) 100%
-        );
-        border-bottom: 1px solid rgba(99, 102, 241, 0.14);
+        background: #f7f7f7;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
     }
 
     #weekly-orders-app .wo-tab {
@@ -332,24 +268,6 @@
 
     #weekly-orders-app .wo-panels {
         padding: 14px;
-        transition: background 0.25s ease;
-    }
-
-    /* List area tint follows active tab (outside collapsed rows) */
-    #weekly-orders-app:has(.wo-tab[data-tab="received"].is-active) .wo-panels {
-        background: linear-gradient(180deg, rgba(219, 234, 254, 0.55) 0%, rgba(255, 255, 255, 0.4) 52%, #fff 100%);
-    }
-
-    #weekly-orders-app:has(.wo-tab[data-tab="shipped"].is-active) .wo-panels {
-        background: linear-gradient(180deg, rgba(233, 213, 254, 0.5) 0%, rgba(255, 255, 255, 0.45) 48%, #fff 100%);
-    }
-
-    #weekly-orders-app:has(.wo-tab[data-tab="delivered"].is-active) .wo-panels {
-        background: linear-gradient(180deg, rgba(252, 231, 243, 0.55) 0%, rgba(255, 255, 255, 0.4) 52%, #fff 100%);
-    }
-
-    #weekly-orders-app:has(.wo-tab[data-tab="returned"].is-active) .wo-panels {
-        background: linear-gradient(180deg, rgba(254, 226, 226, 0.58) 0%, rgba(255, 255, 255, 0.35) 55%, #fff 100%);
     }
 
     #weekly-orders-app .wo-bulk {
@@ -366,23 +284,7 @@
         gap: 10px;
         margin: 0;
         font-weight: 800;
-        color: #3d3d5c;
-    }
-
-    #weekly-orders-app .wo-bulk .btn-primary {
-        background: linear-gradient(135deg, #4f46e5 0%, #be185d 100%);
-        border: none;
-        box-shadow: 0 2px 8px rgba(79, 70, 229, 0.35);
-    }
-
-    #weekly-orders-app .wo-bulk .btn-primary:hover:not(:disabled) {
-        background: linear-gradient(135deg, #6366f1 0%, #db2777 100%);
-    }
-
-    #weekly-orders-app .wo-bulk .btn-primary:disabled {
-        background: #c7c9d9;
-        box-shadow: none;
-        opacity: 0.85;
+        color: #344054;
     }
 
     #weekly-orders-app .wo-order__select {
@@ -407,7 +309,7 @@
         display: block;
     }
 
-    /* Order card */
+    /* Order card (same shell as manage-subscriptions) */
     #weekly-orders-app details.wo-order {
         background: #fff;
         border: 1px solid rgba(0, 0, 0, 0.08);
@@ -619,8 +521,7 @@
 
     @media (max-width: 640px) {
         #weekly-orders-app {
-            margin: -16px -12px 0;
-            padding: 18px 16px 24px;
+            padding: 16px;
         }
 
         #weekly-orders-app .wo-actions-row {
