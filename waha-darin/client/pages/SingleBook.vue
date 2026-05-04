@@ -192,7 +192,7 @@ export default {
         LazyImage,
         Swiper,
         SwiperSlide,
-        'add-to-cart-modal': () => import('~/components/AddToCartModal'),
+        'add-to-cart-modal': () => import('~/components/global/AddToCartModal'),
         'category-books-slider': () =>
             import('~/components/home/CategoryBooksSlider')
     },

@@ -91,6 +91,40 @@
                 {{ $t('Select books to confirm your order') }}
             </p>
         </div>
+
+        <!-- Price + Donation -->
+        <div v-if="plan" class="mt-3 border-top pt-3">
+            <h5 class="mb-2">{{ $t('Payment') }}</h5>
+            <div class="d-flex justify-content-between mb-1">
+                <span class="text-muted">{{ plan.name }}</span>
+                <strong>{{ plan.price }} €</strong>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">{{ $t('Donation') }}</span>
+                <strong>{{ donation }} €</strong>
+            </div>
+            <div class="d-flex gap-2 mb-2">
+                <button
+                    class="btn btn-sm"
+                    :class="donation === 0 ? 'btn-primary' : 'btn-outline-secondary'"
+                    @click.prevent="$emit('update:donation', 0)"
+                >{{ $t('No donation') }}</button>
+                <button
+                    class="btn btn-sm"
+                    :class="donation === 5 ? 'btn-primary' : 'btn-outline-secondary'"
+                    @click.prevent="$emit('update:donation', 5)"
+                >+5 €</button>
+                <button
+                    class="btn btn-sm"
+                    :class="donation === 10 ? 'btn-primary' : 'btn-outline-secondary'"
+                    @click.prevent="$emit('update:donation', 10)"
+                >+10 €</button>
+            </div>
+            <div class="d-flex justify-content-between font-weight-bold border-top pt-2">
+                <span>{{ $t('Total') }}</span>
+                <span>{{ Number(plan.price) + donation }} €</span>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -100,18 +134,18 @@ export default {
     props: {
         formData: {
             type: Object,
-            default: () => {
-                return {
-                    dates: {
-                        selectedDateStart: {},
-                        selectedDateEnd: {}
-                    },
-                    selectedBooks: {
-                        required: true,
-                        type: Array
-                    }
-                }
-            }
+            default: () => ({
+                dates: { selectedDateStart: {}, selectedDateEnd: {} },
+                selectedBooks: []
+            })
+        },
+        plan: {
+            type: Object,
+            default: null
+        },
+        donation: {
+            type: Number,
+            default: 0
         }
     },
     data() {

@@ -78,7 +78,7 @@
                 </div>
             </div>
             <div class="col-4">
-                <order-summery :form-data="formData" />
+                <order-summery :form-data="formData" :donation.sync="donation" :plan="userPlan" />
             </div>
         </div>
     </div>
@@ -146,15 +146,18 @@ export default {
             message: null,
             subMessage: null
         },
+        donation: 0,
         currentStep: 1,
         done: false,
         loading: false
     }),
 
-    computed: mapGetters({
-        lang: 'lang/locale',
-        user: 'auth/user'
-    }),
+    computed: {
+        ...mapGetters({ lang: 'lang/locale', user: 'auth/user' }),
+        userPlan() {
+            return this.user?.subscription?.plan || null
+        }
+    },
     watch: {
         lang() {
             this.refreshDatesForLocale()

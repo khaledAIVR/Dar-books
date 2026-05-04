@@ -28,7 +28,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/user', function (Request $request) {
         $user = $request->user();
         $user->load(['subscription' => function ($q) {
-            $q->select('id', 'user_id', 'plan_id', 'status', 'start', 'end');
+            $q->select('id', 'user_id', 'plan_id', 'status', 'start', 'end')
+              ->with('plan:id,name,price');
         }]);
         return $user;
     });
