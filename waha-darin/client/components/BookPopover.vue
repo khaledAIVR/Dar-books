@@ -102,6 +102,21 @@ export default {
                 }
             } catch (e) {
                 const res = e.response
+                if (
+                    res &&
+                    res.status === 403 &&
+                    res.data &&
+                    res.data.subscription === false
+                ) {
+                    this.$toast.error(
+                        this.$t(
+                            'Your subscription is not active. Please subscribe first.'
+                        )
+                    )
+                    this.$router.push({ name: 'pricing' })
+                    return
+                }
+
                 const msg =
                     res &&
                     res.data &&

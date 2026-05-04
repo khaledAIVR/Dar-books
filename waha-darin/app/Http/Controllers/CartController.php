@@ -28,6 +28,20 @@ class CartController extends Controller
         return 0;
     }
 
+    private function hasActiveSubscription($user): bool
+    {
+        if ($user->isSuperAdmin()) {
+            return true;
+        }
+
+        $subscription = Subscription::where('user_id', $user->id)->first();
+
+        return $subscription
+            && strtolower((string) $subscription->status) === 'active'
+            && $subscription->end
+            && now()->lessThanOrEqualTo($subscription->end);
+    }
+
     public function index()
     {
         $user = auth()->user();
@@ -45,6 +59,10 @@ class CartController extends Controller
     public function update(Book $book)
     {
         $user = auth()->user();
+        if (! $this->hasActiveSubscription($user)) {
+            return response()->json(['subscription' => false, 'status' => 403], 403);
+        }
+
         $available = $this->borrowSlotsRemainingForUser($user);
 
         $currentBookAuthor = $book->author()->get()->toArray();

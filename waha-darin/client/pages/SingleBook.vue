@@ -45,7 +45,9 @@
                                     class="spinner-border text-light mx-2"
                                     role="status"
                                 >
-                                    <span class="sr-only">{{ $t('Loading') }}</span>
+                                    <span class="sr-only">{{
+                                        $t('Loading')
+                                    }}</span>
                                 </div>
                                 <Icon
                                     color="white"
@@ -66,7 +68,9 @@
                                     role="status"
                                     style="max-width: inherit"
                                 >
-                                    <span class="sr-only">{{ $t('Loading') }}</span>
+                                    <span class="sr-only">{{
+                                        $t('Loading')
+                                    }}</span>
                                 </div>
                                 <i v-if="!favloading" class="gg-heart" />
                             </a>
@@ -171,12 +175,13 @@
             </div>
             <div class="my-5" />
         </div>
-        <category-books-slider
-            v-for="category in book.categories"
-            v-if="book.categories && book.categories.length > 0"
-            :key="category.id"
-            :category="category"
-        />
+        <template v-if="book.categories && book.categories.length > 0">
+            <category-books-slider
+                v-for="category in book.categories"
+                :key="category.id"
+                :category="category"
+            />
+        </template>
     </div>
 </template>
 
@@ -269,14 +274,27 @@ export default {
                 }
             } catch (e) {
                 const res = e.response
+                if (
+                    res &&
+                    res.status === 403 &&
+                    res.data &&
+                    res.data.subscription === false
+                ) {
+                    this.$toast.error(
+                        this.$t(
+                            'Your subscription is not active. Please subscribe first.'
+                        )
+                    )
+                    this.$router.push({ name: 'pricing' })
+                    return
+                }
+
                 const msg =
                     res &&
                     res.data &&
                     typeof res.data.message === 'string' &&
                     res.data.message
-                this.$toast.error(
-                    msg || this.$t('cart_borrow_limit_toast')
-                )
+                this.$toast.error(msg || this.$t('cart_borrow_limit_toast'))
             } finally {
                 this.cartloading = false
             }
