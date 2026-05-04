@@ -3,7 +3,6 @@
 namespace App\Observers;
 
 use App\Mail\subscription\DeactivatedSubscription;
-use App\Mail\subscription\ExpiredSubscription;
 use App\Mail\subscription\PendingSubscription;
 use App\Mail\subscription\StartSubscription;
 use App\Models\Subscription;
@@ -54,10 +53,6 @@ class SubscriptionObserver
         } elseif ($status === 'pending') {
             $this->sendMail(function () use ($user, $subscription) {
                 Mail::to($user)->send(new PendingSubscription($subscription));
-            });
-        } elseif ($status === 'expired') {
-            $this->sendMail(function () use ($user, $subscription) {
-                Mail::to($user)->send(new ExpiredSubscription($subscription));
             });
         } elseif (in_array($status, ['deactivated', 'inactive'], true)) {
             $this->sendMail(function () use ($user, $subscription) {

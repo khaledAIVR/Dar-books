@@ -9,7 +9,7 @@ class ExpireSubscriptions extends Command
 {
     protected $signature = 'subscriptions:expire {--dry-run : Do not update anything, just report}';
 
-    protected $description = 'Mark ended active subscriptions as expired and notify users.';
+    protected $description = 'Mark ended active subscriptions as expired.';
 
     public function handle()
     {
@@ -39,7 +39,7 @@ class ExpireSubscriptions extends Command
         $query->chunkById(200, function ($subs) use (&$updated) {
             foreach ($subs as $sub) {
                 $sub->status = 'expired';
-                $sub->save(); // Observer will send "expired" email.
+                $sub->save();
                 $updated++;
             }
         });
@@ -48,4 +48,3 @@ class ExpireSubscriptions extends Command
         return 0;
     }
 }
-

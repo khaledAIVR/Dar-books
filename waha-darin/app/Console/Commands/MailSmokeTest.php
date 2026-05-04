@@ -8,7 +8,6 @@ use App\Mail\Borrow\OrderShipped;
 use App\Mail\Borrow\OverdueReturnReminder;
 use App\Mail\Borrow\ReturnReminder;
 use App\Mail\subscription\DeactivatedSubscription;
-use App\Mail\subscription\ExpiredSubscription;
 use App\Mail\subscription\PendingSubscription;
 use App\Mail\subscription\StartSubscription;
 use App\Models\BorrowOrder;
@@ -141,7 +140,7 @@ class MailSmokeTest extends Command
 
         if (!$this->option('skip-subscriptions')) {
             $this->line('');
-            $this->info('4) Subscription mailables (pending/activated/deactivated/expired)');
+            $this->info('4) Subscription mailables (pending/activated/deactivated)');
 
             try {
                 $plan = Plan::query()->select('id', 'name', 'price', 'books_quota')->first();
@@ -177,9 +176,6 @@ class MailSmokeTest extends Command
                 Mail::to($to)->send(new DeactivatedSubscription($subscription));
                 $this->info('   Deactivated OK');
 
-                $subscription->status = 'expired';
-                Mail::to($to)->send(new ExpiredSubscription($subscription));
-                $this->info('   Expired OK');
             } catch (\Throwable $e) {
                 $failures++;
                 $this->error('   FAILED: '.$e->getMessage());
@@ -196,4 +192,3 @@ class MailSmokeTest extends Command
         return 0;
     }
 }
-
